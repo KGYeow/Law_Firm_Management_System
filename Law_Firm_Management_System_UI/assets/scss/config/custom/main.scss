@@ -1,0 +1,24 @@
+//
+// Custom Main SCSS File
+//
+// Framework: Bootstrap & Element-Plus
+// Website: (1) https://getbootstrap.com/
+//          (2) https://element-plus.org/en-US/
+
+// Custom Layouts & Structure
+@import "./layouts.scss";
+
+// Core Files
+@import "./node_modules/bootstrap/scss/functions";
+@import "./node_modules/bootstrap/scss/variables";
+@import "./node_modules/bootstrap/scss/mixins";
+@import "./node_modules/bootstrap/scss/bootstrap";
+
+// Custom Bootstrap Components
+@import "./../../components/bootstrap/form-control.scss";
+
+// Custom Element Plus Components
+@import "./../../components/element-plus/notification.scss";
+
+// Icons
+@import "./../../icons/icons.scss";

@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\Law_Firm_Management_System_API.props" />
+</Project>
