@@ -56,13 +56,12 @@ const editUserDetails = ref({
 const editUser = async() => {
   try {
     const result = await fetchData.$put(`/User/Me/${user.value.id}`, editUserDetails.value)
-    
     if (!result.error) {
       isEdit.value = !isEdit.value
       ElNotification.success({ message: result.message })
     }
     else {
-      ElNotification.error({ message: "The user profile has been edited unsuccessfully.", duration: 0 })
+      ElNotification.error({ message: "The user profile has been edited unsuccessfully." })
     }
   } catch { ElNotification.error({ message: "There is a problem with the server. Please try again later." }) }
 }

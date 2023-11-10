@@ -1,3 +1,20 @@
 body {
   font-family: "Plus Jakarta Sans", sans-serif !important;
 }
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #eee;
+}
+
+::-webkit-scrollbar-thumb { 
+  background-color: #d6d6d6;
+  border-radius: 6px;
+
+  &:hover {
+    background-color: #aaa;
+  }
+}

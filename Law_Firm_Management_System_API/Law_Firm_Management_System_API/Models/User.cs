@@ -6,9 +6,12 @@ namespace Law_Firm_Management_System_API.Models
     public partial class User
     {
         public int Id { get; set; }
-        public string Username { get; set; } = null!;
-        public string? Password { get; set; }
+        public int? UserRoleId { get; set; }
         public string? FullName { get; set; }
+        public string Username { get; set; } = null!;
         public string Email { get; set; } = null!;
+        public string? Password { get; set; }
+
+        public virtual UserRole? UserRole { get; set; }
     }
 }

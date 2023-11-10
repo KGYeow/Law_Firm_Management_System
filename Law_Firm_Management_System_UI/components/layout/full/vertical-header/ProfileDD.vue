@@ -48,7 +48,6 @@ const { signOut } = useAuth()
 const logout = async() => {
   try {
     const result = await fetchData.$get("/Authenticate/Logout")
-
     if (!result.error) {
       signOut({ callbackUrl: "/login", redirect: true })
       ElNotification.success({ message: "User logout successfully!" })
