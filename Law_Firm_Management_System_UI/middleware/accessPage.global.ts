@@ -8,7 +8,7 @@ export default defineNuxtRouteMiddleware(async(to, from) => {
       return
 
     // Restricted and unrestricted authenticated user access page list (From sidebar)
-    const userAccessPageList = await useFetch(`https://localhost:7204/api/Page/AccessPageList/${user.value?.id}`)
+    const userAccessPageList = await useFetch(`https://localhost:7248/api/Page/AccessPageList/${user.value?.id}`)
     const accessList: string[] = userAccessPageList.data.value as string[]
     const sidebarMenu = shallowRef(sidebarItems)
     const filteredSidebarMenu = sidebarMenu.value.filter(item => accessList.includes(item.title as string) || item.auth == null)
