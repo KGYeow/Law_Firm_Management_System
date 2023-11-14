@@ -20,7 +20,7 @@
 						<!---Item Header -->
 						<LayoutFullVerticalSidebarNavHeader :item="item" v-if="item.header" :key="item.title"/>
 						<!---Single Item-->
-						<LayoutFullVerticalSidebarNavItem :item="item" v-else class="leftPadding"/>
+						<LayoutFullVerticalSidebarNavItem :item="item" v-else/>
 					</template>
 				</v-list>
 			</perfect-scrollbar>

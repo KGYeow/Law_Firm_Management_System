@@ -90,7 +90,7 @@
 
             .v-list-group__items .v-list-item.v-list-item--active,
             .v-list-group__items .v-list-item.v-list-item--active > .v-list-item__overlay {
-                background: transparent;
+                // background: transparent;
                 color: rgb(var(--v-theme-primary));
             }
         }

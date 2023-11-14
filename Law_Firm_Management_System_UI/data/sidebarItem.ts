@@ -38,7 +38,7 @@ const sidebarItem: menu[] = [
     icon: BriefcaseIcon,
     children: [
       {
-        title: 'Case Management',
+        title: 'Case',
         icon: BriefcaseIcon,
         to: '/case',
       },
@@ -47,18 +47,17 @@ const sidebarItem: menu[] = [
         icon: HistoryIcon,
         to: '/case/history',
       },
+      {
+        title: 'Task',
+        icon: ClipboardTextIcon,
+        to: '/task',
+      },
+      {
+        title: 'Task History',
+        icon: HistoryIcon,
+        to: '/task/history',
+      },
     ]
-  },
-  { header: 'Task' },
-  {
-    title: 'Task Management',
-    icon: ClipboardTextIcon,
-    to: '/task',
-  },
-  {
-    title: 'Task History',
-    icon: HistoryIcon,
-    to: '/task/history',
   },
   { header: 'Others' },
   {
