@@ -1,6 +1,6 @@
 import {
-  ApertureIcon,
-  CopyIcon,
+  BriefcaseIcon, HistoryIcon, ClipboardTextIcon, UserCogIcon, CalendarIcon,
+  QuestionMarkIcon, ApertureIcon, CopyIcon,
   LayoutDashboardIcon, MoodHappyIcon, TypographyIcon
 } from 'vue-tabler-icons';
 
@@ -25,8 +25,47 @@ const sidebarItem: menu[] = [
   {
     title: 'Dashboard',
     icon: LayoutDashboardIcon,
-    to: '/dashboard',
+    to: '/home/dashboard',
     auth: true
+  },
+  {
+    title: 'Appointment',
+    icon: CalendarIcon,
+    to: '/home/appointment',
+  },
+  { header: 'Case' },
+  {
+    title: 'Case Management',
+    icon: BriefcaseIcon,
+    to: '/case',
+  },
+  {
+    title: 'Case History',
+    icon: HistoryIcon,
+    to: '/case/history',
+  },
+  { header: 'Task' },
+  {
+    title: 'Task Management',
+    icon: ClipboardTextIcon,
+    to: '/task',
+  },
+  {
+    title: 'Task History',
+    icon: HistoryIcon,
+    to: '/task/history',
+  },
+  { header: 'Others' },
+  {
+    title: 'Question & FAQ',
+    icon: QuestionMarkIcon,
+    to: '/others/question',
+  },
+  { header: 'Configuration' },
+  {
+    title: 'User',
+    icon: UserCogIcon,
+    to: '/configuration/user',
   },
   { header: 'Sample Page' },
   {

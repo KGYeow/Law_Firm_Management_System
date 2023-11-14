@@ -14,7 +14,7 @@ export default defineNuxtRouteMiddleware(async(to, from) => {
     const filteredSidebarMenu = sidebarMenu.value.filter(item => accessList.includes(item.title as string) || item.auth == null)
     const isAuthorized = filteredSidebarMenu.some(path => path.to == to.path)
     if (!isAuthorized) {
-      return navigateTo('/dashboard')
+      return navigateTo('/home/dashboard')
     }
   }
 })

@@ -1,2 +1,6 @@
-// .v-theme--PurpleTheme {
-// }
+.v-theme--PurpleTheme {
+  --v-theme-background: 102, 125, 175, 0.05 !important;
+  --v-theme-primary: 102, 125, 175 !important;
+  --v-border-color: 54, 52, 53 !important;
+  // background-color: #68058d;
+}

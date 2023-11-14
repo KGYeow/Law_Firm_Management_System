@@ -36,6 +36,6 @@ definePageMeta({
 
 // Head
 useHead({
-  title: "Register | CaseCraft - Law Firm Management System",
+  title: "Register | CaseCraft",
 })
 </script>

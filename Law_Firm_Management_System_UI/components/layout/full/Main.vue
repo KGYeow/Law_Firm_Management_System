@@ -3,14 +3,18 @@
 	<v-navigation-drawer left elevation="0" app class="leftSidebar" v-model="sDrawer">
 		<!---Logo part -->
 		<div class="d-flex pa-5">
-			<LayoutFullLogo />
+      <div class="logo mx-auto">
+        <NuxtLink to="/">
+          <img src="/images/logos/casecraftLogo2.png">
+        </NuxtLink>
+      </div>
 		</div>
 		<!-- ---------------------------------------------- -->
 		<!-- Navigation -->
 		<!-- ---------------------------------------------- -->
 		<div>
 			<perfect-scrollbar class="scrollnavbar">
-				<v-list class="pa-6">
+				<v-list class="pa-6 pt-0">
 					<!---Menu Loop -->
 					<template v-for="(item, i) in fullyFilteredSidebarMenu">
 						<!---Item Sub Header -->

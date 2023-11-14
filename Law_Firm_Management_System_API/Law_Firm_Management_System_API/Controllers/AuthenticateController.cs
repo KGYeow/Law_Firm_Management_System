@@ -83,8 +83,9 @@ namespace RnD_Traceability_System_API
                 throw new Exception("Email has been used.");
 
             var newUser = new User();
-            newUser.Username = model.Username;
+            newUser.UserRoleId = 3;
             newUser.FullName = model.Username;
+            newUser.Username = model.Username;
             newUser.Email = model.Email;
             
             var createUser = userService.Create(newUser, model.Password);
