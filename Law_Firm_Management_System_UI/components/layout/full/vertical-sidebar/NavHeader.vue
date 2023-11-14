@@ -6,7 +6,8 @@ const props = defineProps({ item: Object });
   <v-list-subheader
     color="darkText"
     class="smallCap text-uppercase text-subtitle-2 mt-5 font-weight-bold"
+    v-if="item.header"
   >
-    {{ props.item.header}}
+    {{ props.item.header }}
   </v-list-subheader>
 </template>

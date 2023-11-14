@@ -26,23 +26,28 @@ const sidebarItem: menu[] = [
     title: 'Dashboard',
     icon: LayoutDashboardIcon,
     to: '/home/dashboard',
-    auth: true
+    auth: true,
   },
   {
     title: 'Appointment',
     icon: CalendarIcon,
     to: '/home/appointment',
   },
-  { header: 'Case' },
   {
-    title: 'Case Management',
+    title: 'Management',
     icon: BriefcaseIcon,
-    to: '/case',
-  },
-  {
-    title: 'Case History',
-    icon: HistoryIcon,
-    to: '/case/history',
+    children: [
+      {
+        title: 'Case Management',
+        icon: BriefcaseIcon,
+        to: '/case',
+      },
+      {
+        title: 'Case History',
+        icon: HistoryIcon,
+        to: '/case/history',
+      },
+    ]
   },
   { header: 'Task' },
   {
