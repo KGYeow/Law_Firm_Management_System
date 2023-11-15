@@ -57,6 +57,11 @@ const sidebarItem: menu[] = [
         icon: HistoryIcon,
         to: '/task/history',
       },
+      {
+        title: 'Event',
+        icon: HistoryIcon,
+        to: '/event',
+      },
     ]
   },
   { header: 'Others' },
