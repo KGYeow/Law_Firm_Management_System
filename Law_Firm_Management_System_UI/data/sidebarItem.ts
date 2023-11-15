@@ -1,8 +1,4 @@
-import {
-  BriefcaseIcon, HistoryIcon, ClipboardTextIcon, UserCogIcon, CalendarIcon,
-  QuestionMarkIcon, ApertureIcon, CopyIcon,
-  LayoutDashboardIcon, MoodHappyIcon, TypographyIcon
-} from 'vue-tabler-icons';
+import * as tablerIcon from "vue-tabler-icons";
 
 export interface menu {
   header?: string;
@@ -21,82 +17,82 @@ export interface menu {
 }
 
 const sidebarItem: menu[] = [
-  { header: 'Home' },
+  { header: "Home" },
   {
-    title: 'Dashboard',
-    icon: LayoutDashboardIcon,
-    to: '/home/dashboard',
+    title: "Dashboard",
+    icon: tablerIcon.LayoutDashboardIcon,
+    to: "/home/dashboard",
     auth: true,
   },
   {
-    title: 'Appointment',
-    icon: CalendarIcon,
-    to: '/home/appointment',
+    title: "Appointment",
+    icon: tablerIcon.CalendarIcon,
+    to: "/home/appointment",
   },
   {
-    title: 'Management',
-    icon: BriefcaseIcon,
+    title: "Management",
+    icon: tablerIcon.BriefcaseIcon,
     children: [
       {
-        title: 'Case',
-        icon: BriefcaseIcon,
-        to: '/case',
+        title: "Case",
+        icon: tablerIcon.ScriptIcon,
+        to: "/case",
       },
       {
-        title: 'Case History',
-        icon: HistoryIcon,
-        to: '/case/history',
+        title: "Case History",
+        icon: tablerIcon.HistoryIcon,
+        to: "/case/history",
       },
       {
-        title: 'Task',
-        icon: ClipboardTextIcon,
-        to: '/task',
+        title: "Task",
+        icon: tablerIcon.ClipboardTextIcon,
+        to: "/task",
       },
       {
-        title: 'Task History',
-        icon: HistoryIcon,
-        to: '/task/history',
+        title: "Task History",
+        icon: tablerIcon.HistoryIcon,
+        to: "/task/history",
       },
       {
-        title: 'Event',
-        icon: HistoryIcon,
-        to: '/event',
+        title: "Event",
+        icon: tablerIcon.CalendarIcon,
+        to: "/event",
       },
     ]
   },
-  { header: 'Others' },
+  { header: "Others" },
   {
-    title: 'Question & FAQ',
-    icon: QuestionMarkIcon,
-    to: '/others/question',
+    title: "Question & FAQ",
+    icon: tablerIcon.QuestionMarkIcon,
+    to: "/others/question",
   },
-  { header: 'Configuration' },
+  { header: "Configuration" },
   {
-    title: 'User',
-    icon: UserCogIcon,
-    to: '/configuration/user',
+    title: "User",
+    icon: tablerIcon.UserCogIcon,
+    to: "/configuration/user",
   },
-  { header: 'Sample Page' },
+  { header: "Sample Page" },
   {
-    title: 'Sample Page',
-    icon: ApertureIcon,
-    to: '/sample-page',
+    title: "Sample Page",
+    icon: tablerIcon.ApertureIcon,
+    to: "/sample-page",
     auth: true
   },
   {
-    title: 'Typography',
-    icon: TypographyIcon,
-    to: '/sample-page/typography'
+    title: "Typography",
+    icon: tablerIcon.TypographyIcon,
+    to: "/sample-page/typography"
   },
   {
-    title: 'Shadow',
-    icon: CopyIcon,
-    to: '/sample-page/shadow'
+    title: "Shadow",
+    icon: tablerIcon.CopyIcon,
+    to: "/sample-page/shadow"
   },
   {
-    title: 'Icons',
-    icon: MoodHappyIcon,
-    to: '/sample-page/icons'
+    title: "Icons",
+    icon: tablerIcon.MoodHappyIcon,
+    to: "/sample-page/icons"
   },
 ];
 
