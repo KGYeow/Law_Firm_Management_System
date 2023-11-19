@@ -61,6 +61,22 @@ CREATE TABLE [dbo].[RoleAccessPage](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
+/****** Object:  Table [dbo].[Announcement]    Script Date: 19/11/2023 4:36:00 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Announcement](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[Title] [varchar](MAX) NOT NULL,
+	[Description] [varchar](MAX) NOT NULL,
+	[CreatedTime] [datetime] NOT NULL,
+ CONSTRAINT [PK_Announcement] PRIMARY KEY CLUSTERED
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
 /****** Object:  Table [dbo].[Appointment]    Script Date: 13/11/2023 8:15:00 PM ******/
 SET ANSI_NULLS ON
 GO
@@ -278,6 +294,13 @@ INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (21, 3, 5)
 INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (22, 3, 10)
 INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (23, 3, 11)
 SET IDENTITY_INSERT [dbo].[RoleAccessPage] OFF
+GO
+
+SET IDENTITY_INSERT [dbo].[Announcement] ON
+INSERT [dbo].[Announcement] ([Id], [Title], [Description], [CreatedTime]) VALUES (1, N'Milestone 1', N'Start preparing the documentation to detail your proposed application. In milestone 1, write about the proposed application, the type of users involved, and the functionalities of the application. You may prepare your own format of document that is professionally written.', CAST(N'2023-11-15T10:54:11.157' AS DateTime))
+INSERT [dbo].[Announcement] ([Id], [Title], [Description], [CreatedTime]) VALUES (2, N'Milestone 2', N'Continue your report with: Identify users and draw user diagram (1); Identify the contents of your web application. Draw content diagram (1); Identify the interaction/functionality in your web application; Use use case (1) and sequence diagram (4/5 figures-each functionality) and show the interactions and functionality involved', CAST(N'2023-11-17T10:54:11.157' AS DateTime))
+INSERT [dbo].[Announcement] ([Id], [Title], [Description], [CreatedTime]) VALUES (3, N'Test 1 Date', N'Please take note of the Test 1 Date on the 28th November 2023 at 9am. Venue will be announced soon.', CAST(N'2023-11-19T10:54:11.157' AS DateTime))
+SET IDENTITY_INSERT [dbo].[Announcement] OFF
 GO
 
 SET IDENTITY_INSERT [dbo].[DocumentCategory] ON

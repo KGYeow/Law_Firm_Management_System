@@ -28,26 +28,31 @@ const sidebarItem: menu[] = [
     title: "Appointments",
     icon: tablerIcon.Book2Icon,
     to: "/appointments",
+    auth: true,
   },
   {
     title: "Cases",
     icon: tablerIcon.BriefcaseIcon,
     to: "/cases",
+    auth: true,
   },
   {
     title: "Tasks",
     icon: tablerIcon.ClipboardTextIcon,
     to: "/tasks",
+    auth: true,
   },
   {
     title: "Events",
     icon: tablerIcon.CalendarIcon,
     to: "/events",
+    auth: true,
   },
   {
     title: "Documents",
     icon: tablerIcon.FileIcon,
     to: "/documents",
+    auth: true,
   },
   {
     title: "Contacts",
@@ -57,11 +62,13 @@ const sidebarItem: menu[] = [
         title: "Clients",
         icon: tablerIcon.UsersGroupIcon,
         to: "/contacts/clients",
+        auth: true,
       },
       {
         title: "Paralegals",
         icon: tablerIcon.UsersGroupIcon,
         to: "/contacts/paralegals",
+        auth: true,
       },
     ]
   },
@@ -73,30 +80,27 @@ const sidebarItem: menu[] = [
         title: "User Settings",
         icon: tablerIcon.UserCogIcon,
         to: "/configuration/user-settings",
-      },
-      {
-        title: "Firm Settings",
-        icon: tablerIcon.BuildingIcon,
-        to: "/configuration/firm-settings",
+        auth: true,
       },
       {
         title: "Security",
         icon: tablerIcon.ShieldLockIcon,
         to: "/configuration/security",
+        auth: true,
       },
     ]
   },
   {
-    title: "Help & Support",
+    title: "Legal Information",
     icon: tablerIcon.HelpIcon,
-    to: "/help-and-support",
+    to: "/legal-information",
+    auth: true,
   },
   { header: "Sample" },
   {
     title: "Sample Page",
     icon: tablerIcon.ApertureIcon,
     to: "/sample",
-    auth: true
   },
   {
     title: "Typography",

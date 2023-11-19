@@ -56,7 +56,7 @@ import { Menu2Icon } from 'vue-tabler-icons';
 const sDrawer = ref(true);
 const sidebarMenu = shallowRef(sidebarItems);
 const accessList = await fetchData.$get(`/Page/AccessPageList/${useAuth().data.value.id}`)
-const filteredSidebarMenu = sidebarMenu.value.filter(item => accessList.includes(item.title) || item.header != null || item.auth == null)
+const filteredSidebarMenu = sidebarMenu.value.filter(item => accessList.data.value.includes(item.title) || item.header != null || item.auth == null)
 const fullyFilteredSidebarMenu = filteredSidebarMenu.filter((item, index) => {
   if (item.header != null) {
     const nextItem = filteredSidebarMenu[index + 1];

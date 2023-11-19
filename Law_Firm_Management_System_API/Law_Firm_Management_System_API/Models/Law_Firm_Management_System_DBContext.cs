@@ -16,6 +16,7 @@ namespace Law_Firm_Management_System_API.Models
         {
         }
 
+        public virtual DbSet<Announcement> Announcements { get; set; } = null!;
         public virtual DbSet<Appointment> Appointments { get; set; } = null!;
         public virtual DbSet<Case> Cases { get; set; } = null!;
         public virtual DbSet<Client> Clients { get; set; } = null!;
@@ -41,6 +42,19 @@ namespace Law_Firm_Management_System_API.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Announcement>(entity =>
+            {
+                entity.ToTable("Announcement");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.CreatedTime).HasColumnType("datetime");
+
+                entity.Property(e => e.Description).IsUnicode(false);
+
+                entity.Property(e => e.Title).IsUnicode(false);
+            });
+
             modelBuilder.Entity<Appointment>(entity =>
             {
                 entity.ToTable("Appointment");

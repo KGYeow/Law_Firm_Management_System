@@ -20,7 +20,7 @@ export const fetchData = {
     return fetchResult(requestURL, 'PUT', body)
   },
   $get(requestURL: string){
-    return fetchResult(requestURL, 'GET')
+    return useFetch(baseURL + requestURL)
   },
   $delete(requestURL: string){
     return fetchResult(requestURL, 'DELETE')
