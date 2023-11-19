@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@element-plus/nuxt": "^1.0.6",
-    "@mdi/font": "^6.5.95",
+    "@mdi/font": "^7.3.67",
     "@popperjs/core": "^2.11.8",
     "@sidebase/nuxt-auth": "^0.6.0-rc.1",
     "@types/bootstrap": "^5.2.8",

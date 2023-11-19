@@ -1,8 +1,8 @@
 <template>
   <v-row>
     <v-col cols="12" md="12">
-      <UiParentCard title="Task History"> 
-        <div class="pa-7 pt-1"><p class="text-body-1">This is a task history page</p></div>
+      <UiParentCard title="User Setting"> 
+        <div class="pa-7 pt-1"><p class="text-body-1">This is a user setting page</p></div>
       </UiParentCard>
     </v-col>
   </v-row>

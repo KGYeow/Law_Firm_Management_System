@@ -21,78 +21,97 @@ const sidebarItem: menu[] = [
   {
     title: "Dashboard",
     icon: tablerIcon.LayoutDashboardIcon,
-    to: "/home/dashboard",
+    to: "/dashboard",
     auth: true,
   },
   {
-    title: "Appointment",
-    icon: tablerIcon.CalendarIcon,
-    to: "/home/appointment",
+    title: "Appointments",
+    icon: tablerIcon.Book2Icon,
+    to: "/appointments",
   },
   {
-    title: "Management",
+    title: "Cases",
     icon: tablerIcon.BriefcaseIcon,
+    to: "/cases",
+  },
+  {
+    title: "Tasks",
+    icon: tablerIcon.ClipboardTextIcon,
+    to: "/tasks",
+  },
+  {
+    title: "Events",
+    icon: tablerIcon.CalendarIcon,
+    to: "/events",
+  },
+  {
+    title: "Documents",
+    icon: tablerIcon.FileIcon,
+    to: "/documents",
+  },
+  {
+    title: "Contacts",
+    icon: tablerIcon.AddressBookIcon,
     children: [
       {
-        title: "Case",
-        icon: tablerIcon.ScriptIcon,
-        to: "/case",
+        title: "Clients",
+        icon: tablerIcon.UsersGroupIcon,
+        to: "/contacts/clients",
       },
       {
-        title: "Case History",
-        icon: tablerIcon.HistoryIcon,
-        to: "/case/history",
-      },
-      {
-        title: "Task",
-        icon: tablerIcon.ClipboardTextIcon,
-        to: "/task",
-      },
-      {
-        title: "Task History",
-        icon: tablerIcon.HistoryIcon,
-        to: "/task/history",
-      },
-      {
-        title: "Event",
-        icon: tablerIcon.CalendarIcon,
-        to: "/event",
+        title: "Paralegals",
+        icon: tablerIcon.UsersGroupIcon,
+        to: "/contacts/paralegals",
       },
     ]
   },
-  { header: "Others" },
   {
-    title: "Question & FAQ",
-    icon: tablerIcon.QuestionMarkIcon,
-    to: "/others/question",
+    title: "Configuration",
+    icon: tablerIcon.SettingsIcon,
+    children: [
+      {
+        title: "User Settings",
+        icon: tablerIcon.UserCogIcon,
+        to: "/configuration/user-settings",
+      },
+      {
+        title: "Firm Settings",
+        icon: tablerIcon.BuildingIcon,
+        to: "/configuration/firm-settings",
+      },
+      {
+        title: "Security",
+        icon: tablerIcon.ShieldLockIcon,
+        to: "/configuration/security",
+      },
+    ]
   },
-  { header: "Configuration" },
   {
-    title: "User",
-    icon: tablerIcon.UserCogIcon,
-    to: "/configuration/user",
+    title: "Help & Support",
+    icon: tablerIcon.HelpIcon,
+    to: "/help-and-support",
   },
-  { header: "Sample Page" },
+  { header: "Sample" },
   {
     title: "Sample Page",
     icon: tablerIcon.ApertureIcon,
-    to: "/sample-page",
+    to: "/sample",
     auth: true
   },
   {
     title: "Typography",
     icon: tablerIcon.TypographyIcon,
-    to: "/sample-page/typography"
+    to: "/sample/typography"
   },
   {
     title: "Shadow",
     icon: tablerIcon.CopyIcon,
-    to: "/sample-page/shadow"
+    to: "/sample/shadow"
   },
   {
     title: "Icons",
     icon: tablerIcon.MoodHappyIcon,
-    to: "/sample-page/icons"
+    to: "/sample/icons"
   },
 ];
 

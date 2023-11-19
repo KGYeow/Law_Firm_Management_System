@@ -28,14 +28,6 @@
       </UiParentCard>
     </v-col>
   </v-row>
-  <el-affix
-    class="position-absolute"
-    position="bottom"
-    :offset="30"
-    style="right: 30px; bottom: 100px;"
-  >
-    <v-btn icon="mdi-file-document-plus-outline" size="large" color="#68058d" @click="uploadDocument"/>
-  </el-affix>
 </template>
 
 <script setup>
@@ -118,21 +110,11 @@ const desserts = ref([
 
 // Head
 useHead({
-  title: "Appointment | CaseCraft",
+  title: "Appointments | CaseCraft",
 })
 
 // Methods
 const pageCount = () => {
   return Math.ceil(desserts.value.length / itemsPerPage.value)
-}
-const uploadDocument = () => {
-  let input = document.createElement("input");
-  input.type = "file";
-  input.onchange = function () {
-    input.files[0].arrayBuffer().then(function (arrayBuffer) {
-        console.log(new TextDecoder().decode(arrayBuffer));
-    });
-  }
-  input.click();
 }
 </script>
