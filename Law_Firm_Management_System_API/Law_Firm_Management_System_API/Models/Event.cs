@@ -1,0 +1,17 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace Law_Firm_Management_System_API.Models
+{
+    public partial class Event
+    {
+        public int Id { get; set; }
+        public int? CaseId { get; set; }
+        public string? Name { get; set; }
+        public DateTime? CreatedTime { get; set; }
+        public DateTime? EventTime { get; set; }
+        public bool? IsCompleted { get; set; }
+
+        public virtual Case? Case { get; set; }
+    }
+}

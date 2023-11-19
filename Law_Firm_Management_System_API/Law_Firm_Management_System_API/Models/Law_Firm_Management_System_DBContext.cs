@@ -16,8 +16,17 @@ namespace Law_Firm_Management_System_API.Models
         {
         }
 
+        public virtual DbSet<Appointment> Appointments { get; set; } = null!;
+        public virtual DbSet<Case> Cases { get; set; } = null!;
+        public virtual DbSet<Client> Clients { get; set; } = null!;
+        public virtual DbSet<Document> Documents { get; set; } = null!;
+        public virtual DbSet<DocumentCategory> DocumentCategories { get; set; } = null!;
+        public virtual DbSet<Event> Events { get; set; } = null!;
         public virtual DbSet<Page> Pages { get; set; } = null!;
+        public virtual DbSet<Paralegal> Paralegals { get; set; } = null!;
         public virtual DbSet<RoleAccessPage> RoleAccessPages { get; set; } = null!;
+        public virtual DbSet<Task> Tasks { get; set; } = null!;
+        public virtual DbSet<TaskAssignment> TaskAssignments { get; set; } = null!;
         public virtual DbSet<User> Users { get; set; } = null!;
         public virtual DbSet<UserRole> UserRoles { get; set; } = null!;
 
@@ -32,6 +41,115 @@ namespace Law_Firm_Management_System_API.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Appointment>(entity =>
+            {
+                entity.ToTable("Appointment");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.AppointmentTime).HasColumnType("datetime");
+
+                entity.Property(e => e.Category).IsUnicode(false);
+
+                entity.Property(e => e.CreatedTime).HasColumnType("datetime");
+
+                entity.Property(e => e.UpdatedTime).HasColumnType("datetime");
+
+                entity.Property(e => e.UserId).HasColumnName("UserID");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.Appointments)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Appointment_User");
+            });
+
+            modelBuilder.Entity<Case>(entity =>
+            {
+                entity.ToTable("Case");
+
+                entity.Property(e => e.CreatedBy).HasMaxLength(100);
+
+                entity.Property(e => e.CreatedTime).HasColumnType("datetime");
+
+                entity.Property(e => e.Name).IsUnicode(false);
+
+                entity.Property(e => e.UpdatedBy).HasMaxLength(100);
+
+                entity.Property(e => e.UpdatedTime).HasColumnType("datetime");
+            });
+
+            modelBuilder.Entity<Client>(entity =>
+            {
+                entity.ToTable("Client");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.Email).HasMaxLength(256);
+
+                entity.Property(e => e.PhoneNumber).HasMaxLength(256);
+
+                entity.Property(e => e.UserId).HasColumnName("UserID");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.Clients)
+                    .HasForeignKey(d => d.UserId)
+                    .HasConstraintName("FK_Client_User");
+            });
+
+            modelBuilder.Entity<Document>(entity =>
+            {
+                entity.ToTable("Document");
+
+                entity.Property(e => e.CreatedBy).HasMaxLength(100);
+
+                entity.Property(e => e.CreatedDate).HasColumnType("datetime");
+
+                entity.Property(e => e.Name).IsUnicode(false);
+
+                entity.Property(e => e.Type)
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UpdatedBy).HasMaxLength(100);
+
+                entity.Property(e => e.UpdatedDate).HasColumnType("datetime");
+
+                entity.Property(e => e.Version)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.Category)
+                    .WithMany(p => p.Documents)
+                    .HasForeignKey(d => d.CategoryId)
+                    .HasConstraintName("FK_Document_DocumentCategory");
+            });
+
+            modelBuilder.Entity<DocumentCategory>(entity =>
+            {
+                entity.ToTable("DocumentCategory");
+
+                entity.Property(e => e.Name).IsUnicode(false);
+            });
+
+            modelBuilder.Entity<Event>(entity =>
+            {
+                entity.ToTable("Event");
+
+                entity.Property(e => e.CaseId).HasColumnName("CaseID");
+
+                entity.Property(e => e.CreatedTime).HasColumnType("datetime");
+
+                entity.Property(e => e.EventTime).HasColumnType("datetime");
+
+                entity.Property(e => e.Name).IsUnicode(false);
+
+                entity.HasOne(d => d.Case)
+                    .WithMany(p => p.Events)
+                    .HasForeignKey(d => d.CaseId)
+                    .HasConstraintName("FK_Event_Case");
+            });
+
             modelBuilder.Entity<Page>(entity =>
             {
                 entity.ToTable("Page");
@@ -41,6 +159,23 @@ namespace Law_Firm_Management_System_API.Models
                 entity.Property(e => e.Name)
                     .HasMaxLength(50)
                     .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<Paralegal>(entity =>
+            {
+                entity.ToTable("Paralegal");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.PhoneNumber).HasMaxLength(256);
+
+                entity.Property(e => e.UserId).HasColumnName("UserID");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.Paralegals)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Paralegal_User");
             });
 
             modelBuilder.Entity<RoleAccessPage>(entity =>
@@ -64,6 +199,40 @@ namespace Law_Firm_Management_System_API.Models
                     .HasForeignKey(d => d.UserRoleId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_RoleAccessPage_UserRole");
+            });
+
+            modelBuilder.Entity<Task>(entity =>
+            {
+                entity.ToTable("Task");
+
+                entity.Property(e => e.AssignedTime).HasColumnType("datetime");
+
+                entity.Property(e => e.CompletedTime).HasColumnType("datetime");
+
+                entity.Property(e => e.Name).IsUnicode(false);
+            });
+
+            modelBuilder.Entity<TaskAssignment>(entity =>
+            {
+                entity.ToTable("TaskAssignment");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.TaskId).HasColumnName("TaskID");
+
+                entity.Property(e => e.UserId).HasColumnName("UserID");
+
+                entity.HasOne(d => d.Task)
+                    .WithMany(p => p.TaskAssignments)
+                    .HasForeignKey(d => d.TaskId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_TaskAssignment_Task");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.TaskAssignments)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_TaskAssignment_User");
             });
 
             modelBuilder.Entity<User>(entity =>

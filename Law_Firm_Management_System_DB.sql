@@ -71,9 +71,150 @@ CREATE TABLE [dbo].[Appointment](
 	[UserID] [int] NOT NULL,
 	[Category] [varchar](max) NULL,
 	[AppointmentTime] [datetime] NULL,
-	[CreationTime] [datetime] NULL,
+	[CreatedTime] [datetime] NULL,
 	[UpdatedTime] [datetime] NULL,
+	[IsAccepted] [bit] NULL,
+	[IsPending] [bit] NULL,
  CONSTRAINT [PK_Appointment] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Case]    Script Date: 19/11/2023 3:16:00 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Case](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [varchar](max) NULL,
+	[CreatedBy] [nvarchar](100) NULL,
+	[UpdatedBy] [nvarchar](100) NULL,
+	[CreatedTime] [datetime] NULL,
+	[UpdatedTime] [datetime] NULL,
+ CONSTRAINT [PK_Case] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Task]    Script Date: 19/11/2023 3:27:00 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Task](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [varchar](max) NULL,
+	[AssignedTime] [datetime] NULL,
+	[CompletedTime] [datetime] NULL,
+ CONSTRAINT [PK_Task] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[TaskAssignment]    Script Date: 19/11/2023 3:31:00 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[TaskAssignment](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[UserID] [int] NOT NULL,
+	[TaskID] [int] NOT NULL,
+ CONSTRAINT [PK_TaskAssignment] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Event]    Script Date: 19/11/2023 3:37:00 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Event](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[CaseID] [int] NULL,
+	[Name] [varchar](max) NULL,
+	[CreatedTime] [datetime] NULL,
+	[EventTime] [datetime] NULL,
+	[IsCompleted] [bit] NULL,
+ CONSTRAINT [PK_Event] PRIMARY KEY CLUSTERED
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Document]    Script Date: 19/11/2023 3:53:00 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Document](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [varchar](max) NULL,
+	[Version] [varchar](50) NULL,
+	[CategoryId] [int] NULL,
+	[CreatedBy] [nvarchar](100) NULL,
+	[UpdatedBy] [nvarchar](100) NULL,
+	[CreatedDate] [datetime] NULL,
+	[UpdatedDate] [datetime] NULL,
+	[Attachment] [varbinary](max) NULL,
+	[Type] [varchar](10) NULL,
+	[IsArchived] [bit] NULL,
+ CONSTRAINT [PK_Document] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[DocumentCategory]    Script Date: 19/11/2023 3:53:00 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[DocumentCategory](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [varchar](max) NULL,
+ CONSTRAINT [PK_DocumentCategory] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Client]    Script Date: 19/11/2023 4:09:00 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Client](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[UserID] [int] NULL,
+	[FullName] [nvarchar](max) NOT NULL,
+	[PhoneNumber] [nvarchar](256) NULL,
+	[Email] [nvarchar](256) NULL,
+	[Address] [nvarchar](max) NULL,
+ CONSTRAINT [PK_Client] PRIMARY KEY CLUSTERED
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Paralegal]    Script Date: 19/11/2023 4:10:00 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Paralegal](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[UserID] [int] NOT NULL,
+	[FullName] [nvarchar](max) NOT NULL,
+	[PhoneNumber] [nvarchar](256) NULL,
+	[Address] [nvarchar](max) NULL,
+ CONSTRAINT [PK_Paralegal] PRIMARY KEY CLUSTERED
 (
 	[ID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
@@ -96,16 +237,69 @@ GO
 
 SET IDENTITY_INSERT [dbo].[Page] ON
 INSERT [dbo].[Page] ([ID], [Name]) VALUES (1, N'Dashboard')
-INSERT [dbo].[Page] ([ID], [Name]) VALUES (2, N'Sample Page')
+INSERT [dbo].[Page] ([ID], [Name]) VALUES (2, N'Appointments')
+INSERT [dbo].[Page] ([ID], [Name]) VALUES (3, N'Cases')
+INSERT [dbo].[Page] ([ID], [Name]) VALUES (4, N'Tasks')
+INSERT [dbo].[Page] ([ID], [Name]) VALUES (5, N'Events')
+INSERT [dbo].[Page] ([ID], [Name]) VALUES (6, N'Clients')
+INSERT [dbo].[Page] ([ID], [Name]) VALUES (7, N'Paralegals')
+INSERT [dbo].[Page] ([ID], [Name]) VALUES (8, N'User Settings')
+INSERT [dbo].[Page] ([ID], [Name]) VALUES (9, N'Firm Settings')
+INSERT [dbo].[Page] ([ID], [Name]) VALUES (10, N'Security')
+INSERT [dbo].[Page] ([ID], [Name]) VALUES (11, N'Help & Support')
 SET IDENTITY_INSERT [dbo].[Page] OFF
 GO
 
 SET IDENTITY_INSERT [dbo].[RoleAccessPage] ON
+/** Admin **/
 INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (1, 1, 1)
 INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (2, 1, 2)
-INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (3, 2, 1)
-INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (4, 3, 1)
+INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (3, 1, 3)
+INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (4, 1, 4)
+INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (5, 1, 5)
+INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (6, 1, 6)
+INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (7, 1, 7)
+INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (8, 1, 8)
+INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (9, 1, 9)
+INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (10, 1, 10)
+INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (11, 1, 11)
+/** Paralegal **/
+INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (12, 2, 1)
+INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (13, 2, 3)
+INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (14, 2, 4)
+INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (15, 2, 5)
+INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (16, 2, 6)
+INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (17, 2, 10)
+INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (18, 2, 11)
+/** Client **/
+INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (19, 3, 1)
+INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (20, 3, 2)
+INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (21, 3, 5)
+INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (22, 3, 10)
+INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (23, 3, 11)
 SET IDENTITY_INSERT [dbo].[RoleAccessPage] OFF
+GO
+
+SET IDENTITY_INSERT [dbo].[DocumentCategory] ON
+INSERT [dbo].[DocumentCategory] ([Id], [Name]) VALUES (1, N'Case Documents')
+INSERT [dbo].[DocumentCategory] ([Id], [Name]) VALUES (2, N'Client Documents')
+INSERT [dbo].[DocumentCategory] ([Id], [Name]) VALUES (3, N'Legal Research')
+INSERT [dbo].[DocumentCategory] ([Id], [Name]) VALUES (4, N'Contracts and Agreements')
+INSERT [dbo].[DocumentCategory] ([Id], [Name]) VALUES (5, N'Court Orders and Judgments')
+INSERT [dbo].[DocumentCategory] ([Id], [Name]) VALUES (6, N'Financial Documents')
+INSERT [dbo].[DocumentCategory] ([Id], [Name]) VALUES (7, N'Legal Forms')
+INSERT [dbo].[DocumentCategory] ([Id], [Name]) VALUES (8, N'Regulatory Compliance Documents')
+INSERT [dbo].[DocumentCategory] ([Id], [Name]) VALUES (9, N'Intellectual Property Documents')
+INSERT [dbo].[DocumentCategory] ([Id], [Name]) VALUES (10, N'Employee and HR Documents')
+INSERT [dbo].[DocumentCategory] ([Id], [Name]) VALUES (11, N'Insurance Documents')
+INSERT [dbo].[DocumentCategory] ([Id], [Name]) VALUES (12, N'Discovery Documents')
+INSERT [dbo].[DocumentCategory] ([Id], [Name]) VALUES (13, N'Notarial Documents')
+INSERT [dbo].[DocumentCategory] ([Id], [Name]) VALUES (14, N'Estate Planning Documents')
+INSERT [dbo].[DocumentCategory] ([Id], [Name]) VALUES (15, N'Real Estate Documents')
+INSERT [dbo].[DocumentCategory] ([Id], [Name]) VALUES (16, N'Correspondence')
+INSERT [dbo].[DocumentCategory] ([Id], [Name]) VALUES (17, N'Evidence and Exhibits')
+INSERT [dbo].[DocumentCategory] ([Id], [Name]) VALUES (18, N'Administrative Documents')
+SET IDENTITY_INSERT [dbo].[DocumentCategory] OFF
 GO
 
 ALTER TABLE [dbo].[User] WITH CHECK ADD CONSTRAINT [FK_User_UserRole] FOREIGN KEY([UserRoleID])
@@ -129,4 +323,40 @@ ALTER TABLE [dbo].[Appointment] WITH CHECK ADD CONSTRAINT [FK_Appointment_User] 
 REFERENCES [dbo].[User] ([ID])
 GO
 ALTER TABLE [dbo].[Appointment] CHECK CONSTRAINT [FK_Appointment_User]
+GO
+
+ALTER TABLE [dbo].[TaskAssignment] WITH CHECK ADD CONSTRAINT [FK_TaskAssignment_Task] FOREIGN KEY([TaskID])
+REFERENCES [dbo].[Task] ([ID])
+GO
+ALTER TABLE [dbo].[TaskAssignment] CHECK CONSTRAINT [FK_TaskAssignment_Task]
+GO
+ALTER TABLE [dbo].[TaskAssignment] WITH CHECK ADD CONSTRAINT [FK_TaskAssignment_User] FOREIGN KEY([UserID])
+REFERENCES [dbo].[User] ([ID])
+GO
+ALTER TABLE [dbo].[TaskAssignment] CHECK CONSTRAINT [FK_TaskAssignment_User]
+GO
+
+ALTER TABLE [dbo].[Event] WITH CHECK ADD CONSTRAINT [FK_Event_Case] FOREIGN KEY([CaseID])
+REFERENCES [dbo].[Case] ([ID])
+GO
+ALTER TABLE [dbo].[Event] CHECK CONSTRAINT [FK_Event_Case]
+GO
+
+ALTER TABLE [dbo].[Document]  WITH CHECK ADD  CONSTRAINT [FK_Document_DocumentCategory] FOREIGN KEY([CategoryId])
+REFERENCES [dbo].[DocumentCategory] ([Id])
+GO
+
+ALTER TABLE [dbo].[Document] CHECK CONSTRAINT [FK_Document_DocumentCategory]
+GO
+
+ALTER TABLE [dbo].[Client] WITH CHECK ADD CONSTRAINT [FK_Client_User] FOREIGN KEY([UserID])
+REFERENCES [dbo].[User] ([ID])
+GO
+ALTER TABLE [dbo].[Client] CHECK CONSTRAINT [FK_Client_User]
+GO
+
+ALTER TABLE [dbo].[Paralegal] WITH CHECK ADD CONSTRAINT [FK_Paralegal_User] FOREIGN KEY([UserID])
+REFERENCES [dbo].[User] ([ID])
+GO
+ALTER TABLE [dbo].[Paralegal] CHECK CONSTRAINT [FK_Paralegal_User]
 GO
