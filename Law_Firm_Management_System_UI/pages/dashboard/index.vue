@@ -1,19 +1,21 @@
 <template>
   <!-- Rightbar -->
   <v-navigation-drawer
-    class=""
+    elevation="0"
     location="right"
     width="300"
+    absolute
     permanent
-    :absolute="true"
   >
-    <perfect-scrollbar class="">
-      <!-- Announcements -->
-      <DashboardAnnouncement/>
-      <v-divider class="mx-7"/>
-      <!-- Events -->
-      <DashboardEvent/>
-    </perfect-scrollbar>
+    <el-scrollbar>
+      <div class="d-flex flex-column">
+        <!-- Announcements -->
+        <DashboardAnnouncement/>
+        <v-divider class="mx-7"/>
+        <!-- Events -->
+        <DashboardEvent/>
+      </div>
+    </el-scrollbar>
   </v-navigation-drawer>
   <!-- Dashboard Items -->
   <v-row>
@@ -37,7 +39,5 @@
 </template>
 
 <script setup>
+import { SpeakerphoneIcon } from 'vue-tabler-icons'
 </script>
-
-<style scoped lang="scss">
-</style>
