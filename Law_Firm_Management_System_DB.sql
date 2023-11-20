@@ -61,6 +61,39 @@ CREATE TABLE [dbo].[RoleAccessPage](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
+/****** Object:  Table [dbo].[Notification]    Script Date: 20/11/2023 9:22:00 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Notification](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[Title] [varchar](MAX) NOT NULL,
+	[Description] [varchar](MAX) NOT NULL,
+ CONSTRAINT [PK_Notification] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[UserNotification]    Script Date: 20/11/2023 9:25:00 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[UserNotification](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[UserID] [int] NOT NULL,
+	[NotificationID] [int] NULL,
+	[Title] [varchar](MAX) NULL,
+	[Description] [varchar](MAX) NULL,
+	[IsRead] [bit] NOT NULL,
+ CONSTRAINT [PK_UserNotification] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
 /****** Object:  Table [dbo].[Announcement]    Script Date: 19/11/2023 4:36:00 PM ******/
 SET ANSI_NULLS ON
 GO
@@ -294,6 +327,14 @@ INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (22, 3, 5)
 SET IDENTITY_INSERT [dbo].[RoleAccessPage] OFF
 GO
 
+SET IDENTITY_INSERT [dbo].[UserNotification] ON
+INSERT [dbo].[UserNotification] ([Id], [UserID], [NotificationID], [Title], [Description], [IsRead]) VALUES (1, 1, NULL, N'Title 1', N'This is notification 1.', 0)
+INSERT [dbo].[UserNotification] ([Id], [UserID], [NotificationID], [Title], [Description], [IsRead]) VALUES (2, 1, NULL, N'Title 2', N'This is notification 2.', 0)
+INSERT [dbo].[UserNotification] ([Id], [UserID], [NotificationID], [Title], [Description], [IsRead]) VALUES (3, 1, NULL, N'Title 3', N'This is notification 3.', 0)
+INSERT [dbo].[UserNotification] ([Id], [UserID], [NotificationID], [Title], [Description], [IsRead]) VALUES (4, 1, NULL, N'Title 4', N'This is notification 4.', 0)
+SET IDENTITY_INSERT [dbo].[UserNotification] OFF
+GO
+
 SET IDENTITY_INSERT [dbo].[Announcement] ON
 INSERT [dbo].[Announcement] ([Id], [Title], [Description], [CreatedTime]) VALUES (1, N'Milestone 1', N'Start preparing the documentation to detail your proposed application. In milestone 1, write about the proposed application, the type of users involved, and the functionalities of the application. You may prepare your own format of document that is professionally written.', CAST(N'2023-11-15T10:54:11.157' AS DateTime))
 INSERT [dbo].[Announcement] ([Id], [Title], [Description], [CreatedTime]) VALUES (2, N'Milestone 2', N'Continue your report with: Identify users and draw user diagram (1); Identify the contents of your web application. Draw content diagram (1); Identify the interaction/functionality in your web application; Use use case (1) and sequence diagram (4/5 figures-each functionality) and show the interactions and functionality involved', CAST(N'2023-11-17T10:54:11.157' AS DateTime))
@@ -338,6 +379,17 @@ ALTER TABLE [dbo].[RoleAccessPage] WITH CHECK ADD CONSTRAINT [FK_RoleAccessPage_
 REFERENCES [dbo].[UserRole] ([ID])
 GO
 ALTER TABLE [dbo].[RoleAccessPage] CHECK CONSTRAINT [FK_RoleAccessPage_UserRole]
+GO
+
+ALTER TABLE [dbo].[UserNotification] WITH CHECK ADD CONSTRAINT [FK_UserNotification_User] FOREIGN KEY([UserID])
+REFERENCES [dbo].[User] ([ID])
+GO
+ALTER TABLE [dbo].[UserNotification] CHECK CONSTRAINT [FK_UserNotification_User]
+GO
+ALTER TABLE [dbo].[UserNotification] WITH CHECK ADD CONSTRAINT [FK_UserNotification_Notification] FOREIGN KEY([NotificationID])
+REFERENCES [dbo].[Notification] ([ID])
+GO
+ALTER TABLE [dbo].[UserNotification] CHECK CONSTRAINT [FK_UserNotification_Notification]
 GO
 
 ALTER TABLE [dbo].[Appointment] WITH CHECK ADD CONSTRAINT [FK_Appointment_User] FOREIGN KEY([UserID])

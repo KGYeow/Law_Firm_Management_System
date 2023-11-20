@@ -16,7 +16,7 @@ namespace Law_Firm_Management_System_API.Controllers
         [Route("Announcement")]
         public IActionResult GetAnnouncement()
         {
-            var l = context.Announcements.ToList();
+            var l = context.Announcements.OrderByDescending(a => a.Id).ToList();
             return Ok(l);
         }
     }

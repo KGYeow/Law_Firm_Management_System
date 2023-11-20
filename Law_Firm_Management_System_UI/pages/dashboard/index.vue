@@ -39,5 +39,4 @@
 </template>
 
 <script setup>
-import { SpeakerphoneIcon } from 'vue-tabler-icons'
 </script>

@@ -17,7 +17,7 @@
               {{ announcement.title }}
             </v-card-title>
             <v-card-subtitle style="font-size: smaller;">
-              {{ announcement.createdTime }}
+              {{ dayjs(announcement.createdTime).format("D MMM YYYY, h:mm A") }}
             </v-card-subtitle>
           </v-card-item>
           <v-card-text class="p-0 pt-2">
@@ -31,6 +31,7 @@
 
 <script setup>
 import { CalendarEventIcon } from 'vue-tabler-icons';
+import dayjs from 'dayjs';
 
 // Data
 const item = fetchData.$get("/Dashboard/Announcement").data

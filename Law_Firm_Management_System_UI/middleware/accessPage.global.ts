@@ -18,7 +18,7 @@ export default defineNuxtRouteMiddleware(async(to, from) => {
   // If user is authenticated user
   if (status.value == "authenticated") {
     // Restricted and unrestricted access page list (Not from sidebar)
-    if (to.path == "/profile") return
+    if (to.path.match("/profile")) return
 
     // Restricted and unrestricted access page list (From sidebar)
     // Get the user's access page list

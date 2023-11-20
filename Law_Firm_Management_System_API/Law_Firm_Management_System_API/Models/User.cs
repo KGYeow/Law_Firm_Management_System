@@ -11,6 +11,7 @@ namespace Law_Firm_Management_System_API.Models
             Clients = new HashSet<Client>();
             Paralegals = new HashSet<Paralegal>();
             TaskAssignments = new HashSet<TaskAssignment>();
+            UserNotifications = new HashSet<UserNotification>();
         }
 
         public int Id { get; set; }
@@ -25,5 +26,6 @@ namespace Law_Firm_Management_System_API.Models
         public virtual ICollection<Client> Clients { get; set; }
         public virtual ICollection<Paralegal> Paralegals { get; set; }
         public virtual ICollection<TaskAssignment> TaskAssignments { get; set; }
+        public virtual ICollection<UserNotification> UserNotifications { get; set; }
     }
 }

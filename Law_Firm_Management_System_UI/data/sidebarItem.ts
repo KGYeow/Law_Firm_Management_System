@@ -50,7 +50,7 @@ const sidebarItem: menu[] = [
   },
   {
     title: "Documents",
-    icon: tablerIcon.FileIcon,
+    icon: tablerIcon.FileDescriptionIcon,
     to: "/documents",
     auth: true,
   },

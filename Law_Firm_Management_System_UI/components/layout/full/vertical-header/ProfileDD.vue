@@ -1,12 +1,9 @@
 <template>
-  <!-- ---------------------------------------------- -->
-  <!-- notifications DD -->
-  <!-- ---------------------------------------------- -->
   <v-menu :close-on-content-click="false">
     <template v-slot:activator="{ props }">
       <v-btn class="profileBtn custom-hover-primary" variant="text" v-bind="props" icon>
         <v-avatar size="35">
-          <img src="/images/users/avatar-1.jpg" height="35" alt="user" />
+          <img src="/images/users/avatar.jpg" height="35" alt="user" />
         </v-avatar>
       </v-btn>
     </template>
@@ -18,17 +15,11 @@
           </template>
           <v-list-item-title class="pl-4 text-body-1">My Profile</v-list-item-title>
         </v-list-item>
-        <v-list-item value="item2" color="primary">
+        <v-list-item value="item2" color="primary" to="/profile/notification-log">
           <template v-slot:prepend>
-            <MailIcon stroke-width="1.5" size="20"/>
+            <HistoryIcon stroke-width="1.5" size="20"/>
           </template>
-          <v-list-item-title  class="pl-4 text-body-1">My Account</v-list-item-title>
-        </v-list-item>
-        <v-list-item value="item3" color="primary"> 
-          <template v-slot:prepend>
-            <ListCheckIcon stroke-width="1.5"  size="20"/>
-          </template>
-          <v-list-item-title class="pl-4 text-body-1">My Task</v-list-item-title>
+          <v-list-item-title  class="pl-4 text-body-1">Notification Log</v-list-item-title>
         </v-list-item>
       </v-list>
       <div class="pt-4 pb-4 px-5 text-center">
@@ -39,8 +30,6 @@
 </template>
 
 <script setup>
-import { UserIcon, MailIcon, ListCheckIcon } from 'vue-tabler-icons';
-
 // Data
 const { signOut } = useAuth()
 
