@@ -82,12 +82,6 @@ const sidebarItem: menu[] = [
         to: "/configuration/user-settings",
         auth: true,
       },
-      {
-        title: "Security",
-        icon: tablerIcon.ShieldLockIcon,
-        to: "/configuration/security",
-        auth: true,
-      },
     ]
   },
   {

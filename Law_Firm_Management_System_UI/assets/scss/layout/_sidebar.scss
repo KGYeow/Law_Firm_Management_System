@@ -1,23 +1,24 @@
 /*This is for the logo*/
 .leftSidebar {
-    box-shadow: none !important;
-    border-right: 1px solid rgb(var(--v-theme-borderColor));
+  box-shadow: none !important;
+  border-right: 1px solid rgb(var(--v-theme-borderColor));
+  background-color: rgb(251, 250, 255);
 
-    .logo {
-        padding-left: 0px;
+  .logo {
+    padding-left: 0px;
 
-        img, svg {
-            height: $sidebar-logo-height;
-        }
+    img, svg {
+      height: $sidebar-logo-height;
     }
+  }
 
-    .mini-icon {
-        display: none;
-    }
+  .mini-icon {
+    display: none;
+  }
 
-    .mini-text {
-        display: block;
-    }
+  .mini-text {
+    display: block;
+  }
 }
 
 /*This is for the Vertical sidebar*/

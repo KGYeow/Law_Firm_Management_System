@@ -1,10 +1,14 @@
 <template>
-  <UiParentCard title="Announcement" :icon="SpeakerphoneIcon">
-    <div class="pa-7 pt-1 text-body-1">
+  <div>
+    <h5 class="text-h5 mb-6 pl-7 pt-7 d-flex align-center">
+      <LayoutFullVerticalSidebarIcon class="me-3" :item="SpeakerphoneIcon"/>
+      Announcements
+    </h5>
+    <div class="pa-7 py-1 text-body-1">
       <v-card
         class="mb-3 p-3"
         v-for="announcement in item"
-        color="rgb(149, 180, 204, 0.15)"
+        color="rgb(243, 244, 248)"
       >
         <v-card-item class="p-0">
           <v-card-title class="fs-6 fw-bold">
@@ -19,15 +23,14 @@
         </v-card-text>
       </v-card>
     </div>
-  </UiParentCard>
+  </div>
 </template>
 
 <script setup>
-import { SpeakerphoneIcon } from 'vue-tabler-icons';
-import UiParentCard from '@/components/shared/UiParentCard.vue';
+import { SpeakerphoneIcon } from 'vue-tabler-icons'
 
 // Props
-const props = defineProps({ item: Object });
+const props = defineProps({ item: Object })
 
 // Data
 const item = fetchData.$get("/Dashboard/Announcement").data
