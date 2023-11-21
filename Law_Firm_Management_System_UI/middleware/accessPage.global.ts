@@ -1,18 +1,7 @@
 import sidebarItems from '@/data/sidebarItem'
 
-const isAuthorizedRecursive = (menuItems: any, path: any) => {
-  return menuItems.some((item: any) => {
-    if (item.to === path) {
-      return true
-    }
-    if (item.children) {
-      return isAuthorizedRecursive(item.children, path)
-    }
-    return false
-  })
-}
-
 export default defineNuxtRouteMiddleware(async(to, from) => {
+  const baseURL = useRuntimeConfig().public.baseURL
   const { data: user, status } = useAuth()
   
   // If user is authenticated user
@@ -21,16 +10,12 @@ export default defineNuxtRouteMiddleware(async(to, from) => {
     if (to.path.match("/profile")) return
 
     // Restricted and unrestricted access page list (From sidebar)
-    // Get the user's access page list
-    const userAccessPageList = await useFetch(`https://localhost:7248/api/Page/AccessPageList/${user.value?.id}`)
-    const accessList = userAccessPageList.data.value as string[]
-
     // Filter the sidebar menu based on the user's access
-    const sidebarMenu = shallowRef(sidebarItems)
-    const filteredSidebarMenu = sidebarMenu.value.filter(item => accessList.includes(item.title as string) || item.auth == null)
+    const accessList = await useFetch(`${baseURL}/Page/AccessPageList/${user.value?.id}`)
+    const filteredSidebarMenu = filterSidebarItems(accessList.data.value, sidebarItems)
 
     // Check if the user is authorized to access the requested page
-    const isAuthorized = isAuthorizedRecursive(filteredSidebarMenu, to.path)
+    const isAuthorized = checkAuthorization(filteredSidebarMenu, to.path)
 
     // Redirect to the dashboard if not authorized
     if (!isAuthorized) {
@@ -38,3 +23,46 @@ export default defineNuxtRouteMiddleware(async(to, from) => {
     }
   }
 })
+
+const filterSidebarItems = (accessPages: any, menuItems: any) => {
+  return menuItems.filter((item: any) => {
+		if (item.header) {
+			return true; // Include header
+		}
+    if (item.to && accessPages.includes(item.title)) {
+      return true; // Include parent item if it's accessible
+    }
+		else if (item.children) {
+      const filteredChildren = filterSidebarItems(accessPages, item.children);
+      if (filteredChildren.length > 0) {
+				item.children = filteredChildren; // Update parent item's children with filtered children
+        return true; // Include parent item if any child is accessible
+      } else {
+        return false; // Exclude parent item if no child is accessible
+      }
+    }
+		else {
+      return false; // Exclude item if it's not a header, parent, or has children
+    }
+  }).filter((item: any, index: any) => {
+		if (item.header != null) {
+			const nextItem = menuItems[index + 1];
+			if (!nextItem || !nextItem.title) {
+				return false; // Exclude header that does not followed by item 
+			}
+		}
+		return true;
+	})
+}
+
+const checkAuthorization = (menuItems: any, path: any) => {
+  return menuItems.some((item: any) => {
+    if (item.to === path) {
+      return true
+    }
+    if (item.children) {
+      return checkAuthorization(item.children, path)
+    }
+    return false
+  })
+}

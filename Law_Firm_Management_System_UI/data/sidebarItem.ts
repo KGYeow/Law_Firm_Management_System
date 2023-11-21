@@ -90,27 +90,6 @@ const sidebarItem: menu[] = [
     to: "/legal-information",
     auth: true,
   },
-  { header: "Sample" },
-  {
-    title: "Sample Page",
-    icon: tablerIcon.ApertureIcon,
-    to: "/sample",
-  },
-  {
-    title: "Typography",
-    icon: tablerIcon.TypographyIcon,
-    to: "/sample/typography"
-  },
-  {
-    title: "Shadow",
-    icon: tablerIcon.CopyIcon,
-    to: "/sample/shadow"
-  },
-  {
-    title: "Icons",
-    icon: tablerIcon.MoodHappyIcon,
-    to: "/sample/icons"
-  },
 ];
 
 export default sidebarItem;

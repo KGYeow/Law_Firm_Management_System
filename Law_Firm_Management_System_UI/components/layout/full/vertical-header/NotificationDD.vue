@@ -7,7 +7,7 @@
           color="primary"
           offset-x="-5"
           offset-y="-3"
-          v-if="notifications"
+          v-if="hasNotifications"
         >
           <BellRingingIcon stroke-width="1.5" size="22" />
         </v-badge>
@@ -23,8 +23,8 @@
               class="ms-1"
               variant="flat"
               color="primary"
-              density="comfortable"
-              style="font-size: small;"
+              density="compact"
+              style="font-size: x-small;"
               v-if="notifications"
             >
               {{ notifications.length }}
@@ -33,16 +33,21 @@
         </v-card-item>
         <v-divider class="m-0"/>
         <v-card-text class="p-0">
-          <el-scrollbar height="200px">
-            <v-list class="py-0">
-              <v-list-item v-for="item in notifications">
-                <v-alert variant="outlined">
-                  <v-alert-title class="fs-6 fw-bold">{{ item.title }}</v-alert-title>
+          <el-scrollbar height="200px" v-if="hasNotifications">
+            <v-list class="pt-0 pb-3">
+              <v-list-item
+                class="p-0 px-3"
+                v-for="item in notifications"
+              >
+                <v-alert class="p-2">
+                  <v-alert-title class="fw-bold" style="font-size: small;">{{ item.title }}</v-alert-title>
                   <span style="font-size: smaller;">{{ item.description }}</span>
                 </v-alert>
+                <v-divider class="m-0"/>
               </v-list-item>
             </v-list>
           </el-scrollbar>
+          <div class="p-3 text-center" style="font-size: smaller;" v-else>No notifications.</div>
         </v-card-text>
       </v-card>
     </v-sheet>
@@ -55,4 +60,5 @@ import { BellRingingIcon } from 'vue-tabler-icons';
 // Data
 const { data: user } = useAuth()
 const notifications = fetchData.$get(`/Notification/UserNotifications/${user.value?.id}`).data
+const hasNotifications = computed(() => notifications.value?.length > 0)
 </script>

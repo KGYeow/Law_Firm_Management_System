@@ -16,7 +16,7 @@
 			<el-scrollbar class="scrollnavbar">
 				<v-list class="pa-6 pt-0">
 					<!---Menu Loop -->
-					<template v-for="(item, i) in fullyFilteredSidebarMenu">
+					<template v-for="(item, i) in filteredSidebarMenu">
 						<!---Item Header -->
 						<LayoutFullVerticalSidebarNavHeader :item="item" v-if="item.header" :key="item.title"/>
 						<!---Single Item-->
@@ -50,20 +50,41 @@
 
 <script setup>
 import sidebarItems from '@/data/sidebarItem';
-import { Menu2Icon } from 'vue-tabler-icons';
 
 // Data
 const sDrawer = ref(true);
-const sidebarMenu = shallowRef(sidebarItems);
 const accessList = await fetchData.$get(`/Page/AccessPageList/${useAuth().data.value.id}`)
-const filteredSidebarMenu = sidebarMenu.value.filter(item => accessList.data.value.includes(item.title) || item.header != null || item.auth == null)
-const fullyFilteredSidebarMenu = filteredSidebarMenu.filter((item, index) => {
-  if (item.header != null) {
-    const nextItem = filteredSidebarMenu[index + 1];
-    if (nextItem == null || nextItem.title == null) {
-      return false;
+const filteredSidebarMenu = filterSidebarItems(accessList.data.value, sidebarItems)
+
+// Functions
+function filterSidebarItems(accessPages, menuItems) {
+  return menuItems.filter(item => {
+		if (item.header) {
+			return true; // Include header
+		}
+    if (item.to && accessPages.includes(item.title)) {
+      return true; // Include parent item if it's accessible
     }
-  }
-  return true;
-})
+		else if (item.children) {
+      const filteredChildren = filterSidebarItems(accessPages, item.children);
+      if (filteredChildren.length > 0) {
+				item.children = filteredChildren; // Update parent item's children with filtered children
+        return true; // Include parent item if any child is accessible
+      } else {
+        return false; // Exclude parent item if no child is accessible
+      }
+    }
+		else {
+      return false; // Exclude item if it's not a header, parent, or has children
+    }
+  }).filter((item, index) => {
+		if (item.header != null) {
+			const nextItem = menuItems[index + 1];
+			if (!nextItem || !nextItem.title) {
+				return false; // Exclude header that does not followed by item 
+			}
+		}
+		return true;
+	})
+}
 </script>
