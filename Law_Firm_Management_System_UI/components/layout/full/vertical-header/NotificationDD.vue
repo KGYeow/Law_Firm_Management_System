@@ -14,22 +14,42 @@
         <BellRingingIcon stroke-width="1.5" size="22" v-else/>
       </v-btn>
     </template>
-    <v-sheet rounded="md" width="300" elevation="10" class="mt-2">
-      <el-scrollbar height="200px">
-        <v-list class="py-0">
-          <v-list-item v-for="item in notifications">
-            <v-alert variant="outlined">
-              <v-alert-title class="fs-6 fw-bold">{{ item.title }}</v-alert-title>
-              <span style="font-size: smaller;">{{ item.description }}</span>
-            </v-alert>
-          </v-list-item>
-        </v-list>
-      </el-scrollbar>
+    <v-sheet rounded="md" width="300" elevation="10" class="mt-2" :border="true">
+      <v-card>
+        <v-card-item class="px-3 py-2" style="background-color: rgb(243, 244, 248);">
+          <v-card-title class="d-flex align-center fs-6 fw-bold">
+            Notifications
+            <v-chip
+              class="ms-1"
+              variant="flat"
+              color="primary"
+              density="comfortable"
+              style="font-size: small;"
+              v-if="notifications"
+            >
+              {{ notifications.length }}
+            </v-chip>
+          </v-card-title>
+        </v-card-item>
+        <v-divider class="m-0"/>
+        <v-card-text class="p-0">
+          <el-scrollbar height="200px">
+            <v-list class="py-0">
+              <v-list-item v-for="item in notifications">
+                <v-alert variant="outlined">
+                  <v-alert-title class="fs-6 fw-bold">{{ item.title }}</v-alert-title>
+                  <span style="font-size: smaller;">{{ item.description }}</span>
+                </v-alert>
+              </v-list-item>
+            </v-list>
+          </el-scrollbar>
+        </v-card-text>
+      </v-card>
     </v-sheet>
   </v-menu>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { BellRingingIcon } from 'vue-tabler-icons';
 
 // Data

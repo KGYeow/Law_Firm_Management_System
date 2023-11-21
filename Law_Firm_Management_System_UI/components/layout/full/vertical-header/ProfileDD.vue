@@ -7,7 +7,7 @@
         </v-avatar>
       </v-btn>
     </template>
-    <v-sheet rounded="md" width="200" elevation="10" class="mt-2">
+    <v-sheet rounded="md" width="200" elevation="10" class="mt-2" :border="true">
       <v-list class="py-0" lines="one" density="compact">
         <v-list-item value="item1" color="primary" to="/profile">
           <template v-slot:prepend>
