@@ -30,6 +30,7 @@ namespace Law_Firm_Management_System_API.Models
         public virtual DbSet<Task> Tasks { get; set; } = null!;
         public virtual DbSet<TaskAssignment> TaskAssignments { get; set; } = null!;
         public virtual DbSet<User> Users { get; set; } = null!;
+        public virtual DbSet<UserCaseInvolvement> UserCaseInvolvements { get; set; } = null!;
         public virtual DbSet<UserNotification> UserNotifications { get; set; } = null!;
         public virtual DbSet<UserRole> UserRoles { get; set; } = null!;
 
@@ -69,6 +70,10 @@ namespace Law_Firm_Management_System_API.Models
 
                 entity.Property(e => e.CreatedTime).HasColumnType("datetime");
 
+                entity.Property(e => e.Status)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.UpdatedTime).HasColumnType("datetime");
 
                 entity.Property(e => e.UserId).HasColumnName("UserID");
@@ -84,7 +89,7 @@ namespace Law_Firm_Management_System_API.Models
             {
                 entity.ToTable("Case");
 
-                entity.Property(e => e.CreatedBy).HasMaxLength(100);
+                entity.Property(e => e.ClosedTime).HasColumnType("datetime");
 
                 entity.Property(e => e.CreatedTime).HasColumnType("datetime");
 
@@ -134,6 +139,11 @@ namespace Law_Firm_Management_System_API.Models
                 entity.Property(e => e.Version)
                     .HasMaxLength(50)
                     .IsUnicode(false);
+
+                entity.HasOne(d => d.Case)
+                    .WithMany(p => p.Documents)
+                    .HasForeignKey(d => d.CaseId)
+                    .HasConstraintName("FK_Document_Case");
 
                 entity.HasOne(d => d.Category)
                     .WithMany(p => p.Documents)
@@ -280,6 +290,29 @@ namespace Law_Firm_Management_System_API.Models
                     .WithMany(p => p.Users)
                     .HasForeignKey(d => d.UserRoleId)
                     .HasConstraintName("FK_User_UserRole");
+            });
+
+            modelBuilder.Entity<UserCaseInvolvement>(entity =>
+            {
+                entity.ToTable("UserCaseInvolvement");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.CaseId).HasColumnName("CaseID");
+
+                entity.Property(e => e.UserId).HasColumnName("UserID");
+
+                entity.HasOne(d => d.Case)
+                    .WithMany(p => p.UserCaseInvolvements)
+                    .HasForeignKey(d => d.CaseId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_UserCaseInvolvement_Case");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.UserCaseInvolvements)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_UserCaseInvolvement_User");
             });
 
             modelBuilder.Entity<UserNotification>(entity =>

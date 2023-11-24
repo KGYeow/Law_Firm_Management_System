@@ -20,6 +20,12 @@ export default defineNuxtConfig({
   css: [
     '@/assets/scss/config/custom/main.scss',
   ],
+
+  // devServer: https://nuxt.com/docs/api/nuxt-config#devserver
+  devServer: {
+    host: '0.0.0.0',
+    port: 3000,
+  },
   
   // modules: https://nuxt.com/docs/api/configuration/nuxt-config#modules
   modules: [

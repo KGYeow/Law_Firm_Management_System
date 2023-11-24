@@ -11,8 +11,7 @@ namespace Law_Firm_Management_System_API.Models
         public DateTime? AppointmentTime { get; set; }
         public DateTime? CreatedTime { get; set; }
         public DateTime? UpdatedTime { get; set; }
-        public bool? IsAccepted { get; set; }
-        public bool? IsPending { get; set; }
+        public string? Status { get; set; }
 
         public virtual User User { get; set; } = null!;
     }

@@ -122,8 +122,7 @@ CREATE TABLE [dbo].[Appointment](
 	[AppointmentTime] [datetime] NULL,
 	[CreatedTime] [datetime] NULL,
 	[UpdatedTime] [datetime] NULL,
-	[IsAccepted] [bit] NULL,
-	[IsPending] [bit] NULL,
+	[Status] [varchar](100) NULL,
  CONSTRAINT [PK_Appointment] PRIMARY KEY CLUSTERED 
 (
 	[ID] ASC
@@ -138,15 +137,30 @@ GO
 CREATE TABLE [dbo].[Case](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[Name] [varchar](max) NULL,
-	[CreatedBy] [nvarchar](100) NULL,
 	[UpdatedBy] [nvarchar](100) NULL,
 	[CreatedTime] [datetime] NULL,
 	[UpdatedTime] [datetime] NULL,
+	[ClosedTime] [datetime] NULL,
  CONSTRAINT [PK_Case] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[UserCaseInvolvement]    Script Date: 24/11/2023 11:16:00 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[UserCaseInvolvement](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[UserID] [int] NOT NULL,
+	[CaseID] [int] NOT NULL,
+ CONSTRAINT [PK_UserCaseInvolvement] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
 GO
 /****** Object:  Table [dbo].[Task]    Script Date: 19/11/2023 3:27:00 PM ******/
 SET ANSI_NULLS ON
@@ -158,6 +172,7 @@ CREATE TABLE [dbo].[Task](
 	[Name] [varchar](max) NULL,
 	[AssignedTime] [datetime] NULL,
 	[CompletedTime] [datetime] NULL,
+	[InProgress] [bit] NULL,
  CONSTRAINT [PK_Task] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
@@ -204,9 +219,10 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Document](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[CategoryId] [int] NULL,
+	[CaseId] [int] NULL,
 	[Name] [varchar](max) NULL,
 	[Version] [varchar](50) NULL,
-	[CategoryId] [int] NULL,
 	[CreatedBy] [nvarchar](100) NULL,
 	[UpdatedBy] [nvarchar](100) NULL,
 	[CreatedDate] [datetime] NULL,
@@ -246,6 +262,7 @@ CREATE TABLE [dbo].[Client](
 	[PhoneNumber] [nvarchar](256) NULL,
 	[Email] [nvarchar](256) NULL,
 	[Address] [nvarchar](max) NULL,
+	[HasAccount] [bit] NULL,
  CONSTRAINT [PK_Client] PRIMARY KEY CLUSTERED
 (
 	[ID] ASC
@@ -263,6 +280,7 @@ CREATE TABLE [dbo].[Paralegal](
 	[FullName] [nvarchar](max) NOT NULL,
 	[PhoneNumber] [nvarchar](256) NULL,
 	[Address] [nvarchar](max) NULL,
+	[IsActive] [bit] NULL,
  CONSTRAINT [PK_Paralegal] PRIMARY KEY CLUSTERED
 (
 	[ID] ASC
@@ -398,6 +416,17 @@ GO
 ALTER TABLE [dbo].[Appointment] CHECK CONSTRAINT [FK_Appointment_User]
 GO
 
+ALTER TABLE [dbo].[UserCaseInvolvement] WITH CHECK ADD CONSTRAINT [FK_UserCaseInvolvement_Case] FOREIGN KEY([CaseID])
+REFERENCES [dbo].[Case] ([ID])
+GO
+ALTER TABLE [dbo].[UserCaseInvolvement] CHECK CONSTRAINT [FK_UserCaseInvolvement_Case]
+GO
+ALTER TABLE [dbo].[UserCaseInvolvement] WITH CHECK ADD CONSTRAINT [FK_UserCaseInvolvement_User] FOREIGN KEY([UserID])
+REFERENCES [dbo].[User] ([ID])
+GO
+ALTER TABLE [dbo].[UserCaseInvolvement] CHECK CONSTRAINT [FK_UserCaseInvolvement_User]
+GO
+
 ALTER TABLE [dbo].[TaskAssignment] WITH CHECK ADD CONSTRAINT [FK_TaskAssignment_Task] FOREIGN KEY([TaskID])
 REFERENCES [dbo].[Task] ([ID])
 GO
@@ -418,8 +447,13 @@ GO
 ALTER TABLE [dbo].[Document]  WITH CHECK ADD  CONSTRAINT [FK_Document_DocumentCategory] FOREIGN KEY([CategoryId])
 REFERENCES [dbo].[DocumentCategory] ([Id])
 GO
-
 ALTER TABLE [dbo].[Document] CHECK CONSTRAINT [FK_Document_DocumentCategory]
+GO
+
+ALTER TABLE [dbo].[Document]  WITH CHECK ADD  CONSTRAINT [FK_Document_Case] FOREIGN KEY([CaseId])
+REFERENCES [dbo].[Case] ([Id])
+GO
+ALTER TABLE [dbo].[Document] CHECK CONSTRAINT [FK_Document_Case]
 GO
 
 ALTER TABLE [dbo].[Client] WITH CHECK ADD CONSTRAINT [FK_Client_User] FOREIGN KEY([UserID])

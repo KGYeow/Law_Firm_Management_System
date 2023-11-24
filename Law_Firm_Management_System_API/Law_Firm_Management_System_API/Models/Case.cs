@@ -7,16 +7,20 @@ namespace Law_Firm_Management_System_API.Models
     {
         public Case()
         {
+            Documents = new HashSet<Document>();
             Events = new HashSet<Event>();
+            UserCaseInvolvements = new HashSet<UserCaseInvolvement>();
         }
 
         public int Id { get; set; }
         public string? Name { get; set; }
-        public string? CreatedBy { get; set; }
         public string? UpdatedBy { get; set; }
         public DateTime? CreatedTime { get; set; }
         public DateTime? UpdatedTime { get; set; }
+        public DateTime? ClosedTime { get; set; }
 
+        public virtual ICollection<Document> Documents { get; set; }
         public virtual ICollection<Event> Events { get; set; }
+        public virtual ICollection<UserCaseInvolvement> UserCaseInvolvements { get; set; }
     }
 }
