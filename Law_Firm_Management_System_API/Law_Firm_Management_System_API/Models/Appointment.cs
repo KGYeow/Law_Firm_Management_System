@@ -9,7 +9,7 @@ namespace Law_Firm_Management_System_API.Models
         public int UserId { get; set; }
         public string? Category { get; set; }
         public DateTime? AppointmentTime { get; set; }
-        public DateTime? CreatedTime { get; set; }
+        public DateTime CreatedTime { get; set; }
         public DateTime? UpdatedTime { get; set; }
         public string? Status { get; set; }
 

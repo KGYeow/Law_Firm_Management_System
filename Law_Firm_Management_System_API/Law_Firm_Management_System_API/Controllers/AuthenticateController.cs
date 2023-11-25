@@ -103,5 +103,12 @@ namespace RnD_Traceability_System_API
             var user = userService.GetUser(User);
             return Ok(user);
         }
+
+/*        [HttpGet]
+        [Route("GenerateEncryptedPassword")]
+        public IActionResult GenerateEncryptedPassword(string password)
+        {
+            return Ok(AppStatic.Encrypt(password));
+        }*/
     }
 }

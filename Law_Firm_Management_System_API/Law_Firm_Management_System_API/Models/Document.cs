@@ -9,7 +9,6 @@ namespace Law_Firm_Management_System_API.Models
         public int? CategoryId { get; set; }
         public int? CaseId { get; set; }
         public string? Name { get; set; }
-        public string? Version { get; set; }
         public string? CreatedBy { get; set; }
         public string? UpdatedBy { get; set; }
         public DateTime? CreatedDate { get; set; }

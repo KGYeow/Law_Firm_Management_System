@@ -120,7 +120,7 @@ CREATE TABLE [dbo].[Appointment](
 	[UserID] [int] NOT NULL,
 	[Category] [varchar](max) NULL,
 	[AppointmentTime] [datetime] NULL,
-	[CreatedTime] [datetime] NULL,
+	[CreatedTime] [datetime] NOT NULL,
 	[UpdatedTime] [datetime] NULL,
 	[Status] [varchar](100) NULL,
  CONSTRAINT [PK_Appointment] PRIMARY KEY CLUSTERED 
@@ -222,7 +222,6 @@ CREATE TABLE [dbo].[Document](
 	[CategoryId] [int] NULL,
 	[CaseId] [int] NULL,
 	[Name] [varchar](max) NULL,
-	[Version] [varchar](50) NULL,
 	[CreatedBy] [nvarchar](100) NULL,
 	[UpdatedBy] [nvarchar](100) NULL,
 	[CreatedDate] [datetime] NULL,
@@ -279,6 +278,7 @@ CREATE TABLE [dbo].[Paralegal](
 	[UserID] [int] NOT NULL,
 	[FullName] [nvarchar](max) NOT NULL,
 	[PhoneNumber] [nvarchar](256) NULL,
+	[Email] [nvarchar](256) NULL,
 	[Address] [nvarchar](max) NULL,
 	[IsActive] [bit] NULL,
  CONSTRAINT [PK_Paralegal] PRIMARY KEY CLUSTERED
@@ -292,6 +292,18 @@ SET IDENTITY_INSERT [dbo].[User] ON
 INSERT [dbo].[User] ([ID], [UserRoleID], [FullName], [Username], [Email], [Password]) VALUES (1, 1, N'Admin', N'admin', N'admin@gmail.com', N'33354741122871651676713774147412831195')
 INSERT [dbo].[User] ([ID], [UserRoleID], [FullName], [Username], [Email], [Password]) VALUES (2, 2, N'Paralegal', N'paralegal', N'paralegal@gmail.com', N'89137941131780581697199247420039101219')
 INSERT [dbo].[User] ([ID], [UserRoleID], [FullName], [Username], [Email], [Password]) VALUES (3, 3, N'Client', N'client', N'client@gmail.com', N'98961428173194154141109188151842308924137')
+INSERT [dbo].[User] ([ID], [UserRoleID], [FullName], [Username], [Email], [Password]) VALUES (4, 3, N'Kaedehara Kazuha', N'kaedeharakazuha', N'kaedeharakazuha@gmail.com', N'1698229722215936261825011619413220617112')
+INSERT [dbo].[User] ([ID], [UserRoleID], [FullName], [Username], [Email], [Password]) VALUES (5, 3, N'Zhongli', N'zhongli', N'zhongli@gmail.com', N'160230839085551011691861531893924893237115')
+INSERT [dbo].[User] ([ID], [UserRoleID], [FullName], [Username], [Email], [Password]) VALUES (6, 3, N'Eula', N'eula', N'eula@gmail.com', N'1401131841402441261731401620461320023622254')
+INSERT [dbo].[User] ([ID], [UserRoleID], [FullName], [Username], [Email], [Password]) VALUES (7, 3, N'Nahida', N'nahida', N'nahida@gmail.com', N'1602187344681455415123073156876889172')
+INSERT [dbo].[User] ([ID], [UserRoleID], [FullName], [Username], [Email], [Password]) VALUES (8, 3, N'Venti', N'venti', N'venti@gmail.com', N'17699147227128127110140841261138315010621071')
+INSERT [dbo].[User] ([ID], [UserRoleID], [FullName], [Username], [Email], [Password]) VALUES (9, 3, N'Raiden Ei', N'raidenei', N'raidenei@gmail.com', N'107135552716210199193165434580186180116203')
+INSERT [dbo].[User] ([ID], [UserRoleID], [FullName], [Username], [Email], [Password]) VALUES (10, 3, N'Furina', N'furina', N'furina@gmail.com', N'881562001651901052256918214722090894819320')
+INSERT [dbo].[User] ([ID], [UserRoleID], [FullName], [Username], [Email], [Password]) VALUES (11, 3, N'Yelan', N'yelan', N'yelan@gmail.com', N'622011094815217810815163472101785479182184')
+INSERT [dbo].[User] ([ID], [UserRoleID], [FullName], [Username], [Email], [Password]) VALUES (12, 3, N'Cyno', N'cyno', N'cyno@gmail.com', N'3125514245153154221163672511941482102111671')
+INSERT [dbo].[User] ([ID], [UserRoleID], [FullName], [Username], [Email], [Password]) VALUES (13, 3, N'Kamisato Ayaka', N'kamisatoayaka', N'kamisatoayaka@gmail.com', N'10302252491371331381971833523518207176203124')
+INSERT [dbo].[User] ([ID], [UserRoleID], [FullName], [Username], [Email], [Password]) VALUES (14, 3, N'Kamisato Ayato', N'kamisatoayato', N'kamisatoayato@gmail.com', N'971751295718011822825314925166148162210223228')
+INSERT [dbo].[User] ([ID], [UserRoleID], [FullName], [Username], [Email], [Password]) VALUES (15, 3, N'Yae Miko', N'yaemiko', N'yaemiko@gmail.com', N'14124282371541311961724013872009619218100')
 SET IDENTITY_INSERT [dbo].[User] OFF
 GO
 
@@ -358,6 +370,19 @@ INSERT [dbo].[Announcement] ([Id], [Title], [Description], [CreatedTime]) VALUES
 INSERT [dbo].[Announcement] ([Id], [Title], [Description], [CreatedTime]) VALUES (2, N'Milestone 2', N'Continue your report with: Identify users and draw user diagram (1); Identify the contents of your web application. Draw content diagram (1); Identify the interaction/functionality in your web application; Use use case (1) and sequence diagram (4/5 figures-each functionality) and show the interactions and functionality involved', CAST(N'2023-11-17T10:54:11.157' AS DateTime))
 INSERT [dbo].[Announcement] ([Id], [Title], [Description], [CreatedTime]) VALUES (3, N'Test 1 Date', N'Please take note of the Test 1 Date on the 28th November 2023 at 9am. Venue will be announced soon.', CAST(N'2023-11-19T10:54:11.157' AS DateTime))
 SET IDENTITY_INSERT [dbo].[Announcement] OFF
+GO
+
+SET IDENTITY_INSERT [dbo].[Appointment] ON
+INSERT [dbo].[Appointment] ([Id], [UserID], [Category], [AppointmentTime], [CreatedTime], [UpdatedTime], [Status]) VALUES (1, 4, N'Initial Consultation', CAST(N'2023-11-15T10:54:11.157' AS DateTime), CAST(N'2023-11-03T10:54:11.157' AS DateTime), NULL, N'Pending')
+INSERT [dbo].[Appointment] ([Id], [UserID], [Category], [AppointmentTime], [CreatedTime], [UpdatedTime], [Status]) VALUES (2, 5, N'Initial Consultation', CAST(N'2023-11-23T10:54:11.157' AS DateTime), CAST(N'2023-11-05T10:54:11.157' AS DateTime), NULL, N'Pending')
+INSERT [dbo].[Appointment] ([Id], [UserID], [Category], [AppointmentTime], [CreatedTime], [UpdatedTime], [Status]) VALUES (3, 6, N'Initial Consultation', CAST(N'2023-11-08T10:54:11.157' AS DateTime), CAST(N'2023-11-08T10:54:11.157' AS DateTime), NULL, N'Pending')
+INSERT [dbo].[Appointment] ([Id], [UserID], [Category], [AppointmentTime], [CreatedTime], [UpdatedTime], [Status]) VALUES (4, 7, N'Initial Consultation', CAST(N'2023-11-09T10:54:11.157' AS DateTime), CAST(N'2023-11-08T10:54:11.157' AS DateTime), NULL, N'Pending')
+INSERT [dbo].[Appointment] ([Id], [UserID], [Category], [AppointmentTime], [CreatedTime], [UpdatedTime], [Status]) VALUES (5, 8, N'Initial Consultation', CAST(N'2023-12-01T10:54:11.157' AS DateTime), CAST(N'2023-11-15T10:54:11.157' AS DateTime), NULL, N'Pending')
+INSERT [dbo].[Appointment] ([Id], [UserID], [Category], [AppointmentTime], [CreatedTime], [UpdatedTime], [Status]) VALUES (6, 9, N'Initial Consultation', CAST(N'2023-11-20T10:54:11.157' AS DateTime), CAST(N'2023-11-17T10:54:11.157' AS DateTime), NULL, N'Pending')
+INSERT [dbo].[Appointment] ([Id], [UserID], [Category], [AppointmentTime], [CreatedTime], [UpdatedTime], [Status]) VALUES (7, 10, N'Initial Consultation', CAST(N'2023-11-30T10:54:11.157' AS DateTime), CAST(N'2023-11-17T10:54:11.157' AS DateTime), NULL, N'Pending')
+INSERT [dbo].[Appointment] ([Id], [UserID], [Category], [AppointmentTime], [CreatedTime], [UpdatedTime], [Status]) VALUES (8, 11, N'Initial Consultation', CAST(N'2023-11-23T10:54:11.157' AS DateTime), CAST(N'2023-11-22T10:54:11.157' AS DateTime), NULL, N'Pending')
+INSERT [dbo].[Appointment] ([Id], [UserID], [Category], [AppointmentTime], [CreatedTime], [UpdatedTime], [Status]) VALUES (9, 12, N'Initial Consultation', CAST(N'2023-11-25T10:54:11.157' AS DateTime), CAST(N'2023-11-24T10:54:11.157' AS DateTime), NULL, N'Pending')
+SET IDENTITY_INSERT [dbo].[Appointment] OFF
 GO
 
 SET IDENTITY_INSERT [dbo].[DocumentCategory] ON

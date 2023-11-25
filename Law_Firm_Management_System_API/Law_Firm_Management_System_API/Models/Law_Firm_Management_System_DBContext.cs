@@ -136,10 +136,6 @@ namespace Law_Firm_Management_System_API.Models
 
                 entity.Property(e => e.UpdatedDate).HasColumnType("datetime");
 
-                entity.Property(e => e.Version)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
                 entity.HasOne(d => d.Case)
                     .WithMany(p => p.Documents)
                     .HasForeignKey(d => d.CaseId)
@@ -203,6 +199,8 @@ namespace Law_Firm_Management_System_API.Models
                 entity.ToTable("Paralegal");
 
                 entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.Email).HasMaxLength(256);
 
                 entity.Property(e => e.PhoneNumber).HasMaxLength(256);
 
