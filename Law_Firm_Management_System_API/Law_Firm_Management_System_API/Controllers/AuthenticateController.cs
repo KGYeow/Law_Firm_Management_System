@@ -10,6 +10,8 @@ using Law_Firm_Management_System_API.Dto.Authentication;
 using Law_Firm_Management_System_API.Authentication;
 using Law_Firm_Management_System_API.Models;
 using Law_Firm_Management_System_API;
+using System.Data.Entity;
+using System.Data;
 
 namespace RnD_Traceability_System_API
 {
@@ -101,7 +103,9 @@ namespace RnD_Traceability_System_API
         public IActionResult Me()
         {
             var user = userService.GetUser(User);
-            return Ok(user);
+            var userRole = context.UserRoles.FirstOrDefault(a => a.Id == user.UserRoleId);
+            var userRoleName = userRole != null ? userRole.Name : string.Empty;
+            return Ok(new { id = user.Id, username = user.Username, password = user.Password, fullName = user.FullName, email = user.Email, role = userRoleName });
         }
 
 /*        [HttpGet]
