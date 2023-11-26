@@ -68,13 +68,9 @@ namespace Law_Firm_Management_System_API.Models
 
                 entity.Property(e => e.Category).IsUnicode(false);
 
-                entity.Property(e => e.CreatedTime).HasColumnType("datetime");
-
                 entity.Property(e => e.Status)
                     .HasMaxLength(100)
                     .IsUnicode(false);
-
-                entity.Property(e => e.UpdatedTime).HasColumnType("datetime");
 
                 entity.Property(e => e.UserId).HasColumnName("UserID");
 

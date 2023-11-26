@@ -92,6 +92,3 @@ const editUserCancel = () => {
   editUserDetails.value.email = user.value.email
 }
 </script>
-
-<style scoped lang="scss">
-</style>
