@@ -25,11 +25,11 @@ export default defineNuxtRouteMiddleware(async(to, from) => {
 })
 
 const filterSidebarItems = (accessPages: any, menuItems: any) => {
-  return menuItems.filter((item: any) => {
+  const temp = menuItems.filter((item: any) => {
 		if (item.header) {
 			return true; // Include header
 		}
-    if (item.to && accessPages.includes(item.title)) {
+    if (item.to && (!item.auth || accessPages.includes(item.title))) {
       return true; // Include parent item if it's accessible
     }
 		else if (item.children) {
@@ -44,9 +44,10 @@ const filterSidebarItems = (accessPages: any, menuItems: any) => {
 		else {
       return false; // Exclude item if it's not a header, parent, or has children
     }
-  }).filter((item: any, index: any) => {
+  })
+  return temp.filter((item: any, index: any) => {
 		if (item.header != null) {
-			const nextItem = menuItems[index + 1];
+			const nextItem = temp[index + 1];
 			if (!nextItem || !nextItem.title) {
 				return false; // Exclude header that does not followed by item 
 			}

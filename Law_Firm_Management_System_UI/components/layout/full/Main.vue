@@ -58,33 +58,34 @@ const filteredSidebarMenu = filterSidebarItems(accessList.data.value, sidebarIte
 
 // Functions
 function filterSidebarItems(accessPages, menuItems) {
-  return menuItems.filter(item => {
+  const temp = menuItems.filter(item => {
 		if (item.header) {
 			return true; // Include header
 		}
-    if (item.to && accessPages.includes(item.title)) {
-      return true; // Include parent item if it's accessible
+    if (item.to && (!item.auth || accessPages.includes(item.title))) {
+      return true // Include parent item if it's accessible
     }
 		else if (item.children) {
-      const filteredChildren = filterSidebarItems(accessPages, item.children);
+      const filteredChildren = filterSidebarItems(accessPages, item.children)
       if (filteredChildren.length > 0) {
-				item.children = filteredChildren; // Update parent item's children with filtered children
-        return true; // Include parent item if any child is accessible
+				item.children = filteredChildren // Update parent item's children with filtered children
+        return true // Include parent item if any child is accessible
       } else {
-        return false; // Exclude parent item if no child is accessible
+        return false // Exclude parent item if no child is accessible
       }
     }
 		else {
-      return false; // Exclude item if it's not a header, parent, or has children
+      return false // Exclude item if it's not a header, parent, or has children
     }
-  }).filter((item, index) => {
-		if (item.header != null) {
-			const nextItem = menuItems[index + 1];
+  })
+  return temp.filter((item, index) => {
+		if (item.header) {
+			const nextItem = temp[index + 1]
 			if (!nextItem || !nextItem.title) {
-				return false; // Exclude header that does not followed by item 
+				return false // Exclude header that does not followed by item 
 			}
 		}
-		return true;
+		return true
 	})
 }
 </script>

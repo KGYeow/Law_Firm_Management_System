@@ -6,7 +6,7 @@ export default defineNuxtConfig({
   app: {
     // Global page headers: https://nuxt.com/docs/api/configuration/nuxt-config#head
     head: {
-      title: 'CaseCraft - Law Firm Management System',
+      title: 'CaseCraft',
       htmlAttrs: { lang: 'en' },
       meta: [
         { charset: 'utf-8' },

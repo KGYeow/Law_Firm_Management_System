@@ -274,9 +274,7 @@ GO
 CREATE TABLE [dbo].[Paralegal](
 	[ID] [int] IDENTITY(1,1) NOT NULL,
 	[UserID] [int] NOT NULL,
-	[FullName] [nvarchar](max) NOT NULL,
 	[PhoneNumber] [nvarchar](256) NULL,
-	[Email] [nvarchar](256) NULL,
 	[Address] [nvarchar](max) NULL,
 	[IsActive] [bit] NULL,
  CONSTRAINT [PK_Paralegal] PRIMARY KEY CLUSTERED
