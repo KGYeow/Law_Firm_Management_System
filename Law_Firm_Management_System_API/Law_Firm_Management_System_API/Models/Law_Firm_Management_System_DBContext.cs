@@ -26,6 +26,7 @@ namespace Law_Firm_Management_System_API.Models
         public virtual DbSet<Notification> Notifications { get; set; } = null!;
         public virtual DbSet<Page> Pages { get; set; } = null!;
         public virtual DbSet<Paralegal> Paralegals { get; set; } = null!;
+        public virtual DbSet<Partner> Partners { get; set; } = null!;
         public virtual DbSet<RoleAccessPage> RoleAccessPages { get; set; } = null!;
         public virtual DbSet<Task> Tasks { get; set; } = null!;
         public virtual DbSet<TaskAssignment> TaskAssignments { get; set; } = null!;
@@ -68,17 +69,25 @@ namespace Law_Firm_Management_System_API.Models
 
                 entity.Property(e => e.Category).IsUnicode(false);
 
+                entity.Property(e => e.ClientId).HasColumnName("ClientID");
+
+                entity.Property(e => e.PartnerId).HasColumnName("PartnerID");
+
                 entity.Property(e => e.Status)
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
-                entity.Property(e => e.UserId).HasColumnName("UserID");
-
-                entity.HasOne(d => d.User)
+                entity.HasOne(d => d.Client)
                     .WithMany(p => p.Appointments)
-                    .HasForeignKey(d => d.UserId)
+                    .HasForeignKey(d => d.ClientId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Appointment_User");
+                    .HasConstraintName("FK_Appointment_Client");
+
+                entity.HasOne(d => d.Partner)
+                    .WithMany(p => p.Appointments)
+                    .HasForeignKey(d => d.PartnerId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Appointment_Partner");
             });
 
             modelBuilder.Entity<Case>(entity =>
@@ -196,8 +205,6 @@ namespace Law_Firm_Management_System_API.Models
 
                 entity.Property(e => e.Id).HasColumnName("ID");
 
-                entity.Property(e => e.Email).HasMaxLength(256);
-
                 entity.Property(e => e.PhoneNumber).HasMaxLength(256);
 
                 entity.Property(e => e.UserId).HasColumnName("UserID");
@@ -207,6 +214,30 @@ namespace Law_Firm_Management_System_API.Models
                     .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Paralegal_User");
+            });
+
+            modelBuilder.Entity<Partner>(entity =>
+            {
+                entity.ToTable("Partner");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.ParalegalId).HasColumnName("ParalegalID");
+
+                entity.Property(e => e.PhoneNumber).HasMaxLength(256);
+
+                entity.Property(e => e.UserId).HasColumnName("UserID");
+
+                entity.HasOne(d => d.Paralegal)
+                    .WithMany(p => p.Partners)
+                    .HasForeignKey(d => d.ParalegalId)
+                    .HasConstraintName("FK_Partner_Paralegal");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.Partners)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Partner_User");
             });
 
             modelBuilder.Entity<RoleAccessPage>(entity =>

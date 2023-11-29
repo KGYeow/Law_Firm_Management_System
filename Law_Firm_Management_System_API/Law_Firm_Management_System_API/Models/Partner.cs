@@ -3,22 +3,21 @@ using System.Collections.Generic;
 
 namespace Law_Firm_Management_System_API.Models
 {
-    public partial class Client
+    public partial class Partner
     {
-        public Client()
+        public Partner()
         {
             Appointments = new HashSet<Appointment>();
         }
 
         public int Id { get; set; }
-        public int? UserId { get; set; }
-        public string FullName { get; set; } = null!;
+        public int UserId { get; set; }
+        public int? ParalegalId { get; set; }
         public string? PhoneNumber { get; set; }
-        public string? Email { get; set; }
         public string? Address { get; set; }
-        public bool? HasAccount { get; set; }
 
-        public virtual User? User { get; set; }
+        public virtual Paralegal? Paralegal { get; set; }
+        public virtual User User { get; set; } = null!;
         public virtual ICollection<Appointment> Appointments { get; set; }
     }
 }

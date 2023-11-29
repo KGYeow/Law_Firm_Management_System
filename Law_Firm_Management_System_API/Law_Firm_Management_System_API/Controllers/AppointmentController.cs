@@ -1,7 +1,7 @@
 ﻿using Law_Firm_Management_System_API.Models;
 using Law_Firm_Management_System_API.Service;
 using Microsoft.AspNetCore.Mvc;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 
 namespace Law_Firm_Management_System_API.Controllers
 {
@@ -14,7 +14,7 @@ namespace Law_Firm_Management_System_API.Controllers
         }
 
         [HttpGet]
-        [Route("ClientAppointment")]
+        [Route("")]
         public IActionResult GetAppointment()
         {
             var l = context.Appointments.Include(a => a.User).OrderByDescending(a => a.Id).ToList()

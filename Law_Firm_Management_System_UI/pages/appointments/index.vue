@@ -13,11 +13,11 @@
               {{ dayjs(item.appointmentTime).format("DD MMM YYYY, hh:mm A") }}
             </template>
             <template v-slot:item.actions>
-              <v-btn icon="mdi-eye-outline" size="small" color="#68058d" variant="text" class="me-1"/>
-              <v-btn icon="mdi-archive-outline" size="small" color="#68058d" variant="text"/>
+              <v-btn icon="mdi-check" size="small" color="#68058d" variant="text" class="me-1"/>
+              <v-btn icon="mdi-close" size="small" color="#68058d" variant="text"/>
             </template>
             <template v-slot:bottom>
-              <div class="d-flex justify-content-center pt-2">
+              <div class="d-flex justify-content-end pt-2">
                 <el-pagination
                   layout="total, prev, pager, next"
                   v-model:current-page="currentPage"
@@ -43,14 +43,14 @@ const currentPage = ref(1)
 const itemsPerPage = ref(10)
 const headers = ref([
   { key: "id", title: "No." },
-  { key: "userId", title: "User ID" },
   { key: "fullName", title: "Full Name" },
   { key: "category", title: "Category" },
   { key: "appointmentTime" , title: "Appointment Time" },
   { key: "status" , title: "Status" },
   { key: "actions", title: "Actions", sortable: false }
 ])
-const appointmentList = await fetchData.$get("/Appointment/ClientAppointment")
+const appointmentList = await fetchData.$get("/Appointment")
+console.log(appointmentList.data.value)
 
 // Head
 useHead({

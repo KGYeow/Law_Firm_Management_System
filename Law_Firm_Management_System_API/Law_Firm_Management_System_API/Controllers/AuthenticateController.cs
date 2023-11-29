@@ -108,11 +108,11 @@ namespace RnD_Traceability_System_API
             return Ok(new { id = user.Id, username = user.Username, password = user.Password, fullName = user.FullName, email = user.Email, role = userRoleName });
         }
 
-/*        [HttpGet]
+        [HttpGet]
         [Route("GenerateEncryptedPassword")]
         public IActionResult GenerateEncryptedPassword(string password)
         {
             return Ok(AppStatic.Encrypt(password));
-        }*/
+        }
     }
 }

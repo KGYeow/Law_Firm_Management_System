@@ -117,7 +117,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Appointment](
 	[ID] [int] IDENTITY(1,1) NOT NULL,
-	[UserID] [int] NOT NULL,
+	[ClientID] [int] NOT NULL,
+	[PartnerID] [int] NOT NULL,
 	[Category] [varchar](max) NULL,
 	[AppointmentTime] [datetime] NULL,
 	[Status] [varchar](100) NULL,
@@ -283,9 +284,26 @@ CREATE TABLE [dbo].[Paralegal](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
+/****** Object:  Table [dbo].[Partner]    Script Date: 29/11/2023 6:18:00 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Partner](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[UserID] [int] NOT NULL,
+	[ParalegalID] [int] NULL,
+	[PhoneNumber] [nvarchar](256) NULL,
+	[Address] [nvarchar](max) NULL,
+ CONSTRAINT [PK_Partner] PRIMARY KEY CLUSTERED
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
 
 SET IDENTITY_INSERT [dbo].[User] ON
-INSERT [dbo].[User] ([ID], [UserRoleID], [FullName], [Username], [Email], [Password]) VALUES (1, 1, N'Admin', N'admin', N'admin@gmail.com', N'33354741122871651676713774147412831195')
+INSERT [dbo].[User] ([ID], [UserRoleID], [FullName], [Username], [Email], [Password]) VALUES (1, 1, N'Partner', N'partner', N'partner@gmail.com', N'1168411515814412785149174972167513371245116')
 INSERT [dbo].[User] ([ID], [UserRoleID], [FullName], [Username], [Email], [Password]) VALUES (2, 2, N'Paralegal', N'paralegal', N'paralegal@gmail.com', N'89137941131780581697199247420039101219')
 INSERT [dbo].[User] ([ID], [UserRoleID], [FullName], [Username], [Email], [Password]) VALUES (3, 3, N'Client', N'client', N'client@gmail.com', N'98961428173194154141109188151842308924137')
 INSERT [dbo].[User] ([ID], [UserRoleID], [FullName], [Username], [Email], [Password]) VALUES (4, 3, N'Kaedehara Kazuha', N'kaedeharakazuha', N'kaedeharakazuha@gmail.com', N'1698229722215936261825011619413220617112')
@@ -300,12 +318,18 @@ INSERT [dbo].[User] ([ID], [UserRoleID], [FullName], [Username], [Email], [Passw
 INSERT [dbo].[User] ([ID], [UserRoleID], [FullName], [Username], [Email], [Password]) VALUES (13, 3, N'Kamisato Ayaka', N'kamisatoayaka', N'kamisatoayaka@gmail.com', N'10302252491371331381971833523518207176203124')
 INSERT [dbo].[User] ([ID], [UserRoleID], [FullName], [Username], [Email], [Password]) VALUES (14, 3, N'Kamisato Ayato', N'kamisatoayato', N'kamisatoayato@gmail.com', N'971751295718011822825314925166148162210223228')
 INSERT [dbo].[User] ([ID], [UserRoleID], [FullName], [Username], [Email], [Password]) VALUES (15, 3, N'Yae Miko', N'yaemiko', N'yaemiko@gmail.com', N'14124282371541311961724013872009619218100')
+INSERT [dbo].[User] ([ID], [UserRoleID], [FullName], [Username], [Email], [Password]) VALUES (16, 2, N'Yanfei', N'yanfei', N'yanfei@gmail.com', N'10812554593111297225504418545781096242')
+INSERT [dbo].[User] ([ID], [UserRoleID], [FullName], [Username], [Email], [Password]) VALUES (17, 1, N'Sangonomiya Kokomi', N'sangonomiyakokomi', N'sangonomiyakokomi@gmail.com', N'231367268801502362213214126112115194240144')
+INSERT [dbo].[User] ([ID], [UserRoleID], [FullName], [Username], [Email], [Password]) VALUES (18, 1, N'Neuvillette', N'neuvillette', N'neuvillette@gmail.com', N'10169119360185239137213194719522160242186')
+INSERT [dbo].[User] ([ID], [UserRoleID], [FullName], [Username], [Email], [Password]) VALUES (19, 2, N'Navia', N'navia', N'navia@gmail.com', N'199210190154140229241542024021514513556177193')
+INSERT [dbo].[User] ([ID], [UserRoleID], [FullName], [Username], [Email], [Password]) VALUES (20, 2, N'Clorinde', N'clorinde', N'clorinde@gmail.com', N'179170115257585241115441481492411931746055')
+INSERT [dbo].[User] ([ID], [UserRoleID], [FullName], [Username], [Email], [Password]) VALUES (21, 2, N'Gorou', N'gorou', N'gorou@gmail.com', N'145228208160331994022912622921219011880213')
 SET IDENTITY_INSERT [dbo].[User] OFF
 GO
 
 SET IDENTITY_INSERT [dbo].[UserRole] ON
-INSERT [dbo].[UserRole] ([ID], [Name]) VALUES (1, N'Admin')
-INSERT [dbo].[UserRole] ([ID], [Name]) VALUES (2, N'Paralegal')
+INSERT [dbo].[UserRole] ([ID], [Name]) VALUES (1, N'Admin/Partner')
+INSERT [dbo].[UserRole] ([ID], [Name]) VALUES (2, N'Staff/Paralegal')
 INSERT [dbo].[UserRole] ([ID], [Name]) VALUES (3, N'Client')
 SET IDENTITY_INSERT [dbo].[UserRole] OFF
 GO
@@ -369,15 +393,15 @@ SET IDENTITY_INSERT [dbo].[Announcement] OFF
 GO
 
 SET IDENTITY_INSERT [dbo].[Appointment] ON
-INSERT [dbo].[Appointment] ([Id], [UserID], [Category], [AppointmentTime], [Status]) VALUES (1, 4, N'Initial Consultation', CAST(N'2023-11-15T10:54:11.157' AS DateTime), N'Pending')
-INSERT [dbo].[Appointment] ([Id], [UserID], [Category], [AppointmentTime], [Status]) VALUES (2, 5, N'Initial Consultation', CAST(N'2023-11-23T10:54:11.157' AS DateTime), N'Pending')
-INSERT [dbo].[Appointment] ([Id], [UserID], [Category], [AppointmentTime], [Status]) VALUES (3, 6, N'Legal Advice Appointment:', CAST(N'2023-11-08T10:54:11.157' AS DateTime), N'Pending')
-INSERT [dbo].[Appointment] ([Id], [UserID], [Category], [AppointmentTime], [Status]) VALUES (4, 7, N'Initial Consultation', CAST(N'2023-11-09T10:54:11.157' AS DateTime), N'Pending')
-INSERT [dbo].[Appointment] ([Id], [UserID], [Category], [AppointmentTime], [Status]) VALUES (5, 8, N'Legal Advice Appointment:', CAST(N'2023-12-01T10:54:11.157' AS DateTime), N'Pending')
-INSERT [dbo].[Appointment] ([Id], [UserID], [Category], [AppointmentTime], [Status]) VALUES (6, 9, N'Legal Advice Appointment:', CAST(N'2023-11-20T10:54:11.157' AS DateTime), N'Pending')
-INSERT [dbo].[Appointment] ([Id], [UserID], [Category], [AppointmentTime], [Status]) VALUES (7, 10, N'Initial Consultation', CAST(N'2023-11-30T10:54:11.157' AS DateTime), N'Pending')
-INSERT [dbo].[Appointment] ([Id], [UserID], [Category], [AppointmentTime], [Status]) VALUES (8, 11, N'Legal Advice Appointment:', CAST(N'2023-11-23T10:54:11.157' AS DateTime), N'Pending')
-INSERT [dbo].[Appointment] ([Id], [UserID], [Category], [AppointmentTime], [Status]) VALUES (9, 12, N'Initial Consultation', CAST(N'2023-11-25T10:54:11.157' AS DateTime), N'Pending')
+INSERT [dbo].[Appointment] ([Id], [ClientID], [PartnerID], [Category], [AppointmentTime], [Status]) VALUES (1, 1, 2, N'Initial Consultation', CAST(N'2023-11-15T10:54:11.157' AS DateTime), N'Pending')
+INSERT [dbo].[Appointment] ([Id], [ClientID], [PartnerID], [Category], [AppointmentTime], [Status]) VALUES (2, 2, 2, N'Initial Consultation', CAST(N'2023-11-23T10:54:11.157' AS DateTime), N'Pending')
+INSERT [dbo].[Appointment] ([Id], [ClientID], [PartnerID], [Category], [AppointmentTime], [Status]) VALUES (3, 3, 2, N'Legal Advice Appointment:', CAST(N'2023-11-08T10:54:11.157' AS DateTime), N'Pending')
+INSERT [dbo].[Appointment] ([Id], [ClientID], [PartnerID], [Category], [AppointmentTime], [Status]) VALUES (4, 4, 2, N'Initial Consultation', CAST(N'2023-11-09T10:54:11.157' AS DateTime), N'Pending')
+INSERT [dbo].[Appointment] ([Id], [ClientID], [PartnerID], [Category], [AppointmentTime], [Status]) VALUES (5, 5, 2, N'Legal Advice Appointment:', CAST(N'2023-12-01T10:54:11.157' AS DateTime), N'Pending')
+INSERT [dbo].[Appointment] ([Id], [ClientID], [PartnerID], [Category], [AppointmentTime], [Status]) VALUES (6, 6, 2, N'Legal Advice Appointment:', CAST(N'2023-11-20T10:54:11.157' AS DateTime), N'Pending')
+INSERT [dbo].[Appointment] ([Id], [ClientID], [PartnerID], [Category], [AppointmentTime], [Status]) VALUES (7, 7, 2, N'Initial Consultation', CAST(N'2023-11-30T10:54:11.157' AS DateTime), N'Pending')
+INSERT [dbo].[Appointment] ([Id], [ClientID], [PartnerID], [Category], [AppointmentTime], [Status]) VALUES (8, 8, 2, N'Legal Advice Appointment:', CAST(N'2023-11-23T10:54:11.157' AS DateTime), N'Pending')
+INSERT [dbo].[Appointment] ([Id], [ClientID], [PartnerID], [Category], [AppointmentTime], [Status]) VALUES (9, 9, 2, N'Initial Consultation', CAST(N'2023-11-25T10:54:11.157' AS DateTime), N'Pending')
 SET IDENTITY_INSERT [dbo].[Appointment] OFF
 GO
 
@@ -401,6 +425,38 @@ INSERT [dbo].[DocumentCategory] ([Id], [Name]) VALUES (16, N'Correspondence')
 INSERT [dbo].[DocumentCategory] ([Id], [Name]) VALUES (17, N'Evidence and Exhibits')
 INSERT [dbo].[DocumentCategory] ([Id], [Name]) VALUES (18, N'Administrative Documents')
 SET IDENTITY_INSERT [dbo].[DocumentCategory] OFF
+GO
+
+SET IDENTITY_INSERT [dbo].[Client] ON
+INSERT [dbo].[Client] ([Id], [UserID], [FullName], [PhoneNumber], [Email], [Address], [HasAccount]) VALUES (1, 3, N'Client', null, N'client@gmail.com', N'Client Address', 1)
+INSERT [dbo].[Client] ([Id], [UserID], [FullName], [PhoneNumber], [Email], [Address], [HasAccount]) VALUES (2, 4, N'Kaedehara Kazuha', null, N'kaedeharakazuha@gmail.com', N'Inazuma', 1)
+INSERT [dbo].[Client] ([Id], [UserID], [FullName], [PhoneNumber], [Email], [Address], [HasAccount]) VALUES (3, 5, N'Zhongli', null, N'zhongli@gmail.com', N'Liyue', 1)
+INSERT [dbo].[Client] ([Id], [UserID], [FullName], [PhoneNumber], [Email], [Address], [HasAccount]) VALUES (4, 6, N'Eula', null, N'eula@gmail.com', N'Mondstadt', 1)
+INSERT [dbo].[Client] ([Id], [UserID], [FullName], [PhoneNumber], [Email], [Address], [HasAccount]) VALUES (5, 7, N'Nahida', null, N'nahida@gmail.com', N'Sumeru', 1)
+INSERT [dbo].[Client] ([Id], [UserID], [FullName], [PhoneNumber], [Email], [Address], [HasAccount]) VALUES (6, 8, N'Venti', null, N'venti@gmail.com', N'Mondstadt', 1)
+INSERT [dbo].[Client] ([Id], [UserID], [FullName], [PhoneNumber], [Email], [Address], [HasAccount]) VALUES (7, 9, N'Raiden Ei', null, N'raidenei@gmail.com', N'Inazuma', 1)
+INSERT [dbo].[Client] ([Id], [UserID], [FullName], [PhoneNumber], [Email], [Address], [HasAccount]) VALUES (8, 10, N'Furina', null, N'furina@gmail.com', N'Fontaine', 1)
+INSERT [dbo].[Client] ([Id], [UserID], [FullName], [PhoneNumber], [Email], [Address], [HasAccount]) VALUES (9, 11, N'Yelan', null, N'yelan@gmail.com', N'Liyue', 1)
+INSERT [dbo].[Client] ([Id], [UserID], [FullName], [PhoneNumber], [Email], [Address], [HasAccount]) VALUES (10, 12, N'Cyno', null, N'cyno@gmail.com', N'Sumeru', 1)
+INSERT [dbo].[Client] ([Id], [UserID], [FullName], [PhoneNumber], [Email], [Address], [HasAccount]) VALUES (11, 13, N'Kamisato Ayaka', null, N'kamisatoayaka@gmail.com', N'Inazuma', 1)
+INSERT [dbo].[Client] ([Id], [UserID], [FullName], [PhoneNumber], [Email], [Address], [HasAccount]) VALUES (12, 14, N'Kamisato Ayato', null, N'kamisatoayato@gmail.com', N'Inazuma', 1)
+INSERT [dbo].[Client] ([Id], [UserID], [FullName], [PhoneNumber], [Email], [Address], [HasAccount]) VALUES (13, 15, N'Yae Miko', null, N'yaemiko@gmail.com', N'Inazuma', 1)
+SET IDENTITY_INSERT [dbo].[Client] OFF
+GO
+
+SET IDENTITY_INSERT [dbo].[Paralegal] ON
+INSERT [dbo].[Paralegal] ([Id], [UserID], [PhoneNumber], [Address], [IsActive]) VALUES (1, 2, null, N'Paralegal Address', 1)
+INSERT [dbo].[Paralegal] ([Id], [UserID], [PhoneNumber], [Address], [IsActive]) VALUES (2, 16, null, N'Liyue', 1)
+INSERT [dbo].[Paralegal] ([Id], [UserID], [PhoneNumber], [Address], [IsActive]) VALUES (3, 19, null, N'Fontaine', 1)
+INSERT [dbo].[Paralegal] ([Id], [UserID], [PhoneNumber], [Address], [IsActive]) VALUES (4, 20, null, N'Fontaine', 0)
+SET IDENTITY_INSERT [dbo].[Paralegal] OFF
+GO
+
+SET IDENTITY_INSERT [dbo].[Partner] ON
+INSERT [dbo].[Partner] ([Id], [UserID], [ParalegalID], [PhoneNumber], [Address]) VALUES (1, 1, 1, null, N'Partner Address')
+INSERT [dbo].[Partner] ([Id], [UserID], [ParalegalID], [PhoneNumber], [Address]) VALUES (2, 17, 3, null, N'Inazuma')
+INSERT [dbo].[Partner] ([Id], [UserID], [ParalegalID], [PhoneNumber], [Address]) VALUES (3, 18, 2, null, N'Fontaine')
+SET IDENTITY_INSERT [dbo].[Partner] OFF
 GO
 
 ALTER TABLE [dbo].[User] WITH CHECK ADD CONSTRAINT [FK_User_UserRole] FOREIGN KEY([UserRoleID])
@@ -431,10 +487,15 @@ GO
 ALTER TABLE [dbo].[UserNotification] CHECK CONSTRAINT [FK_UserNotification_Notification]
 GO
 
-ALTER TABLE [dbo].[Appointment] WITH CHECK ADD CONSTRAINT [FK_Appointment_User] FOREIGN KEY([UserID])
-REFERENCES [dbo].[User] ([ID])
+ALTER TABLE [dbo].[Appointment] WITH CHECK ADD CONSTRAINT [FK_Appointment_Client] FOREIGN KEY([ClientID])
+REFERENCES [dbo].[Client] ([ID])
 GO
-ALTER TABLE [dbo].[Appointment] CHECK CONSTRAINT [FK_Appointment_User]
+ALTER TABLE [dbo].[Appointment] CHECK CONSTRAINT [FK_Appointment_Client]
+GO
+ALTER TABLE [dbo].[Appointment] WITH CHECK ADD CONSTRAINT [FK_Appointment_Partner] FOREIGN KEY([PartnerID])
+REFERENCES [dbo].[Partner] ([ID])
+GO
+ALTER TABLE [dbo].[Appointment] CHECK CONSTRAINT [FK_Appointment_Partner]
 GO
 
 ALTER TABLE [dbo].[UserCaseInvolvement] WITH CHECK ADD CONSTRAINT [FK_UserCaseInvolvement_Case] FOREIGN KEY([CaseID])
@@ -487,4 +548,16 @@ ALTER TABLE [dbo].[Paralegal] WITH CHECK ADD CONSTRAINT [FK_Paralegal_User] FORE
 REFERENCES [dbo].[User] ([ID])
 GO
 ALTER TABLE [dbo].[Paralegal] CHECK CONSTRAINT [FK_Paralegal_User]
+GO
+
+ALTER TABLE [dbo].[Partner] WITH CHECK ADD CONSTRAINT [FK_Partner_User] FOREIGN KEY([UserID])
+REFERENCES [dbo].[User] ([ID])
+GO
+ALTER TABLE [dbo].[Partner] CHECK CONSTRAINT [FK_Partner_User]
+GO
+
+ALTER TABLE [dbo].[Partner] WITH CHECK ADD CONSTRAINT [FK_Partner_Paralegal] FOREIGN KEY([ParalegalID])
+REFERENCES [dbo].[Paralegal] ([ID])
+GO
+ALTER TABLE [dbo].[Partner] CHECK CONSTRAINT [FK_Partner_Paralegal]
 GO
