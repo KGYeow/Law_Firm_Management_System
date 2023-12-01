@@ -71,7 +71,7 @@ namespace Law_Firm_Management_System_API.Models
 
                 entity.Property(e => e.ClientId).HasColumnName("ClientID");
 
-                entity.Property(e => e.PartnerId).HasColumnName("PartnerID");
+                entity.Property(e => e.PartnerUserId).HasColumnName("PartnerUserID");
 
                 entity.Property(e => e.Status)
                     .HasMaxLength(100)
@@ -83,9 +83,9 @@ namespace Law_Firm_Management_System_API.Models
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Appointment_Client");
 
-                entity.HasOne(d => d.Partner)
+                entity.HasOne(d => d.PartnerUser)
                     .WithMany(p => p.Appointments)
-                    .HasForeignKey(d => d.PartnerId)
+                    .HasForeignKey(d => d.PartnerUserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Appointment_Partner");
             });
@@ -127,6 +127,12 @@ namespace Law_Firm_Management_System_API.Models
             {
                 entity.ToTable("Document");
 
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.CaseId).HasColumnName("CaseID");
+
+                entity.Property(e => e.CategoryId).HasColumnName("CategoryID");
+
                 entity.Property(e => e.CreatedBy).HasMaxLength(100);
 
                 entity.Property(e => e.CreatedDate).HasColumnType("datetime");
@@ -156,12 +162,16 @@ namespace Law_Firm_Management_System_API.Models
             {
                 entity.ToTable("DocumentCategory");
 
+                entity.Property(e => e.Id).HasColumnName("ID");
+
                 entity.Property(e => e.Name).IsUnicode(false);
             });
 
             modelBuilder.Entity<Event>(entity =>
             {
                 entity.ToTable("Event");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
 
                 entity.Property(e => e.CaseId).HasColumnName("CaseID");
 
@@ -201,41 +211,45 @@ namespace Law_Firm_Management_System_API.Models
 
             modelBuilder.Entity<Paralegal>(entity =>
             {
+                entity.HasKey(e => e.UserId);
+
                 entity.ToTable("Paralegal");
 
-                entity.Property(e => e.Id).HasColumnName("ID");
+                entity.Property(e => e.UserId)
+                    .ValueGeneratedNever()
+                    .HasColumnName("UserID");
 
                 entity.Property(e => e.PhoneNumber).HasMaxLength(256);
 
-                entity.Property(e => e.UserId).HasColumnName("UserID");
-
                 entity.HasOne(d => d.User)
-                    .WithMany(p => p.Paralegals)
-                    .HasForeignKey(d => d.UserId)
+                    .WithOne(p => p.Paralegal)
+                    .HasForeignKey<Paralegal>(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Paralegal_User");
             });
 
             modelBuilder.Entity<Partner>(entity =>
             {
+                entity.HasKey(e => e.UserId);
+
                 entity.ToTable("Partner");
 
-                entity.Property(e => e.Id).HasColumnName("ID");
+                entity.Property(e => e.UserId)
+                    .ValueGeneratedNever()
+                    .HasColumnName("UserID");
 
-                entity.Property(e => e.ParalegalId).HasColumnName("ParalegalID");
+                entity.Property(e => e.ParalegalUserId).HasColumnName("ParalegalUserID");
 
                 entity.Property(e => e.PhoneNumber).HasMaxLength(256);
 
-                entity.Property(e => e.UserId).HasColumnName("UserID");
-
-                entity.HasOne(d => d.Paralegal)
+                entity.HasOne(d => d.ParalegalUser)
                     .WithMany(p => p.Partners)
-                    .HasForeignKey(d => d.ParalegalId)
+                    .HasForeignKey(d => d.ParalegalUserId)
                     .HasConstraintName("FK_Partner_Paralegal");
 
                 entity.HasOne(d => d.User)
-                    .WithMany(p => p.Partners)
-                    .HasForeignKey(d => d.UserId)
+                    .WithOne(p => p.Partner)
+                    .HasForeignKey<Partner>(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Partner_User");
             });

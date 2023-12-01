@@ -10,7 +10,6 @@ namespace Law_Firm_Management_System_API.Models
             Partners = new HashSet<Partner>();
         }
 
-        public int Id { get; set; }
         public int UserId { get; set; }
         public string? PhoneNumber { get; set; }
         public string? Address { get; set; }

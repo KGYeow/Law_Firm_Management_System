@@ -39,6 +39,7 @@ import UiParentCard from "@/components/shared/UiParentCard.vue";
 import { VDataTable } from "vuetify/lib/labs/components.mjs";
 
 // Data
+const { data: user } = useAuth()
 const currentPage = ref(1)
 const itemsPerPage = ref(10)
 const headers = ref([
@@ -49,8 +50,7 @@ const headers = ref([
   { key: "status" , title: "Status" },
   { key: "actions", title: "Actions", sortable: false }
 ])
-const appointmentList = await fetchData.$get("/Appointment")
-console.log(appointmentList.data.value)
+const appointmentList = await fetchData.$get(`/Appointment/ClientAppointments/${user.value.id}`)
 
 // Head
 useHead({

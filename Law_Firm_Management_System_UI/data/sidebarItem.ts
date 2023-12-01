@@ -70,6 +70,12 @@ const sidebarItem: menu[] = [
         to: "/contacts/paralegals",
         auth: true,
       },
+      {
+        title: "Partners",
+        icon: tablerIcon.UsersGroupIcon,
+        to: "/contacts/partners",
+        auth: true,
+      },
     ]
   },
   {
