@@ -21,7 +21,8 @@ namespace Law_Firm_Management_System_API.Controllers
         [Route("")]
         public IActionResult Get()
         {
-            var l = context.Users.ToList();
+            var l = context.Users.Include(a => a.UserRole).ToList()
+                .Select(x => new { id = x.Id, username = x.Username, fullName = x.FullName, email = x.Email, role = x.UserRole?.Name });
             return Ok(l);
         }
 

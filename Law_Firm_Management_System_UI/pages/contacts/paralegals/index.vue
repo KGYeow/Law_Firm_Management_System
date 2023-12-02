@@ -12,6 +12,10 @@
             <template v-slot:item.number="{ index }">
               <span>{{ index + 1 }}</span>
             </template>
+            <template v-slot:item.assignedPartner="{ item }">
+              <span v-if="item.assignedPartner">{{ item.assignedPartner }}</span>
+              <span v-else>-</span>
+            </template>
             <template v-slot:item.phoneNumber="{ item }">
               <span v-if="item.phoneNumber">{{ item.phoneNumber }}</span>
               <span v-else>-</span>
@@ -47,7 +51,7 @@ const itemsPerPage = ref(10)
 const headers = ref([
   { key: "number", title: "No." },
   { key: "fullName", title: "Full Name" },
-  { key: "assignedPartner", title: "Partner" },
+  { key: "assignedPartner", title: "Assigned Partner" },
   { key: "email" , title: "Email" },
   { key: "phoneNumber" , title: "Phone No." },
   { key: "address" , title: "Address" },

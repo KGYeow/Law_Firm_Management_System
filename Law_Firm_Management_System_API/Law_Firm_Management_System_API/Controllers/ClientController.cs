@@ -17,7 +17,7 @@ namespace Law_Firm_Management_System_API.Controllers
         [Route("")]
         public IActionResult GetClientList()
         {
-            var l = context.Clients.OrderByDescending(a => a.FullName).ToList();
+            var l = context.Clients.OrderBy(a => a.FullName).ToList();
             return Ok(l);
         }
     }

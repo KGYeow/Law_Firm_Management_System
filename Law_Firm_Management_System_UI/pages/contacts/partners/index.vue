@@ -43,7 +43,7 @@ const itemsPerPage = ref(10)
 const headers = ref([
   { key: "number", title: "No." },
   { key: "fullName", title: "Full Name" },
-  { key: "assignedParalegal", title: "Paralegal" },
+  { key: "assignedParalegal", title: "Assigned Paralegal" },
   { key: "email" , title: "Email" },
   { key: "phoneNumber" , title: "Phone No." },
   { key: "address" , title: "Address" },

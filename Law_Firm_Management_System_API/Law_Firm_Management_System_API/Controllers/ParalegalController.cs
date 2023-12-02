@@ -17,8 +17,8 @@ namespace Law_Firm_Management_System_API.Controllers
         [Route("")]
         public IActionResult GetParalegalList()
         {
-            var l = context.Paralegals.Include(a => a.User).Include(a => a.Partners).OrderByDescending(a => a.User.FullName).ToList()
-                .Select(x => new { fullName = x.User.FullName, assignedPartner = x.Partners, phoneNumber = x.PhoneNumber, address = x.Address, email = x.User.Email, isActive = x.IsActive });
+            var l = context.Paralegals.Include(a => a.User).OrderBy(a => a.User.FullName).ToList()
+                .Select(x => new { fullName = x.User.FullName, assignedPartner = context.Partners.Where(p => p.ParalegalUserId == x.UserId && x.IsActive == true).Select(p => p.User.FullName).FirstOrDefault(), phoneNumber = x.PhoneNumber, address = x.Address, email = x.User.Email, isActive = x.IsActive });
             return Ok(l);
         }
     }
