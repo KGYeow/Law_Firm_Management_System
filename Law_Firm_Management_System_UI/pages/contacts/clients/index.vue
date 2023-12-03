@@ -6,7 +6,7 @@
           <v-data-table
             v-model:page="currentPage"
             :headers="headers"
-            :items="clientList.data.value"
+            :items="clientList"
             :items-per-page="itemsPerPage"
           >
             <template v-slot:item.number="{ index }">
@@ -21,8 +21,8 @@
                 <el-pagination
                   layout="total, prev, pager, next"
                   v-model:current-page="currentPage"
-                  :page-size="clientList.data.value.length/pageCount()"
-                  :total="clientList.data.value.length"
+                  :page-size="clientList.length/pageCount()"
+                  :total="clientList.length"
                 />
               </div>
             </template>
@@ -47,7 +47,7 @@ const headers = ref([
   { key: "phoneNumber" , title: "Phone No." },
   { key: "address" , title: "Address" },
 ])
-const clientList = await fetchData.$get("/Client")
+const { data: clientList } = await fetchData.$get("/Client")
 
 // Head
 useHead({
@@ -56,6 +56,6 @@ useHead({
 
 // Methods
 const pageCount = () => {
-  return Math.ceil(clientList.data.value.length / itemsPerPage.value)
+  return Math.ceil(clientList.value.length / itemsPerPage.value)
 }
 </script>

@@ -13,6 +13,7 @@ namespace Law_Firm_Management_System_API.Controllers
         {
         }
 
+        // Get the list of partner.
         [HttpGet]
         [Route("")]
         public IActionResult GetPartnerList()
@@ -20,6 +21,17 @@ namespace Law_Firm_Management_System_API.Controllers
             var l = context.Partners.Include(a => a.User).Include(a => a.ParalegalUser.User).OrderBy(a => a.User.FullName).ToList()
                 .Select(x => new { fullName = x.User.FullName, assignedParalegal = x.ParalegalUser?.User.FullName, phoneNumber = x.PhoneNumber, address = x.Address, email = x.User.Email});
             return Ok(l);
+        }
+
+        // Get the assigned partner of a specific paralegal.
+        [HttpGet]
+        [Route("AssignedPartner/{ParalegalId}")]
+        public IActionResult GetAssignedPartner(int paralegalId)
+        {
+            var assignedPartner = context.Partners.Where(a => a.ParalegalUserId == paralegalId)
+                .Select(x => new { fullName = x.User.FullName, email = x.User.Email, phoneNumber = x.PhoneNumber })
+                .FirstOrDefault();
+            return Ok(assignedPartner);
         }
     }
 }

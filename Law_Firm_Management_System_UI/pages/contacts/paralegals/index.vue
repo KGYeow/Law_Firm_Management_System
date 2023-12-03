@@ -1,12 +1,52 @@
 <template>
   <v-row>
     <v-col cols="12" md="12">
-      <UiParentCard title="Paralegals"> 
+      <v-card elevation="10" class="withbg bg-primary">
+        <v-card-item>
+          <div class="d-flex align-center justify-space-between">
+            <v-card-title class="text-h6 d-flex align-center">
+              <v-avatar class="me-2" color="rgb(243, 244, 248)" size="small">
+                <UserIcon color="gray" size="18"/>
+              </v-avatar>
+              Your Assigned Paralegal
+              <v-divider
+                vertical
+                class="mx-5 my-0"
+                style="border-color: white !important; opacity: 0.5;"
+              />
+              <div class="text-h4">
+                <span class="text-subtitle-1">
+                  <strong>Full Name: </strong>{{ assignedParalegal.fullName }}
+                </span>
+                <br/>
+                <span class="text-subtitle-1">
+                  <strong>Email Address: </strong>{{ assignedParalegal.email }}
+                </span>
+                <br/>
+                <span class="text-subtitle-1">
+                  <strong>Phone Number: </strong>
+                  <span v-if="assignedParalegal.phoneNumber">{{ assignedParalegal.phoneNumber }}</span>
+                  <span v-else>-</span>
+                </span>
+              </div>
+            </v-card-title>
+            <div>
+              <v-btn variant="outlined" class="me-2">Change</v-btn>
+              <v-btn variant="outlined">Delete</v-btn>
+            </div>
+          </div>
+        </v-card-item>
+      </v-card>
+    </v-col>
+  </v-row>
+  <v-row>
+    <v-col cols="12" md="12">
+      <UiParentCard title="Paralegals">
         <div class="pa-7 pt-1 text-body-1">
           <v-data-table
             v-model:page="currentPage"
             :headers="headers"
-            :items="paralegalList.data.value"
+            :items="paralegalList"
             :items-per-page="itemsPerPage"
           >
             <template v-slot:item.number="{ index }">
@@ -29,8 +69,8 @@
                 <el-pagination
                   layout="total, prev, pager, next"
                   v-model:current-page="currentPage"
-                  :page-size="paralegalList.data.value.length/pageCount()"
-                  :total="paralegalList.data.value.length"
+                  :page-size="paralegalList.length/pageCount()"
+                  :total="paralegalList.length"
                 />
               </div>
             </template>
@@ -46,6 +86,7 @@ import UiParentCard from "@/components/shared/UiParentCard.vue";
 import { VDataTable } from "vuetify/lib/labs/components.mjs";
 
 // Data
+const { data: user } = useAuth()
 const currentPage = ref(1)
 const itemsPerPage = ref(10)
 const headers = ref([
@@ -57,7 +98,8 @@ const headers = ref([
   { key: "address" , title: "Address" },
   { key: "isActive" , title: "Status" },
 ])
-const paralegalList = await fetchData.$get("/Paralegal")
+const { data: paralegalList } = await fetchData.$get("/Paralegal")
+const { data: assignedParalegal } = await fetchData.$get(`/Paralegal/AssignedParalegal/${user.value.id}`)
 
 // Head
 useHead({
@@ -66,6 +108,6 @@ useHead({
 
 // Methods
 const pageCount = () => {
-  return Math.ceil(paralegalList.data.value.length / itemsPerPage.value)
+  return Math.ceil(paralegalList.value.length / itemsPerPage.value)
 }
 </script>

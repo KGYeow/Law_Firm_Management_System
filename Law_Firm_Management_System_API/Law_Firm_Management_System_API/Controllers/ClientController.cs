@@ -13,6 +13,7 @@ namespace Law_Firm_Management_System_API.Controllers
         {
         }
 
+        // Get the list of client.
         [HttpGet]
         [Route("")]
         public IActionResult GetClientList()

@@ -13,13 +13,33 @@ namespace Law_Firm_Management_System_API.Controllers
         {
         }
 
+        // Get the list of paralegal.
         [HttpGet]
         [Route("")]
         public IActionResult GetParalegalList()
         {
             var l = context.Paralegals.Include(a => a.User).OrderBy(a => a.User.FullName).ToList()
-                .Select(x => new { fullName = x.User.FullName, assignedPartner = context.Partners.Where(p => p.ParalegalUserId == x.UserId && x.IsActive == true).Select(p => p.User.FullName).FirstOrDefault(), phoneNumber = x.PhoneNumber, address = x.Address, email = x.User.Email, isActive = x.IsActive });
+                .Select(x => new
+                {
+                    fullName = x.User.FullName,
+                    assignedPartner = context.Partners.Where(p => p.ParalegalUserId == x.UserId && x.IsActive == true).Select(p => p.User.FullName).FirstOrDefault(),
+                    phoneNumber = x.PhoneNumber,
+                    address = x.Address,
+                    email = x.User.Email,
+                    isActive = x.IsActive
+                });
             return Ok(l);
+        }
+
+        // Get the assigned paralegal of a specific partner.
+        [HttpGet]
+        [Route("AssignedParalegal/{PartnerId}")]
+        public IActionResult GetAssignedParalegal(int partnerId)
+        {
+            var assignedParalegal = context.Partners.Where(a => a.UserId == partnerId)
+                .Select(x => new { fullName = x.ParalegalUser.User.FullName, email = x.ParalegalUser.User.Email, phoneNumber = x.ParalegalUser.PhoneNumber })
+                .FirstOrDefault();
+            return Ok(assignedParalegal);
         }
     }
 }
