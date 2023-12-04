@@ -46,10 +46,12 @@
 }
 
 .v-btn {
+  border-radius: 10px;
   text-transform: capitalize;
   letter-spacing: $btn-letter-spacing;
 }
 .v-btn--icon.v-btn--density-default {
+  border-radius: 50%;
   width: calc(var(--v-btn-height) + 6px);
   height: calc(var(--v-btn-height) + 6px);
 }

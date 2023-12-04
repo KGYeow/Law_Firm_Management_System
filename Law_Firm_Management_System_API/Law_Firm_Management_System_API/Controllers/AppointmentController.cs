@@ -15,7 +15,7 @@ namespace Law_Firm_Management_System_API.Controllers
 
         // Get the list of client appointments for a specific partner.
         [HttpGet]
-        [Route("ClientAppointments")]
+        [Route("ClientAppointments/{PartnerId}")]
         public IActionResult GetClientAppointments(int partnerId)
         {
             var l = context.Appointments.Include(a => a.Client).Where(a => a.PartnerUserId == partnerId).OrderByDescending(a => a.Id).ToList()

@@ -6,9 +6,9 @@
           <v-avatar class="me-2" color="rgb(243, 244, 248)" size="small">
             <StarIcon color="gray" size="18"/>
           </v-avatar>
-          Cases Completed
+          Tasks Completed
         </v-card-title>
-        <span class="text-h4">3243</span>
+        <span class="text-h4">1412</span>
       </div>
       <v-divider/>
       <v-row>
@@ -26,7 +26,7 @@
       </v-row>
     </v-card-item>
     <div class="mt-3">
-      <apexchart type="area" height="304" :options="areachartOptions" :series="areaChart.series"> </apexchart>
+      <apexchart type="area" height="60" :options="areachartOptions" :series="areaChart.series"> </apexchart>
     </div>
   </v-card>
 </template>

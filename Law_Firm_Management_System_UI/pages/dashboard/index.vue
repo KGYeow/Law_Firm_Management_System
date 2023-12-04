@@ -3,35 +3,41 @@
   <v-navigation-drawer
     elevation="0"
     location="right"
-    width="300"
+    width="350"
     absolute
     permanent
   >
     <el-scrollbar>
       <div class="d-flex flex-column">
-        <!-- Announcements -->
-        <DashboardAnnouncement/>
+        <!-- Calendar -->
+        <DashboardCalendar/>
         <v-divider class="mx-7"/>
         <!-- Events -->
-        <DashboardEvent/>
+        <DashboardUpcomingEvent/>
       </div>
     </el-scrollbar>
   </v-navigation-drawer>
   <!-- Dashboard Items -->
   <v-row>
-    <v-col cols="12" lg="12">
+    <v-col cols="12">
       <v-row>
-        <v-col cols="6" lg="6">
+        <!-- Announcements -->
+        <v-col cols="12">
+          <DashboardAnnouncement/>
+        </v-col>
+        <v-col cols="12">
+          <DashboardTodayTask/>
+        </v-col>
+        <v-col cols="12" lg="6">
           <DashboardCaseCompleted/>
         </v-col>
-        <v-col cols="6" lg="6">
-          <DashboardCaseNew/>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col cols="12" lg="12">
-          <!-- Calendar -->
-          <DashboardCalendar/>
+        <v-col cols="12" lg="6">
+          <div class="mb-6">
+            <DashboardCaseNew/>
+          </div>
+          <div>
+            <DashboardTaskCompleted/>
+          </div>
         </v-col>
       </v-row>
     </v-col>
@@ -39,4 +45,8 @@
 </template>
 
 <script setup>
+// Head
+useHead({
+  title: "Dashboard | CaseCraft",
+})
 </script>

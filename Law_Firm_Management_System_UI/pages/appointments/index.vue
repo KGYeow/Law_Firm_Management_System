@@ -9,6 +9,9 @@
             :items="appointmentList"
             :items-per-page="itemsPerPage"
           >
+            <template v-slot:item.number="{ index }">
+              <span>{{ index + 1 }}</span>
+            </template>
             <template v-slot:item.appointmentTime="{ item }">
               {{ dayjs(item.appointmentTime).format("DD MMM YYYY, hh:mm A") }}
             </template>
@@ -43,7 +46,7 @@ const { data: user } = useAuth()
 const currentPage = ref(1)
 const itemsPerPage = ref(10)
 const headers = ref([
-  { key: "id", title: "No." },
+  { key: "number", title: "No." },
   { key: "fullName", title: "Full Name" },
   { key: "category", title: "Category" },
   { key: "appointmentTime" , title: "Appointment Time" },

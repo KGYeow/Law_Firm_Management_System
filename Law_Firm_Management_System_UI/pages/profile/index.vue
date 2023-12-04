@@ -72,6 +72,11 @@ const editUserDetails = ref({
   email: user.value.email
 })
 
+// Head
+useHead({
+  title: `${user.value.fullName} | CaseCraft`,
+})
+
 // Methods
 const editUser = async() => {
   try {

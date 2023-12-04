@@ -4,28 +4,25 @@
       <LayoutFullVerticalSidebarIcon class="me-3" :item="SpeakerphoneIcon"/>
       Announcements
     </h5>
-    <el-scrollbar height="50vh">
-      <div class="pa-7 py-1 text-body-1">
-        <v-card
-          v-for="item in announcement"
-          class="mb-3 p-3"
-          color="rgb(243, 244, 248)"
-          elevation="2"
-        >
-          <v-card-item class="p-0">
-            <v-card-title class="fs-6 fw-bold">
-              {{ item.title }}
-            </v-card-title>
-            <v-card-subtitle style="font-size: smaller;">
-              {{ dayjs(item.createdTime).format("D MMM YYYY, h:mm A") }}
-            </v-card-subtitle>
-          </v-card-item>
-          <v-card-text class="p-0 pt-2">
-            {{ item.description }}
-          </v-card-text>
-        </v-card>
-      </div>
-    </el-scrollbar>
+    <div class="text-body-1">
+      <v-card elevation="10">
+        <v-carousel height="200px" color="primary" hide-delimiter-background="">
+          <v-carousel-item v-for="item in announcement" height="200px">
+            <v-card-item class="px-16 mx-3">
+              <v-card-title class="fs-6 fw-bold">
+                {{ item.title }}
+              </v-card-title>
+              <v-card-subtitle style="font-size: smaller;">
+                {{ dayjs(item.createdTime).format("D MMM YYYY, h:mm A") }}
+              </v-card-subtitle>
+              <v-card-text class="p-0 pt-2 text-justify">
+                {{ item.description }}
+              </v-card-text>
+            </v-card-item>
+          </v-carousel-item>
+        </v-carousel>
+      </v-card>
+    </div>
   </div>
 </template>
 

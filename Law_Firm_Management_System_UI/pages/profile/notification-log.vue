@@ -12,4 +12,9 @@
 
 <script setup>
 import UiParentCard from '@/components/shared/UiParentCard.vue';
+
+// Head
+useHead({
+  title: "Notification Log | CaseCraft",
+})
 </script>

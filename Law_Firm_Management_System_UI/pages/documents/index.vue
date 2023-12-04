@@ -124,7 +124,7 @@ const desserts = ref([
 
 // Head
 useHead({
-  title: "Repository | USM Document Management System",
+  title: "Documents | CaseCraft",
 })
 
 // Methods
