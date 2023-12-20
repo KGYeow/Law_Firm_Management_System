@@ -13,23 +13,23 @@ namespace Law_Firm_Management_System_API.Controllers
         {
         }
 
-        // Get the list of client appointments for a specific partner.
+        // Get the list of client appointments from partner's perspective.
         [HttpGet]
-        [Route("ClientAppointments/{PartnerId}")]
-        public IActionResult GetClientAppointments(int partnerId)
+        [Route("ClientAppointments/{PartnerUserId}")]
+        public IActionResult GetClientAppointments(int partnerUserId)
         {
-            var l = context.Appointments.Include(a => a.Client).Where(a => a.PartnerUserId == partnerId).OrderByDescending(a => a.Id).ToList()
+            var l = context.Appointments.Include(a => a.Client).Where(a => a.PartnerUserId == partnerUserId).OrderByDescending(a => a.Id).ToList()
                 .Select(x => new { id = x.Id, fullName = x.Client?.FullName, category = x.Category, appointmentTime = x.AppointmentTime, status = x.Status });
             return Ok(l);
         }
 
-        // Get the list of appointments made by a specific client.
+        // Get the list of client appointments from client's perspective.
         [HttpGet]
-        [Route("ClientAppointmentsToLawyer")]
+        [Route("ClientAppointmentsToLawyer/{ClientUserId}")]
         public IActionResult GetClientAppointmentsToLawyer(int clientUserId)
         {
-            var l = context.Appointments.Include(a => a.Client).Where(a => a.ClientId == clientUserId).OrderByDescending(a => a.Id).ToList()
-                .Select(x => new { id = x.Id, fullName = x.Client?.FullName, category = x.Category, appointmentTime = x.AppointmentTime, status = x.Status });
+            var l = context.Appointments.Include(a => a.PartnerUser).Where(a => a.Client.UserId == clientUserId).OrderByDescending(a => a.Id).ToList()
+                .Select(x => new { id = x.Id, fullName = x.PartnerUser?.FullName, category = x.Category, appointmentTime = x.AppointmentTime, status = x.Status });
             return Ok(l);
         }
     }

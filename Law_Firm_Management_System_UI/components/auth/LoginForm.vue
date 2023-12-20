@@ -2,11 +2,20 @@
   <v-row class="d-flex mb-3">
     <v-col cols="12">
       <v-label class="font-weight-bold mb-1">Username</v-label>
-      <v-text-field variant="outlined" hide-details color="primary" v-model="loginDetails.username"></v-text-field>
+      <v-text-field density="compact" variant="outlined" hide-details color="primary" v-model="loginDetails.username"></v-text-field>
     </v-col>
     <v-col cols="12">
       <v-label class="font-weight-bold mb-1">Password</v-label>
-      <v-text-field variant="outlined" type="password" hide-details color="primary" v-model="loginDetails.password"></v-text-field>
+      <v-text-field
+        :append-inner-icon="passwordVisible ? 'mdi-eye-off' : 'mdi-eye'"
+        :type="passwordVisible ? 'text' : 'password'"
+        density="compact"
+        variant="outlined"
+        hide-details
+        color="primary"
+        v-model="loginDetails.password"
+        @click:append-inner="passwordVisible = !passwordVisible"
+      ></v-text-field>
     </v-col>
     <v-col cols="12" class="pt-0">
       <div class="d-flex flex-wrap align-center ml-n2">
@@ -29,7 +38,8 @@
 <script setup>
 // Data
 const { signIn } = useAuth()
-const checkbox = ref(true);
+const passwordVisible = ref(false)
+const checkbox = ref(true)
 const loginDetails = ref({
   username: null,
   password: null,

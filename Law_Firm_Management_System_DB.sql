@@ -408,6 +408,10 @@ INSERT [dbo].[Appointment] ([ID], [ClientID], [PartnerUserID], [Category], [Appo
 INSERT [dbo].[Appointment] ([ID], [ClientID], [PartnerUserID], [Category], [AppointmentTime], [Status]) VALUES (7, 7, 17, N'Initial Consultation', CAST(N'2023-11-30T10:54:11.157' AS DateTime), N'Pending')
 INSERT [dbo].[Appointment] ([ID], [ClientID], [PartnerUserID], [Category], [AppointmentTime], [Status]) VALUES (8, 8, 17, N'Legal Advice Appointment:', CAST(N'2023-11-23T10:54:11.157' AS DateTime), N'Pending')
 INSERT [dbo].[Appointment] ([ID], [ClientID], [PartnerUserID], [Category], [AppointmentTime], [Status]) VALUES (9, 9, 18, N'Initial Consultation', CAST(N'2023-11-25T10:54:11.157' AS DateTime), N'Pending')
+INSERT [dbo].[Appointment] ([ID], [ClientID], [PartnerUserID], [Category], [AppointmentTime], [Status]) VALUES (10, 1, 1, N'Initial Consultation', CAST(N'2023-11-15T10:54:11.157' AS DateTime), N'Pending')
+INSERT [dbo].[Appointment] ([ID], [ClientID], [PartnerUserID], [Category], [AppointmentTime], [Status]) VALUES (11, 1, 17, N'Initial Consultation', CAST(N'2023-11-15T10:54:11.157' AS DateTime), N'Pending')
+INSERT [dbo].[Appointment] ([ID], [ClientID], [PartnerUserID], [Category], [AppointmentTime], [Status]) VALUES (12, 1, 1, N'Legal Advice Appointment', CAST(N'2023-11-15T10:54:11.157' AS DateTime), N'Pending')
+INSERT [dbo].[Appointment] ([ID], [ClientID], [PartnerUserID], [Category], [AppointmentTime], [Status]) VALUES (13, 1, 17, N'Legal Advice Appointment', CAST(N'2023-11-15T10:54:11.157' AS DateTime), N'Pending')
 SET IDENTITY_INSERT [dbo].[Appointment] OFF
 GO
 
