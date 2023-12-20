@@ -40,11 +40,12 @@ GO
 CREATE TABLE [dbo].[Page](
 	[ID] [int] IDENTITY(1,1) NOT NULL,
 	[Name] [varchar](50) NULL,
+	[AccessName] [varchar](MAX) NULL,
  CONSTRAINT [PK_Page] PRIMARY KEY CLUSTERED
 (
 	[ID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 /****** Object:  Table [dbo].[RoleAccessPage]    Script Date: 7/11/2023 8:17:00 PM ******/
 SET ANSI_NULLS ON
@@ -326,56 +327,59 @@ SET IDENTITY_INSERT [dbo].[User] OFF
 GO
 
 SET IDENTITY_INSERT [dbo].[UserRole] ON
-INSERT [dbo].[UserRole] ([ID], [Name]) VALUES (1, N'Admin/Partner')
-INSERT [dbo].[UserRole] ([ID], [Name]) VALUES (2, N'Staff/Paralegal')
+INSERT [dbo].[UserRole] ([ID], [Name]) VALUES (1, N'Partner')
+INSERT [dbo].[UserRole] ([ID], [Name]) VALUES (2, N'Paralegal')
 INSERT [dbo].[UserRole] ([ID], [Name]) VALUES (3, N'Client')
 SET IDENTITY_INSERT [dbo].[UserRole] OFF
 GO
 
 SET IDENTITY_INSERT [dbo].[Page] ON
-INSERT [dbo].[Page] ([ID], [Name]) VALUES (1, N'Dashboard')
-INSERT [dbo].[Page] ([ID], [Name]) VALUES (2, N'Appointments')
-INSERT [dbo].[Page] ([ID], [Name]) VALUES (3, N'Cases')
-INSERT [dbo].[Page] ([ID], [Name]) VALUES (4, N'Tasks')
-INSERT [dbo].[Page] ([ID], [Name]) VALUES (5, N'Events')
-INSERT [dbo].[Page] ([ID], [Name]) VALUES (6, N'Documents')
-INSERT [dbo].[Page] ([ID], [Name]) VALUES (7, N'Clients')
-INSERT [dbo].[Page] ([ID], [Name]) VALUES (8, N'Paralegals')
-INSERT [dbo].[Page] ([ID], [Name]) VALUES (9, N'Partners')
-INSERT [dbo].[Page] ([ID], [Name]) VALUES (10, N'User Settings')
-INSERT [dbo].[Page] ([ID], [Name]) VALUES (11, N'Legal Information')
+INSERT [dbo].[Page] ([ID], [Name], [AccessName]) VALUES (1, N'Dashboard', N'Dashboard_Client')
+INSERT [dbo].[Page] ([ID], [Name], [AccessName]) VALUES (2, N'Dashboard', N'Dashboard_Employee')
+INSERT [dbo].[Page] ([ID], [Name], [AccessName]) VALUES (3, N'Appointments', N'Appointments_Client')
+INSERT [dbo].[Page] ([ID], [Name], [AccessName]) VALUES (4, N'Appointments', N'Appointments_Employee')
+INSERT [dbo].[Page] ([ID], [Name], [AccessName]) VALUES (5, N'Cases', N'Cases')
+INSERT [dbo].[Page] ([ID], [Name], [AccessName]) VALUES (6, N'Tasks', N'Tasks')
+INSERT [dbo].[Page] ([ID], [Name], [AccessName]) VALUES (7, N'Events', N'Events')
+INSERT [dbo].[Page] ([ID], [Name], [AccessName]) VALUES (8, N'Documents', N'Documents')
+INSERT [dbo].[Page] ([ID], [Name], [AccessName]) VALUES (9, N'Clients', N'Clients')
+INSERT [dbo].[Page] ([ID], [Name], [AccessName]) VALUES (10, N'Paralegals', N'Paralegals')
+INSERT [dbo].[Page] ([ID], [Name], [AccessName]) VALUES (11, N'Partners', N'Partners_Client')
+INSERT [dbo].[Page] ([ID], [Name], [AccessName]) VALUES (12, N'Partners', N'Partners_Employee')
+INSERT [dbo].[Page] ([ID], [Name], [AccessName]) VALUES (13, N'User Settings', N'UserSettings')
+INSERT [dbo].[Page] ([ID], [Name], [AccessName]) VALUES (14, N'Legal Information', N'LegalInformation')
 SET IDENTITY_INSERT [dbo].[Page] OFF
 GO
 
 SET IDENTITY_INSERT [dbo].[RoleAccessPage] ON
 /** Admin **/
-INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (1, 1, 1)
-INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (2, 1, 2)
-INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (3, 1, 3)
-INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (4, 1, 4)
-INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (5, 1, 5)
-INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (6, 1, 6)
-INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (7, 1, 7)
-INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (8, 1, 8)
-INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (9, 1, 9)
-INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (10, 1, 10)
-INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (11, 1, 11)
+INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (1, 1, 2)
+INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (2, 1, 4)
+INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (3, 1, 5)
+INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (4, 1, 6)
+INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (5, 1, 7)
+INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (6, 1, 8)
+INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (7, 1, 9)
+INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (8, 1, 10)
+INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (9, 1, 12)
+INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (10, 1, 13)
+INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (11, 1, 14)
 /** Paralegal **/
-INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (12, 2, 1)
-INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (13, 2, 2)
-INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (14, 2, 3)
-INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (15, 2, 4)
-INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (16, 2, 5)
-INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (17, 2, 6)
-INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (18, 2, 7)
-INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (19, 2, 9)
-INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (20, 2, 11)
+INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (12, 2, 2)
+INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (13, 2, 4)
+INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (14, 2, 5)
+INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (15, 2, 6)
+INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (16, 2, 7)
+INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (17, 2, 8)
+INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (18, 2, 9)
+INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (19, 2, 12)
+INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (20, 2, 14)
 /** Client **/
 INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (21, 3, 1)
-INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (22, 3, 2)
-INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (23, 3, 3)
-INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (24, 3, 5)
-INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (25, 3, 9)
+INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (22, 3, 3)
+INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (23, 3, 5)
+INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (24, 3, 7)
+INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (25, 3, 11)
 SET IDENTITY_INSERT [dbo].[RoleAccessPage] OFF
 GO
 

@@ -12,6 +12,7 @@ namespace Law_Firm_Management_System_API.Models
 
         public int Id { get; set; }
         public string? Name { get; set; }
+        public string? AccessName { get; set; }
 
         public virtual ICollection<RoleAccessPage> RoleAccessPages { get; set; }
     }

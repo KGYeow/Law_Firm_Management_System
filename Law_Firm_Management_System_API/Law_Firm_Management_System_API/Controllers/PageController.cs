@@ -40,7 +40,7 @@ namespace Law_Firm_Management_System_API.Controllers
                 {
                     foreach (var item in access)
                     {
-                        accessList.Add(item.Page.Name);
+                        accessList.Add(item.Page.AccessName);
                     }
                 }
                 Console.WriteLine(accessList);

@@ -14,6 +14,7 @@ export interface menu {
   type?: string;
   subCaption?: string;
   auth?: boolean;
+  accessName?: string;
 }
 
 const sidebarItem: menu[] = [
@@ -21,38 +22,65 @@ const sidebarItem: menu[] = [
   {
     title: "Dashboard",
     icon: tablerIcon.LayoutDashboardIcon,
+    to: "/dashboard-client",
+    auth: true,
+    accessName: "Dashboard_Client",
+  },
+  {
+    title: "Dashboard",
+    icon: tablerIcon.LayoutDashboardIcon,
     to: "/dashboard",
     auth: true,
+    accessName: "Dashboard_Employee",
+  },
+  {
+    title: "Appointments",
+    icon: tablerIcon.Book2Icon,
+    to: "/appointments-client",
+    auth: true,
+    accessName: "Appointments_Client",
   },
   {
     title: "Appointments",
     icon: tablerIcon.Book2Icon,
     to: "/appointments",
     auth: true,
+    accessName: "Appointments_Employee",
   },
   {
     title: "Cases",
     icon: tablerIcon.BriefcaseIcon,
     to: "/cases",
     auth: true,
+    accessName: "Cases",
   },
   {
     title: "Tasks",
     icon: tablerIcon.ClipboardTextIcon,
     to: "/tasks",
     auth: true,
+    accessName: "Tasks",
   },
   {
     title: "Events",
     icon: tablerIcon.CalendarIcon,
     to: "/events",
     auth: true,
+    accessName: "Events",
   },
   {
     title: "Documents",
     icon: tablerIcon.FileDescriptionIcon,
     to: "/documents",
     auth: true,
+    accessName: "Documents",
+  },
+  {
+    title: "Partners",
+    icon: tablerIcon.ScaleIcon,
+    to: "/partners",
+    auth: true,
+    accessName: "Partners_Client",
   },
   {
     title: "Contacts",
@@ -63,18 +91,21 @@ const sidebarItem: menu[] = [
         icon: tablerIcon.UsersGroupIcon,
         to: "/contacts/clients",
         auth: true,
+        accessName: "Clients",
       },
       {
         title: "Paralegals",
         icon: tablerIcon.UsersGroupIcon,
         to: "/contacts/paralegals",
         auth: true,
+        accessName: "Paralegals",
       },
       {
         title: "Partners",
-        icon: tablerIcon.UsersGroupIcon,
+        icon: tablerIcon.ScaleIcon,
         to: "/contacts/partners",
         auth: true,
+        accessName: "Partners_Employee",
       },
     ]
   },
@@ -87,6 +118,7 @@ const sidebarItem: menu[] = [
         icon: tablerIcon.UserCogIcon,
         to: "/configuration/user-settings",
         auth: true,
+        accessName: "UserSettings",
       },
     ]
   },
@@ -95,6 +127,7 @@ const sidebarItem: menu[] = [
     icon: tablerIcon.HelpIcon,
     to: "/legal-information",
     auth: true,
+    accessName: "LegalInformation",
   },
 ];
 

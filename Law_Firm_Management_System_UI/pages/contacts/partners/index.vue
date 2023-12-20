@@ -1,5 +1,5 @@
 <template>
-  <v-row v-if="user.role === 'Staff/Paralegal'">
+  <v-row v-if="user.role === 'Paralegal'">
     <v-col cols="12" md="12">
       <v-card elevation="10" class="withbg bg-primary">
         <v-card-item>

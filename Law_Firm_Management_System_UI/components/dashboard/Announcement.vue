@@ -6,7 +6,7 @@
     </h5>
     <div class="text-body-1">
       <v-card elevation="10">
-        <v-carousel height="200px" color="primary" hide-delimiter-background="">
+        <v-carousel height="200px" color="primary" hide-delimiter-background="" delimiter-icon="mdi-minus">
           <v-carousel-item v-for="item in announcement" height="200px">
             <v-card-item class="px-16 mx-3">
               <v-card-title class="fs-6 fw-bold">
