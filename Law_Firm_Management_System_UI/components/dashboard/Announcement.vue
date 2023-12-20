@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h5 class="text-h5 mb-6 pl-7 pt-7 d-flex align-center">
+    <h5 class="text-h5 mb-6 pl-7 pt-7 ps-0 d-flex align-center">
       <LayoutFullVerticalSidebarIcon class="me-3" :item="SpeakerphoneIcon"/>
       Announcements
     </h5>

@@ -1,4 +1,7 @@
 <template>
+  <h5 class="text-h5 mb-6 pl-7 pt-7 ps-0 d-flex align-center">
+    Partners
+  </h5>
   <v-row>
     <v-col cols="3" v-for="partner in partnerList">
       <v-card elevation="10" class="withbg">
