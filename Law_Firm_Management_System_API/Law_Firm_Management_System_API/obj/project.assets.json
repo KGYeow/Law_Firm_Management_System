@@ -3217,23 +3217,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\kokgu\\.nuget\\packages\\": {},
+    "C:\\Users\\new\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Documents\\Projects\\Law_Firm_Management_System\\Law_Firm_Management_System_API\\Law_Firm_Management_System_API\\Law_Firm_Management_System_API.csproj",
+      "projectUniqueName": "C:\\Users\\new\\Downloads\\Law_Firm_Management_System\\Law_Firm_Management_System_API\\Law_Firm_Management_System_API\\Law_Firm_Management_System_API.csproj",
       "projectName": "Law_Firm_Management_System_API",
-      "projectPath": "D:\\Documents\\Projects\\Law_Firm_Management_System\\Law_Firm_Management_System_API\\Law_Firm_Management_System_API\\Law_Firm_Management_System_API.csproj",
-      "packagesPath": "C:\\Users\\kokgu\\.nuget\\packages\\",
-      "outputPath": "D:\\Documents\\Projects\\Law_Firm_Management_System\\Law_Firm_Management_System_API\\Law_Firm_Management_System_API\\obj\\",
+      "projectPath": "C:\\Users\\new\\Downloads\\Law_Firm_Management_System\\Law_Firm_Management_System_API\\Law_Firm_Management_System_API\\Law_Firm_Management_System_API.csproj",
+      "packagesPath": "C:\\Users\\new\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\new\\Downloads\\Law_Firm_Management_System\\Law_Firm_Management_System_API\\Law_Firm_Management_System_API\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\kokgu\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\new\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -3310,6 +3310,24 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
+        "downloadDependencies": [
+          {
+            "name": "Microsoft.AspNetCore.App.Ref",
+            "version": "[6.0.24, 6.0.24]"
+          },
+          {
+            "name": "Microsoft.NETCore.App.Host.win-x64",
+            "version": "[6.0.24, 6.0.24]"
+          },
+          {
+            "name": "Microsoft.NETCore.App.Ref",
+            "version": "[6.0.24, 6.0.24]"
+          },
+          {
+            "name": "Microsoft.WindowsDesktop.App.Ref",
+            "version": "[6.0.24, 6.0.24]"
+          }
+        ],
         "frameworkReferences": {
           "Microsoft.AspNetCore.App": {
             "privateAssets": "none"
@@ -3318,7 +3336,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.201\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.403\\RuntimeIdentifierGraph.json"
       }
     }
   }
