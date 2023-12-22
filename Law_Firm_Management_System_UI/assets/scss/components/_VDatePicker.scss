@@ -1,0 +1,31 @@
+.v-date-picker {
+  width: 100%;
+
+  .v-date-picker-controls {
+    padding-inline: 20px;
+    .v-btn {
+      font-weight: bold;
+    }
+  }
+
+  .v-date-picker-month {
+    display: block;
+    padding-bottom: 20px;
+  }
+
+  .v-date-picker-month__days {
+    .v-btn, .v-date-picker-month__day {
+      margin: 0 5px;
+      height: 25px;
+      width: 25px;
+      font-size: 12px !important;
+    }
+  }
+
+  .v-date-picker-months__content,
+  .v-date-picker-years__content {
+    .v-btn {
+      font-size: 12px;
+    }
+  }
+}

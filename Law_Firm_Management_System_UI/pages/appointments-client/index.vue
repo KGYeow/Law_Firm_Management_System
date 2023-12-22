@@ -5,6 +5,7 @@
         Upcoming Appointments
       </h5>
       <div class="d-flex justify-content-between align-center">
+        <!-- Search Bar -->
         <div class="w-25">
           <v-text-field
             label="Search appointments"
@@ -15,10 +16,13 @@
             hide-details
           ></v-text-field>
         </div>
+        <!-- Add New Appointment -->
         <v-btn color="primary" elevation="0" @click="addAppointmentModal = true">New Appointment</v-btn>
       </div>
     </v-col>
   </v-row>
+
+  <!-- Appointment Item List -->
   <v-row class="justify-content-between">
     <v-col cols="3" v-for="item in appointmentList">
       <v-card elevation="10" class="withbg">
@@ -27,9 +31,9 @@
           class="position-absolute fw-bold"
           style="bottom: -10px; right: -15px; border-radius: 10px;"
         >
-          <i class="mdi mdi-check"></i>
-          <i class="mdi mdi-timer-sand-complete"></i>
-          <i class="mdi mdi-close"></i>
+          <i class="mdi mdi-check" v-if="item.status == 'Approved'"></i>
+          <i class="mdi mdi-timer-sand-complete" v-else-if="item.status == 'Pending'"></i>
+          <i class="mdi mdi-close" v-else-if="item.status == 'Rejected'"></i>
           {{ item.status }}
         </el-tag>
         <v-card-actions
@@ -62,9 +66,9 @@
     </v-col>
   </v-row>
 
-  <!-- Add Appointment Modal -->
+  <!-- Add New Appointment Modal -->
   <v-dialog v-model="addAppointmentModal" width="auto" persistent>
-    <v-card elevation="10" class="withbg" style="border-radius: 10px;">
+    <v-card elevation="10" class="withbg" width="500px" style="border-radius: 10px;">
       <v-card-title class="px-4 py-4 d-sm-flex align-center justify-space-between">
         <h5 class="text-h5 mb-0 d-flex align-center">
           Add New Appointment
@@ -72,15 +76,87 @@
         <v-btn density="compact" variant="plain" icon="mdi-close" @click="addAppointmentModal = false"/>
       </v-card-title>
       <v-divider class="m-0"/>
-      <v-card-item class="p-3 text-body-1">
-        <form @submit.prevent="addAppointment">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-        </form>
-      </v-card-item>
-      <v-divider class="m-0"/>
-      <v-card-actions class="p-3 justify-content-end">
-        <v-btn color="primary" variant="tonal">Save</v-btn>
-      </v-card-actions>
+      <form @submit.prevent="addAppointment">
+        <v-card-item class="p-3 text-body-1">
+          <v-row>
+            <v-col>
+              <v-label class="text-caption">Partner</v-label>
+              <v-select
+                :items="partnerList"
+                item-title="fullName"
+                item-value="fullName"
+                placeholder="Select partner"
+                variant="outlined"
+                density="compact"
+                color="primary"
+                v-model="addAppointmentDetails.fullName"
+                hide-details
+              />
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col>
+              <v-label class="text-caption">Category</v-label>
+              <v-select
+                :items="categoryList"
+                item-title="name"
+                item-value="name"
+                placeholder="Select category"
+                variant="outlined"
+                density="compact"
+                color="primary"
+                v-model="addAppointmentDetails.category"
+                hide-details
+              />
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col>
+              <v-label class="text-caption">Date</v-label>
+              <v-menu :close-on-content-click="false">
+                <template v-slot:activator="{ props }">
+                  <v-text-field
+                    v-bind="props"
+                    placeholder="Select date and time"
+                    variant="outlined"
+                    density="compact"
+                    color="primary"
+                    append-inner-icon="mdi-calendar"
+                    :model-value="addAppointmentDetails.appointmentTime ? dayjs(addAppointmentDetails.appointmentTime).format('YYYY-MM-DD, hh:mm A') : null"
+                    hide-details
+                    readonly
+                  />
+                </template>
+                <v-sheet elevation="3">
+                  <v-text-field
+                    class="my-3 mx-5"
+                    placeholder="Select time"
+                    variant="outlined"
+                    density="compact"
+                    color="primary"
+                    type="time"
+                    v-model="addAppointmentDetails.time"
+                    hide-details
+                  />
+                  <v-divider class="mx-5 my-0"/>
+                  <v-date-picker
+                    elevation="0"
+                    color="primary"
+                    :min="new Date(new Date().getTime() - 86400000)"
+                    v-model="addAppointmentDetails.date"
+                    show-adjacent-months
+                    hide-header
+                  />
+                </v-sheet>
+              </v-menu>
+            </v-col>
+          </v-row>
+        </v-card-item>
+        <v-divider class="m-0"/>
+        <v-card-actions class="p-3 justify-content-end">
+          <v-btn color="primary" type="submit">Submit</v-btn>
+        </v-card-actions>
+      </form>
     </v-card>
   </v-dialog>
 </template>
@@ -90,12 +166,23 @@ import dayjs from 'dayjs'
 
 // Data
 const { data: user } = useAuth()
-const { data: appointmentList } = await fetchData.$get(`/Appointment/ClientAppointmentsToLawyer/${user.value.id}`)
+const { data: partnerList } = await fetchData.$get("/Partner")
+const { data: categoryList } = await fetchData.$get("/Appointment/Category")
+const { data: appointmentList } = await fetchData.$get(`/Appointment/List/ClientPerspective/${user.value.id}`)
 const addAppointmentModal = ref(false)
 const addAppointmentDetails = ref({
   fullName: null,
+  category: null,
   appointmentTime: null,
-  category: null
+  date: null,
+  time: null
+})
+addAppointmentDetails.value.appointmentTime = computed(() => {
+  if (!addAppointmentDetails.value.date && !addAppointmentDetails.value.time)
+    return null
+  const date = addAppointmentDetails.value.date ?? new Date()
+  const time = addAppointmentDetails.value.time ?? "00:00"
+  return new Date(`${date.toLocaleString().slice(0, 10)} ${time}`)
 })
 
 // Head
@@ -106,11 +193,19 @@ useHead({
 // Methods
 const addAppointment = async() => {
   try {
-    const result = await fetchData.$put(`/Appointment/${user.value.id}`, addAppointmentDetails.value)
+    const result = await fetchData.$put(`/Appointment/ClientCreate/${user.value.id}`, {
+      fullName: addAppointmentDetails.value.fullName,
+      category: addAppointmentDetails.value.category,
+      appointmentTime: addAppointmentDetails.value.appointmentTime,
+    })
+
     if (!result.error) {
+      addAppointmentModal.value = false
       addAppointmentDetails.value.fullName = null
-      addAppointmentDetails.value.appointmentTime = null
       addAppointmentDetails.value.category = null
+      addAppointmentDetails.value.appointmentTime = null
+      addAppointmentDetails.value.date = null
+      addAppointmentDetails.value.time = null
       ElNotification.success({ message: result.message })
     }
     else {

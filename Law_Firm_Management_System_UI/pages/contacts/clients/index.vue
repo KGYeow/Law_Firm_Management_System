@@ -35,7 +35,6 @@
 
 <script setup>
 import UiParentCard from "@/components/shared/UiParentCard.vue";
-import { VDataTable } from "vuetify/lib/labs/components.mjs";
 
 // Data
 const currentPage = ref(1)
