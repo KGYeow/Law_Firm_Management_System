@@ -26,7 +26,7 @@ namespace Law_Firm_Management_System_API.Controllers
 
         // Get the list of client appointments from partner's perspective.
         [HttpGet]
-        [Route("/List/PartnerPerspective/{PartnerUserId}")]
+        [Route("List/PartnerPerspective/{PartnerUserId}")]
         public IActionResult GetAppointmentsPartnerPerspective(int partnerUserId)
         {
             var l = context.Appointments.Include(a => a.Client).Include(a => a.Category).Where(a => a.PartnerUserId == partnerUserId).OrderByDescending(a => a.Id).ToList()
@@ -36,7 +36,7 @@ namespace Law_Firm_Management_System_API.Controllers
 
         // Get the list of appointments from client's perspective.
         [HttpGet]
-        [Route("/List/ClientPerspective/{ClientUserId}")]
+        [Route("List/ClientPerspective/{ClientUserId}")]
         public IActionResult GetAppointmentsClientPerspective(int clientUserId)
         {
             var l = context.Appointments.Include(a => a.PartnerUser).Include(a => a.Category).Where(a => a.Client.UserId == clientUserId).OrderByDescending(a => a.Id).ToList()
