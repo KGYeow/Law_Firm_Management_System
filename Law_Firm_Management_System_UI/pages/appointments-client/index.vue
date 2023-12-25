@@ -28,7 +28,8 @@
       <v-card elevation="10" class="withbg">
         <el-tag
           :type="item.status == 'Approved' ? 'success' : item.status == 'Pending' ? 'warning' : 'danger'"
-          class="position-absolute fw-bold"
+          class="position-absolute"
+          effect="dark"
           style="bottom: -10px; right: -15px; border-radius: 10px;"
         >
           <i class="mdi mdi-check" v-if="item.status == 'Approved'"></i>
@@ -77,7 +78,7 @@
       </v-card-title>
       <v-divider class="m-0"/>
       <form @submit.prevent="addAppointment">
-        <v-card-item class="p-3 text-body-1">
+        <v-card-item class="px-5 py-4 text-body-1">
           <v-row>
             <v-col>
               <v-label class="text-caption">Partner</v-label>
@@ -89,8 +90,8 @@
                 variant="outlined"
                 density="compact"
                 color="primary"
+                :rules="[!!addAppointmentDetails.fullName || 'Required.']"
                 v-model="addAppointmentDetails.fullName"
-                hide-details
               />
             </v-col>
           </v-row>
