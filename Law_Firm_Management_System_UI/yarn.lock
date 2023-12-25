@@ -336,10 +336,10 @@
   resolved "https://registry.npmjs.org/@element-plus/icons-vue/-/icons-vue-2.1.0.tgz"
   integrity sha512-PSBn3elNoanENc1vnCfh+3WA9fimRC7n+fWkf3rE5jvv+aBohNHABC/KAR5KWPecxWxDTVT1ERpRbOMRcOV/vA==
 
-"@element-plus/nuxt@^1.0.6":
-  version "1.0.6"
-  resolved "https://registry.npmjs.org/@element-plus/nuxt/-/nuxt-1.0.6.tgz"
-  integrity sha512-UdZ1YD4gSpXL7vIciYVRXBHPMTq/FFfLqtWiTVA18n/65tAw75HvJE1OmvA3ZhW8tMAxhv3IGzh4zA5zdFXCFg==
+"@element-plus/nuxt@^1.0.7":
+  version "1.0.7"
+  resolved "https://registry.npmjs.org/@element-plus/nuxt/-/nuxt-1.0.7.tgz"
+  integrity sha512-cRP2iMTzrKKKgfXuWXQ/HAC1vawVeErNZPz7ylA2OfhR+RKPS0UbDy43zytBx/imxhuZbtDI6lPuGAf7TOMYDQ==
   dependencies:
     "@nuxt/kit" "^3.7.1"
     magic-string "^0.27.0"
@@ -5926,7 +5926,7 @@ vite-plugin-vue-inspector@^4.0.0:
     kolorist "^1.8.0"
     magic-string "^0.30.4"
 
-vite-plugin-vuetify@^1.0.0-alpha.12:
+vite-plugin-vuetify@>=1.0.0-alpha.12:
   version "1.0.2"
   resolved "https://registry.npmjs.org/vite-plugin-vuetify/-/vite-plugin-vuetify-1.0.2.tgz"
   integrity sha512-MubIcKD33O8wtgQXlbEXE7ccTEpHZ8nPpe77y9Wy3my2MWw/PgehP9VqTp92BLqr0R1dSL970Lynvisx3UxBFw==
@@ -6027,7 +6027,7 @@ vue-tabler-icons@^2.21.0:
   resolved "https://registry.npmjs.org/vue-tabler-icons/-/vue-tabler-icons-2.21.0.tgz"
   integrity sha512-rEZYPd37j1sd/9gBFtC1u8wj3Pz1S3gLP1tgexvnivzQPXphc6M+7XuTSOd7wtdpaLt1sQgDmuQxIgczzrvf0A==
 
-"vue@^2.7.0 || ^3.2.25", vue@^3.0.0, "vue@^3.0.0-0 || ^2.6.0", vue@^3.2.0, vue@^3.2.25, vue@^3.3.4, "vue@> 3.0.0", "vue@>=2.7 || >=3", vue@3.3.7:
+"vue@^2.7.0 || ^3.2.25", vue@^3.0.0, "vue@^3.0.0-0 || ^2.6.0", vue@^3.2.0, vue@^3.2.25, vue@^3.3.0, vue@^3.3.4, "vue@> 3.0.0", "vue@>=2.7 || >=3", vue@3.3.7:
   version "3.3.7"
   resolved "https://registry.npmjs.org/vue/-/vue-3.3.7.tgz"
   integrity sha512-YEMDia1ZTv1TeBbnu6VybatmSteGOS3A3YgfINOfraCbf85wdKHzscD6HSS/vB4GAtI7sa1XPX7HcQaJ1l24zA==
@@ -6043,10 +6043,10 @@ vue3-apexcharts@1.4.1:
   resolved "https://registry.npmjs.org/vue3-apexcharts/-/vue3-apexcharts-1.4.1.tgz"
   integrity sha512-96qP8JDqB9vwU7bkG5nVU+E0UGQn7yYQVqUUCLQMYWDuQyu2vE77H/UFZ1yI+hwzlSTBKT9BqnNG8JsFegB3eg==
 
-vuetify@^3.0.0-beta.4, vuetify@^3.3.23:
-  version "3.3.23"
-  resolved "https://registry.npmjs.org/vuetify/-/vuetify-3.3.23.tgz"
-  integrity sha512-EVEFvDyKr/HK2+hQJyhQSjIDULDaBi9vfgAAB0ekm+2Tvc8AkaDwb7VK44R2eilGFGpju6iN52FV7Uasj8SmIg==
+vuetify@^3.0.0-beta.4, vuetify@^3.4.8:
+  version "3.4.8"
+  resolved "https://registry.npmjs.org/vuetify/-/vuetify-3.4.8.tgz"
+  integrity sha512-fx/cVZNYU1Pk1LWevbCCKU5pv2ew/8EWkLhF75LHSzgU6b0skzQaIq6Gr/qSXbUDAPuJz7zqqGbFD6CSNYsY0w==
 
 watchpack@^2.4.0, watchpack@2.4.0:
   version "2.4.0"

@@ -1,4 +1,7 @@
 <template>
+  <h5 class="text-h5 mb-6 pl-7 pt-7 ps-0 d-flex align-center">
+    Partners
+  </h5>
   <v-row>
     <v-col cols="3" v-for="partner in partnerList">
       <v-card elevation="10" class="withbg">
@@ -14,23 +17,23 @@
             </v-card-title>
           </div>
           <v-divider/>
-            <el-scrollbar class="text-body-1" height="150px">
-              <v-list density="compact">
-                <v-list-item>
-                  <template v-slot:prepend>
-                    <i class="mdi mdi-phone me-5"></i>
-                  </template>
-                  <span v-if="partner.phoneNumber">{{ partner.phoneNumber }}</span>
-                  <span v-else>-</span>
-                </v-list-item>
-                <v-list-item>
-                  <template v-slot:prepend>
-                    <i class="mdi mdi-email me-5"></i>
-                  </template>
-                  {{ partner.email }}
-                </v-list-item>
-              </v-list>
-            </el-scrollbar>
+          <el-scrollbar class="text-body-1" height="150px">
+            <v-list density="compact">
+              <v-list-item>
+                <template v-slot:prepend>
+                  <i class="mdi mdi-phone me-5"></i>
+                </template>
+                <span v-if="partner.phoneNumber">{{ partner.phoneNumber }}</span>
+                <span v-else>-</span>
+              </v-list-item>
+              <v-list-item>
+                <template v-slot:prepend>
+                  <i class="mdi mdi-email me-5"></i>
+                </template>
+                {{ partner.email }}
+              </v-list-item>
+            </v-list>
+          </el-scrollbar>
         </v-card-item>
       </v-card>
     </v-col>

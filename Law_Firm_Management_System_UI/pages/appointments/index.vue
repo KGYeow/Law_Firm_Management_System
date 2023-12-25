@@ -37,9 +37,8 @@
 </template>
 
 <script setup>
-import dayjs from 'dayjs';
-import UiParentCard from "@/components/shared/UiParentCard.vue";
-import { VDataTable } from "vuetify/lib/labs/components.mjs";
+import dayjs from 'dayjs'
+import UiParentCard from "@/components/shared/UiParentCard.vue"
 
 // Data
 const { data: user } = useAuth()
@@ -53,7 +52,7 @@ const headers = ref([
   { key: "status" , title: "Status" },
   { key: "actions", title: "Actions", sortable: false }
 ])
-const { data: appointmentList } = await fetchData.$get(`/Appointment/ClientAppointments/${user.value.id}`)
+const { data: appointmentList } = await fetchData.$get(`/Appointment/List/PartnerPerspective/${user.value.id}`)
 
 // Head
 useHead({

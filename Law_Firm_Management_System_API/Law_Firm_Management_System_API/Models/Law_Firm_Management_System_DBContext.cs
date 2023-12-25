@@ -18,6 +18,7 @@ namespace Law_Firm_Management_System_API.Models
 
         public virtual DbSet<Announcement> Announcements { get; set; } = null!;
         public virtual DbSet<Appointment> Appointments { get; set; } = null!;
+        public virtual DbSet<AppointmentCategory> AppointmentCategories { get; set; } = null!;
         public virtual DbSet<Case> Cases { get; set; } = null!;
         public virtual DbSet<Client> Clients { get; set; } = null!;
         public virtual DbSet<Document> Documents { get; set; } = null!;
@@ -67,7 +68,7 @@ namespace Law_Firm_Management_System_API.Models
 
                 entity.Property(e => e.AppointmentTime).HasColumnType("datetime");
 
-                entity.Property(e => e.Category).IsUnicode(false);
+                entity.Property(e => e.CategoryId).HasColumnName("CategoryID");
 
                 entity.Property(e => e.ClientId).HasColumnName("ClientID");
 
@@ -76,6 +77,12 @@ namespace Law_Firm_Management_System_API.Models
                 entity.Property(e => e.Status)
                     .HasMaxLength(100)
                     .IsUnicode(false);
+
+                entity.HasOne(d => d.Category)
+                    .WithMany(p => p.Appointments)
+                    .HasForeignKey(d => d.CategoryId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Appointment_AppointmentCategory");
 
                 entity.HasOne(d => d.Client)
                     .WithMany(p => p.Appointments)
@@ -88,6 +95,17 @@ namespace Law_Firm_Management_System_API.Models
                     .HasForeignKey(d => d.PartnerUserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Appointment_Partner");
+            });
+
+            modelBuilder.Entity<AppointmentCategory>(entity =>
+            {
+                entity.ToTable("AppointmentCategory");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.Name)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<Case>(entity =>
