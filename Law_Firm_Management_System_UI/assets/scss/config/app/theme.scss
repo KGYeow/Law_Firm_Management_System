@@ -1,3 +1,4 @@
+// Vuetify Theme
 .v-theme--PurpleTheme {
   --v-theme-background: 243, 244, 248 !important;
   --v-theme-primary: 43, 76, 101 !important;
@@ -9,4 +10,10 @@
   // #2B4C65
   // #1D1C22
   // #FFFFFF
+}
+
+// Element Plus Theme
+:root {
+  --el-color-primary: #2b4c65 !important;
+  --el-border-color: #cecece !important;
 }

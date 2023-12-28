@@ -17,7 +17,7 @@
           ></v-text-field>
         </div>
         <!-- Add New Appointment -->
-        <v-btn color="primary" elevation="0" @click="addAppointmentModal = true">New Appointment</v-btn>
+        <v-btn color="primary" flat @click="addAppointmentModal = true">New Appointment</v-btn>
       </div>
     </v-col>
   </v-row>
@@ -69,8 +69,8 @@
 
   <!-- Add New Appointment Modal -->
   <v-dialog v-model="addAppointmentModal" width="auto" persistent>
-    <v-card elevation="10" class="withbg" width="500px" style="border-radius: 10px;">
-      <v-card-title class="px-4 py-4 d-sm-flex align-center justify-space-between">
+    <v-card elevation="10" class="withbg rounded-3 overflow-visible" width="500px">
+      <v-card-title class="px-4 py-4 d-sm-flex align-center justify-space-between bg-background rounded-top-3">
         <h5 class="text-h5 mb-0 d-flex align-center">
           Add New Appointment
         </h5>
@@ -78,9 +78,9 @@
       </v-card-title>
       <v-divider class="m-0"/>
       <form @submit.prevent="addAppointment">
-        <v-card-item class="px-5 py-4 text-body-1">
+        <v-card-item class="px-8 py-4 text-body-1">
           <v-row>
-            <v-col>
+            <v-col class="pb-0">
               <v-label class="text-caption">Partner</v-label>
               <v-select
                 :items="partnerList"
@@ -90,13 +90,14 @@
                 variant="outlined"
                 density="compact"
                 color="primary"
-                :rules="[!!addAppointmentDetails.fullName || 'Required.']"
-                v-model="addAppointmentDetails.fullName"
+                :error-messages="addAppointmentDetails.fullName.errorMessage"
+                v-model="addAppointmentDetails.fullName.value"
+                hide-details="auto"
               />
             </v-col>
           </v-row>
           <v-row>
-            <v-col>
+            <v-col class="pb-0">
               <v-label class="text-caption">Category</v-label>
               <v-select
                 :items="categoryList"
@@ -106,56 +107,38 @@
                 variant="outlined"
                 density="compact"
                 color="primary"
-                v-model="addAppointmentDetails.category"
-                hide-details
+                :error-messages="addAppointmentDetails.category.errorMessage"
+                v-model="addAppointmentDetails.category.value"
+                hide-details="auto"
               />
             </v-col>
           </v-row>
           <v-row>
             <v-col>
               <v-label class="text-caption">Date</v-label>
-              <v-menu :close-on-content-click="false">
-                <template v-slot:activator="{ props }">
-                  <v-text-field
-                    v-bind="props"
-                    placeholder="Select date and time"
-                    variant="outlined"
-                    density="compact"
-                    color="primary"
-                    append-inner-icon="mdi-calendar"
-                    :model-value="addAppointmentDetails.appointmentTime ? dayjs(addAppointmentDetails.appointmentTime).format('YYYY-MM-DD, hh:mm A') : null"
-                    hide-details
-                    readonly
-                  />
-                </template>
-                <v-sheet elevation="3">
-                  <v-text-field
-                    class="my-3 mx-5"
-                    placeholder="Select time"
-                    variant="outlined"
-                    density="compact"
-                    color="primary"
-                    type="time"
-                    v-model="addAppointmentDetails.time"
-                    hide-details
-                  />
-                  <v-divider class="mx-5 my-0"/>
-                  <v-date-picker
-                    elevation="0"
-                    color="primary"
-                    :min="new Date(new Date().getTime() - 86400000)"
-                    v-model="addAppointmentDetails.date"
-                    show-adjacent-months
-                    hide-header
-                  />
-                </v-sheet>
-              </v-menu>
+              <el-date-picker
+                :class="{ 'error': addAppointmentDetails.appointmentTime.errorMessage }"
+                placeholder="Select date and time"
+                type="datetime"
+                format="DD MMM YYYY, hh:mm A"
+                date-format="DD MMM YYYY"
+                time-format="HH:mm"
+                :teleported="false"
+                v-model="addAppointmentDetails.appointmentTime.value"
+                style="height: 40px;"
+              />
+              <v-messages
+                :messages="addAppointmentDetails.appointmentTime.errorMessage"
+                :active="addAppointmentDetails.appointmentTime.errorMessage ? true : false"
+                color="#fa896b"
+                :transition="false"
+                style="padding: 3px 16px 3px; opacity: unset;"
+              />
             </v-col>
           </v-row>
         </v-card-item>
-        <v-divider class="m-0"/>
         <v-card-actions class="p-3 justify-content-end">
-          <v-btn color="primary" type="submit">Submit</v-btn>
+          <v-btn color="primary" type="submit" @click="console.log(addAppointmentDetails.appointmentTime.value)">Submit</v-btn>
         </v-card-actions>
       </form>
     </v-card>
@@ -163,6 +146,7 @@
 </template>
 
 <script setup>
+import { useField, useForm } from 'vee-validate'
 import dayjs from 'dayjs'
 
 // Data
@@ -170,20 +154,24 @@ const { data: user } = useAuth()
 const { data: partnerList } = await fetchData.$get("/Partner")
 const { data: categoryList } = await fetchData.$get("/Appointment/Category")
 const { data: appointmentList } = await fetchData.$get(`/Appointment/List/ClientPerspective/${user.value.id}`)
+const { handleSubmit } = useForm({
+  validationSchema: {
+    partner(value) {
+      return value ? true : 'Partner is required'
+    },
+    category(value) {
+      return value ? true : 'Category is required'
+    },
+    appointmentTime(value) {
+      return value ? true : 'Appointment time is required'
+    }
+  }
+})
 const addAppointmentModal = ref(false)
 const addAppointmentDetails = ref({
-  fullName: null,
-  category: null,
-  appointmentTime: null,
-  date: null,
-  time: null
-})
-addAppointmentDetails.value.appointmentTime = computed(() => {
-  if (!addAppointmentDetails.value.date && !addAppointmentDetails.value.time)
-    return null
-  const date = addAppointmentDetails.value.date ?? new Date()
-  const time = addAppointmentDetails.value.time ?? "00:00"
-  return new Date(`${date.toLocaleString().slice(0, 10)} ${time}`)
+  fullName: useField('partner'),
+  category: useField('category'),
+  appointmentTime: useField('appointmentTime'),
 })
 
 // Head
@@ -192,26 +180,19 @@ useHead({
 })
 
 // Methods
-const addAppointment = async() => {
+const addAppointment = handleSubmit(async(values) => {
   try {
-    const result = await fetchData.$put(`/Appointment/ClientCreate/${user.value.id}`, {
-      fullName: addAppointmentDetails.value.fullName,
-      category: addAppointmentDetails.value.category,
-      appointmentTime: addAppointmentDetails.value.appointmentTime,
-    })
-
+    const result = await fetchData.$put(`/Appointment/ClientCreate/${user.value.id}`, values)
     if (!result.error) {
       addAppointmentModal.value = false
-      addAppointmentDetails.value.fullName = null
-      addAppointmentDetails.value.category = null
-      addAppointmentDetails.value.appointmentTime = null
-      addAppointmentDetails.value.date = null
-      addAppointmentDetails.value.time = null
+      addAppointmentDetails.value.fullName.value = null
+      addAppointmentDetails.value.category.value = null
+      addAppointmentDetails.value.appointmentTime.value = null
       ElNotification.success({ message: result.message })
     }
     else {
       ElNotification.error({ message: result.message })
     }
   } catch { ElNotification.error({ message: "There is a problem with the server. Please try again later." }) }
-}
+})
 </script>

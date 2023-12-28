@@ -1,0 +1,53 @@
+.el-date-editor.el-input {
+  width: 100% !important;
+
+  .el-input__wrapper {
+    padding: 0 12px;
+  }
+
+  .el-input__inner {
+    padding: 8px 6px 8px 0px;
+  }
+}
+
+.el-date-picker {
+  .el-date-picker__header {
+    .el-picker-panel__icon-btn {
+      margin: 0;
+      padding: 1px 10px;
+      border-radius: 50%;
+      transition: all 0.15s ease-in-out;
+      
+      &:hover {
+        background-color: rgb(243, 244, 248);
+      }
+    }
+  }
+
+  .el-date-table th {
+    text-align: center;
+  }
+
+  .el-date-table__row {
+    td {
+      padding: 0;
+    }
+  }
+
+  .el-date-table-cell {
+    .el-date-table-cell__text {
+      transition: all 0.15s ease-in-out;
+    }
+
+    &:hover {
+      .el-date-table-cell__text {
+        background-color: rgb(243, 244, 248);
+      }
+    }
+  }
+
+  .el-picker-panel__content {
+    margin-top: 5px;
+    margin-bottom: 5px;
+  }
+}
