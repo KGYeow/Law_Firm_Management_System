@@ -35,10 +35,10 @@
 				</v-btn>
 			</div>
 			<div>
-        		<!-- Notification -->
-				<LayoutFullVerticalHeaderNotificationDD />
+        <!-- Notification -->
+				<LayoutFullVerticalHeaderNotificationDD/>
 				<!-- User Profile -->
-				<LayoutFullVerticalHeaderProfileDD />
+				<LayoutFullVerticalHeaderProfileDD/>
 			</div>
 		</div>
 	</v-app-bar>

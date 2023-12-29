@@ -35,4 +35,14 @@
 useHead({
   title: "Dashboard | CaseCraft",
 })
+
+// Page Meta
+definePageMeta({
+  breadcrumbs: [
+    {
+      title: 'Dashboard',
+      disabled: true,
+    },
+  ],
+})
 </script>

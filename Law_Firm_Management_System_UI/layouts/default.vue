@@ -1,9 +1,10 @@
 <template>
-  <v-locale-provider >
+  <v-locale-provider>
     <v-app>
       <LayoutFullMain/>
       <v-main>
         <v-container fluid class="page-wrapper">
+          <LayoutFullBreadcrumbs/>
           <div class="maxWidth">
             <RouterView/>
           </div>

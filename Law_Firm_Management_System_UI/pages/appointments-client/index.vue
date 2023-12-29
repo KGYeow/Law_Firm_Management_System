@@ -180,6 +180,16 @@ useHead({
   title: "Appointments | CaseCraft",
 })
 
+// Page Meta
+definePageMeta({
+  breadcrumbs: [
+    {
+      title: 'Appointments',
+      disabled: true,
+    },
+  ],
+})
+
 // Methods
 const addAppointment = handleSubmit(async(values) => {
   try {
