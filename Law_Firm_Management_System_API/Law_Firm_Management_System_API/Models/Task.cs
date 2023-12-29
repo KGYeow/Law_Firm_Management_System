@@ -11,10 +11,10 @@ namespace Law_Firm_Management_System_API.Models
         }
 
         public int Id { get; set; }
-        public string? Name { get; set; }
-        public DateTime? AssignedTime { get; set; }
+        public string Name { get; set; } = null!;
+        public DateTime AssignedTime { get; set; }
         public DateTime? CompletedTime { get; set; }
-        public bool? InProgress { get; set; }
+        public bool InProgress { get; set; }
 
         public virtual ICollection<TaskAssignment> TaskAssignments { get; set; }
     }

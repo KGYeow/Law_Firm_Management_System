@@ -23,8 +23,11 @@
   </v-row>
 
   <!-- Appointment Item List -->
-  <v-row class="justify-content-between">
-    <v-col cols="3" v-for="item in appointmentList">
+  <v-row class="justify-content-start">
+    <div class="w-100 text-center pt-5" v-if="appointmentList.length == 0">
+      <div>No Appointments</div>
+    </div>
+    <v-col class="pb-8" cols="3" v-for="item in appointmentList" v-else>
       <v-card elevation="10" class="withbg">
         <el-tag
           :type="item.status == 'Approved' ? 'success' : item.status == 'Pending' ? 'warning' : 'danger'"
@@ -97,7 +100,7 @@
             </v-col>
           </v-row>
           <v-row>
-            <v-col class="pb-0">
+            <v-col>
               <v-label class="text-caption">Category</v-label>
               <v-select
                 :items="categoryList"
@@ -112,8 +115,6 @@
                 hide-details="auto"
               />
             </v-col>
-          </v-row>
-          <v-row>
             <v-col>
               <v-label class="text-caption">Date</v-label>
               <el-date-picker
@@ -123,7 +124,6 @@
                 format="DD MMM YYYY, hh:mm A"
                 date-format="DD MMM YYYY"
                 time-format="HH:mm"
-                value-format="YYYY-MM-DDTHH:mm"
                 :teleported="false"
                 v-model="addAppointmentDetails.appointmentTime.value"
                 style="height: 40px;"
@@ -157,10 +157,10 @@ const { data: categoryList } = await fetchData.$get("/Appointment/Category")
 const { data: appointmentList } = await fetchData.$get(`/Appointment/List/ClientPerspective/${user.value.id}`)
 const { handleSubmit } = useForm({
   validationSchema: {
-    partner(value) {
+    partnerUserId(value) {
       return value ? true : 'Partner is required'
     },
-    category(value) {
+    categoryId(value) {
       return value ? true : 'Category is required'
     },
     appointmentTime(value) {
@@ -170,8 +170,8 @@ const { handleSubmit } = useForm({
 })
 const addAppointmentModal = ref(false)
 const addAppointmentDetails = ref({
-  partnerUserId: useField('partner'),
-  categoryId: useField('category'),
+  partnerUserId: useField('partnerUserId'),
+  categoryId: useField('categoryId'),
   appointmentTime: useField('appointmentTime'),
 })
 
@@ -190,6 +190,7 @@ const addAppointment = handleSubmit(async(values) => {
       addAppointmentDetails.value.categoryId.value = null
       addAppointmentDetails.value.appointmentTime.value = null
       ElNotification.success({ message: result.message })
+      refreshNuxtData()
     }
     else {
       ElNotification.error({ message: result.message })

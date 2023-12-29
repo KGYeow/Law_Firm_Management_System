@@ -6,7 +6,7 @@
           <v-data-table
             v-model:page="currentPage"
             :headers="headers"
-            :items="userList.data.value"
+            :items="userList"
             :items-per-page="itemsPerPage"
           >
             <!-- <template v-slot:item.phoneNumber="{ item }">
@@ -18,8 +18,8 @@
                 <el-pagination
                   layout="total, prev, pager, next"
                   v-model:current-page="currentPage"
-                  :page-size="userList.data.value.length/pageCount()"
-                  :total="userList.data.value.length"
+                  :page-size="userList.length/pageCount()"
+                  :total="userList.length"
                 />
               </div>
             </template>
@@ -43,7 +43,7 @@ const headers = ref([
   { key: "email" , title: "Email" },
   { key: "role", title: "User Type" },
 ])
-const userList = await fetchData.$get("/User")
+const { data: userList } = await fetchData.$get("/User")
 
 // Head
 useHead({
@@ -52,6 +52,6 @@ useHead({
 
 // Methods
 const pageCount = () => {
-  return Math.ceil(userList.data.value.length / itemsPerPage.value)
+  return Math.ceil(userList.value.length / itemsPerPage.value)
 }
 </script>

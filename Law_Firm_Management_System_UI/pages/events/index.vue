@@ -20,11 +20,6 @@
     <v-col cols="12">
       <v-row>
       
-        
-        <v-col cols="12">
-          <!-- Breadcrumbs -->
-          <EventBreadcrumb/>
-        </v-col>
 
         
         

@@ -7,11 +7,12 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[User](
 	[ID] [int] IDENTITY(1,1) NOT NULL,
-	[UserRoleID] [int] NULL,
-	[FullName] [nvarchar](max) NULL,
+	[UserRoleID] [int] NOT NULL,
+	[FullName] [nvarchar](max) NOT NULL,
 	[Username] [nvarchar](100) NOT NULL,
 	[Email] [nvarchar](256) NOT NULL,
-	[Password] [nvarchar](100) NULL,
+	[Password] [nvarchar](100) NOT NULL,
+	[ProfilePhoto] [varbinary](max) NULL,
  CONSTRAINT [PK_User] PRIMARY KEY CLUSTERED
 (
 	[ID] ASC
@@ -102,6 +103,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Announcement](
 	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[PartnerUserID] [int] NOT NULL,
 	[Title] [varchar](MAX) NOT NULL,
 	[Description] [varchar](MAX) NOT NULL,
 	[CreatedTime] [datetime] NOT NULL,
@@ -152,7 +154,7 @@ CREATE TABLE [dbo].[Case](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[Name] [varchar](max) NULL,
 	[UpdatedBy] [nvarchar](100) NULL,
-	[CreatedTime] [datetime] NULL,
+	[CreatedTime] [datetime] NOT NULL,
 	[UpdatedTime] [datetime] NULL,
 	[ClosedTime] [datetime] NULL,
  CONSTRAINT [PK_Case] PRIMARY KEY CLUSTERED 
@@ -183,10 +185,10 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Task](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
-	[Name] [varchar](max) NULL,
-	[AssignedTime] [datetime] NULL,
+	[Name] [varchar](max) NOT NULL,
+	[AssignedTime] [datetime] NOT NULL,
 	[CompletedTime] [datetime] NULL,
-	[InProgress] [bit] NULL,
+	[InProgress] [bit] NOT NULL,
  CONSTRAINT [PK_Task] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
@@ -216,10 +218,10 @@ GO
 CREATE TABLE [dbo].[Event](
 	[ID] [int] IDENTITY(1,1) NOT NULL,
 	[CaseID] [int] NULL,
-	[Name] [varchar](max) NULL,
-	[CreatedTime] [datetime] NULL,
-	[EventTime] [datetime] NULL,
-	[IsCompleted] [bit] NULL,
+	[Name] [varchar](max) NOT NULL,
+	[CreatedTime] [datetime] NOT NULL,
+	[EventTime] [datetime] NOT NULL,
+	[IsCompleted] [bit] NOT NULL,
  CONSTRAINT [PK_Event] PRIMARY KEY CLUSTERED
 (
 	[ID] ASC
@@ -233,16 +235,16 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Document](
 	[ID] [int] IDENTITY(1,1) NOT NULL,
-	[CategoryID] [int] NULL,
+	[CategoryID] [int] NOT NULL,
 	[CaseID] [int] NULL,
-	[Name] [varchar](max) NULL,
-	[CreatedBy] [nvarchar](100) NULL,
+	[Name] [varchar](max) NOT NULL,
+	[CreatedBy] [nvarchar](100) NOT NULL,
 	[UpdatedBy] [nvarchar](100) NULL,
-	[CreatedDate] [datetime] NULL,
+	[CreatedDate] [datetime] NOT NULL,
 	[UpdatedDate] [datetime] NULL,
-	[Attachment] [varbinary](max) NULL,
-	[Type] [varchar](10) NULL,
-	[IsArchived] [bit] NULL,
+	[Attachment] [varbinary](max) NOT NULL,
+	[Type] [varchar](10) NOT NULL,
+	[IsArchived] [bit] NOT NULL,
  CONSTRAINT [PK_Document] PRIMARY KEY CLUSTERED 
 (
 	[ID] ASC
@@ -256,7 +258,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[DocumentCategory](
 	[ID] [int] IDENTITY(1,1) NOT NULL,
-	[Name] [varchar](max) NULL,
+	[Name] [varchar](max) NOT NULL,
  CONSTRAINT [PK_DocumentCategory] PRIMARY KEY CLUSTERED 
 (
 	[ID] ASC
@@ -407,9 +409,9 @@ SET IDENTITY_INSERT [dbo].[UserNotification] OFF
 GO
 
 SET IDENTITY_INSERT [dbo].[Announcement] ON
-INSERT [dbo].[Announcement] ([ID], [Title], [Description], [CreatedTime]) VALUES (1, N'Milestone 1', N'Start preparing the documentation to detail your proposed application. In milestone 1, write about the proposed application, the type of users involved, and the functionalities of the application. You may prepare your own format of document that is professionally written.', CAST(N'2023-11-15T10:54:11.157' AS DateTime))
-INSERT [dbo].[Announcement] ([ID], [Title], [Description], [CreatedTime]) VALUES (2, N'Milestone 2', N'Continue your report with: Identify users and draw user diagram (1); Identify the contents of your web application. Draw content diagram (1); Identify the interaction/functionality in your web application; Use use case (1) and sequence diagram (4/5 figures-each functionality) and show the interactions and functionality involved', CAST(N'2023-11-17T10:54:11.157' AS DateTime))
-INSERT [dbo].[Announcement] ([ID], [Title], [Description], [CreatedTime]) VALUES (3, N'Test 1 Date', N'Please take note of the Test 1 Date on the 28th November 2023 at 9am. Venue will be announced soon.', CAST(N'2023-11-19T10:54:11.157' AS DateTime))
+INSERT [dbo].[Announcement] ([ID], [PartnerUserID], [Title], [Description], [CreatedTime]) VALUES (1, 1, N'Milestone 1', N'Start preparing the documentation to detail your proposed application. In milestone 1, write about the proposed application, the type of users involved, and the functionalities of the application. You may prepare your own format of document that is professionally written.', CAST(N'2023-11-15T10:54:11.157' AS DateTime))
+INSERT [dbo].[Announcement] ([ID], [PartnerUserID], [Title], [Description], [CreatedTime]) VALUES (2, 17, N'Milestone 2', N'Continue your report with: Identify users and draw user diagram (1); Identify the contents of your web application. Draw content diagram (1); Identify the interaction/functionality in your web application; Use use case (1) and sequence diagram (4/5 figures-each functionality) and show the interactions and functionality involved', CAST(N'2023-11-17T10:54:11.157' AS DateTime))
+INSERT [dbo].[Announcement] ([ID], [PartnerUserID], [Title], [Description], [CreatedTime]) VALUES (3, 18, N'Test 1 Date', N'Please take note of the Test 1 Date on the 28th November 2023 at 9am. Venue will be announced soon.', CAST(N'2023-11-19T10:54:11.157' AS DateTime))
 SET IDENTITY_INSERT [dbo].[Announcement] OFF
 GO
 
@@ -529,6 +531,12 @@ ALTER TABLE [dbo].[UserNotification] WITH CHECK ADD CONSTRAINT [FK_UserNotificat
 REFERENCES [dbo].[Notification] ([ID])
 GO
 ALTER TABLE [dbo].[UserNotification] CHECK CONSTRAINT [FK_UserNotification_Notification]
+GO
+
+ALTER TABLE [dbo].[Announcement] WITH CHECK ADD CONSTRAINT [FK_Announcement_Partner] FOREIGN KEY([PartnerUserID])
+REFERENCES [dbo].[User] ([ID])
+GO
+ALTER TABLE [dbo].[Announcement] CHECK CONSTRAINT [FK_Announcement_Partner]
 GO
 
 ALTER TABLE [dbo].[Appointment] WITH CHECK ADD CONSTRAINT [FK_Appointment_Client] FOREIGN KEY([ClientID])

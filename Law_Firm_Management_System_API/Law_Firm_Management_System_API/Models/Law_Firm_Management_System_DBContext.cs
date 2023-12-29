@@ -57,7 +57,15 @@ namespace Law_Firm_Management_System_API.Models
 
                 entity.Property(e => e.Description).IsUnicode(false);
 
+                entity.Property(e => e.PartnerUserId).HasColumnName("PartnerUserID");
+
                 entity.Property(e => e.Title).IsUnicode(false);
+
+                entity.HasOne(d => d.PartnerUser)
+                    .WithMany(p => p.Announcements)
+                    .HasForeignKey(d => d.PartnerUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Announcement_Partner");
             });
 
             modelBuilder.Entity<Appointment>(entity =>
@@ -173,6 +181,7 @@ namespace Law_Firm_Management_System_API.Models
                 entity.HasOne(d => d.Category)
                     .WithMany(p => p.Documents)
                     .HasForeignKey(d => d.CategoryId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Document_DocumentCategory");
             });
 
@@ -348,6 +357,7 @@ namespace Law_Firm_Management_System_API.Models
                 entity.HasOne(d => d.UserRole)
                     .WithMany(p => p.Users)
                     .HasForeignKey(d => d.UserRoleId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_User_UserRole");
             });
 

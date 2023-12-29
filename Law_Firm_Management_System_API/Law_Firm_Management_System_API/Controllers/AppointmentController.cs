@@ -68,18 +68,21 @@ namespace Law_Firm_Management_System_API.Controllers
 
         // Approve or reject the pending appointment.
         [HttpPut]
-        [Route("PartnerApproval/{AppointmentId}/{Status}")]
-        public IActionResult AppointmentApproval(int appointmentId, string status)
+        [Route("PartnerApproval")]
+        public IActionResult AppointmentApproval([FromBody] AppointmentApprovalDto dto)
         {
-            var appointment = context.Appointments.Where(a => a.Id == appointmentId).FirstOrDefault();
-            appointment.Status = status;
+            var appointment = context.Appointments.Where(a => a.Id == dto.AppointmentId).FirstOrDefault();
+            appointment.Status = dto.Status;
             context.Appointments.Update(appointment);
             context.SaveChanges();
 
-            if (status == "Approved")
-                return Ok(new Response { Status = "Success", Message = "Appointment approved successfully!" });
+            var notifyMessage = "";
+            if (dto.Status == "Approved")
+                notifyMessage = "Appointment approved successfully!";
             else
-                return Ok(new Response { Status = "Success", Message = "Appointment rejected successfully!" });
+                notifyMessage = "Appointment rejected successfully!";
+
+            return Ok(new Response { Status = "Success", Message = notifyMessage });
         }
 
         public class AppointmentDto
@@ -92,7 +95,7 @@ namespace Law_Firm_Management_System_API.Controllers
         public class AppointmentApprovalDto
         {
             public int AppointmentId { get; set; }
-            public string? Status { get; set; }
+            public string Status { get; set; } = null!;
         }
     }
 }
