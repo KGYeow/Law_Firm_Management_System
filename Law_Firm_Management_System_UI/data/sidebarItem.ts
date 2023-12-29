@@ -69,6 +69,13 @@ const sidebarItem: menu[] = [
     accessName: "Events",
   },
   {
+    title: "Events",
+    icon: tablerIcon.CalendarIcon,
+    to: "/events-partner",
+    auth: true,
+    accessName: "Events_Partner",
+  },
+  {
     title: "Documents",
     icon: tablerIcon.FileDescriptionIcon,
     to: "/documents",

@@ -362,6 +362,7 @@ INSERT [dbo].[Page] ([ID], [Name], [AccessName]) VALUES (11, N'Partners', N'Part
 INSERT [dbo].[Page] ([ID], [Name], [AccessName]) VALUES (12, N'Partners', N'Partners_Employee')
 INSERT [dbo].[Page] ([ID], [Name], [AccessName]) VALUES (13, N'User Settings', N'UserSettings')
 INSERT [dbo].[Page] ([ID], [Name], [AccessName]) VALUES (14, N'Legal Information', N'LegalInformation')
+INSERT [dbo].[Page] ([ID], [Name], [AccessName]) VALUES (15, N'Events', N'Events_Partner')
 SET IDENTITY_INSERT [dbo].[Page] OFF
 GO
 
@@ -371,13 +372,13 @@ INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (1, 1, 2)
 INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (2, 1, 4)
 INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (3, 1, 5)
 INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (4, 1, 6)
-INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (5, 1, 7)
-INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (6, 1, 8)
-INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (7, 1, 9)
-INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (8, 1, 10)
-INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (9, 1, 12)
-INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (10, 1, 13)
-INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (11, 1, 14)
+INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (5, 1, 8)
+INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (6, 1, 9)
+INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (7, 1, 10)
+INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (8, 1, 12)
+INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (9, 1, 13)
+INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (10, 1, 14)
+INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (11, 1, 15)
 /** Paralegal **/
 INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (12, 2, 2)
 INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (13, 2, 4)
@@ -479,6 +480,18 @@ INSERT [dbo].[Client] ([ID], [UserID], [FullName], [PhoneNumber], [Email], [Addr
 INSERT [dbo].[Client] ([ID], [UserID], [FullName], [PhoneNumber], [Email], [Address]) VALUES (15, NULL, N'Diluc', NULL, N'diluc@gmail.com', N'Mondstadt')
 INSERT [dbo].[Client] ([ID], [UserID], [FullName], [PhoneNumber], [Email], [Address]) VALUES (16, 22, N'Dehya', NULL, N'dehya@gmail.com', N'Sumeru')
 SET IDENTITY_INSERT [dbo].[Client] OFF
+GO
+
+SET IDENTITY_INSERT [dbo].[Case] ON
+INSERT [dbo].[Case] ([ID], [Name], [UpdatedBy], [CreatedTime], [UpdatedTime], [ClosedTime]) VALUES (1, N'School', NULL, CAST(N'2023-11-15T10:54:11.157'AS DateTime), CAST(N'2023-12-10T10:54:11.157' AS DateTime), CAST(N'2023-12-10T10:54:11.157' AS DateTime))
+INSERT [dbo].[Case] ([ID], [Name], [UpdatedBy], [CreatedTime], [UpdatedTime], [ClosedTime]) VALUES (2, N'Hospital', NULL, CAST(N'2023-11-15T10:54:11.157'AS DateTime), CAST(N'2023-12-10T10:54:11.157' AS DateTime), CAST(N'2023-12-10T10:54:11.157' AS DateTime))
+SET IDENTITY_INSERT [dbo].[Case] OFF
+GO
+
+SET IDENTITY_INSERT [dbo].[Event] ON
+INSERT [dbo].[Event] ([ID], [CaseID], [Name], [CreatedTime], [EventTime], [IsCompleted]) VALUES (1, 1, N'Court Hearings', CAST(N'2023-11-15T10:54:11.157'AS DateTime), CAST(N'2023-12-10T10:54:11.157' AS DateTime), 0)
+INSERT [dbo].[Event] ([ID], [CaseID], [Name], [CreatedTime], [EventTime], [IsCompleted]) VALUES (2, 2, N'Trial Preparation', CAST(N'2023-12-10T10:54:11.157' AS DateTime), CAST(N'2023-12-10T10:54:11.157' AS DateTime), 1)
+SET IDENTITY_INSERT [dbo].[Event] OFF
 GO
 
 INSERT [dbo].[Paralegal] ([UserID], [PhoneNumber], [Address], [IsActive]) VALUES (2, NULL, N'Paralegal Address', 1)
