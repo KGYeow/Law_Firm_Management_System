@@ -45,11 +45,6 @@ export default defineNuxtConfig({
     shim: false
   },
 
-  // build: https://nuxt.com/docs/api/nuxt-config#build
-  build: {
-    transpile: ["vuetify"],
-  },
-
   // vite: https://nuxt.com/docs/api/nuxt-config#vite
   vite: {
     define: {
@@ -81,7 +76,7 @@ export default defineNuxtConfig({
       token: {
         maxAgeInSeconds: 60 * 60 * 24
       },
-      sessionDataType: { id: 'number', username: 'string', password: 'string', fullName: 'string', email: 'string', role: 'string' }
+      sessionDataType: { id: 'number', username: 'string', password: 'string', fullName: 'string', email: 'string', userRoleId: 'number' }
     },
     baseURL: 'https://localhost:7248/api',
   }

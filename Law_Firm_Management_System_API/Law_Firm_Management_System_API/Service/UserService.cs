@@ -48,7 +48,7 @@ namespace Law_Firm_Management_System_API.Service
             //return user;
 
             if (claimsPrincipal.Identity == null)
-                throw new Exception("Invalid token.");
+                throw new Exception("Invalid token");
 
             var identity = (ClaimsIdentity)claimsPrincipal.Identity;
             var claim = identity.FindFirst(ClaimTypes.Name);
@@ -58,7 +58,7 @@ namespace Law_Firm_Management_System_API.Service
                 if (user != null)
                     return user;
             }
-            throw new Exception("Invalid user.");
+            throw new Exception("Invalid user");
         }
 
         public User Create(User user, string password)

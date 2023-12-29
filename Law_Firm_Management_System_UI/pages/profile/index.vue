@@ -39,7 +39,7 @@
                 </div>
                 <div class="col">
                   <label class="my-1 fw-bold">Role</label>
-                  <v-text-field variant="outlined" density="compact" v-model="user.role" disabled/>
+                  <v-text-field variant="outlined" density="compact" v-model="role" disabled/>
                 </div>
               </div>
               <div class="row">
@@ -65,6 +65,7 @@
 <script setup>
 // Data
 const { data: user } = useAuth()
+const { data: role } = fetchData.$get(`/UserRole/RoleName/${user.value?.userRoleId}`)
 const isEdit = ref(false)
 const editUserDetails = ref({
   username: user.value.username,

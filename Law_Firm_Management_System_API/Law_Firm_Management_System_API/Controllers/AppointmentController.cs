@@ -1,7 +1,7 @@
 ﻿using Law_Firm_Management_System_API.Authentication;
-using Law_Firm_Management_System_API.Dto.Authentication;
 using Law_Firm_Management_System_API.Models;
 using Law_Firm_Management_System_API.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -46,18 +46,17 @@ namespace Law_Firm_Management_System_API.Controllers
 
         // Create the appointment made by the client.
         [HttpPost]
-        [Route("ClientCreate/{ClientUserId}")]
-        public IActionResult CreateAppointmentClientPerspective(int clientUserId, AppointmentDto dto)
+        [Route("ClientCreate")]
+        public IActionResult CreateAppointmentClientPerspective([FromBody] AppointmentDto dto)
         {
-            var client = context.Clients.Where(a => a.UserId == clientUserId).FirstOrDefault();
-            var partner = context.Partners.Include(a => a.User).Where(a => a.User.FullName == dto.FullName).FirstOrDefault();
-            var category = context.AppointmentCategories.Where(a => a.Name == dto.Category).FirstOrDefault();
+            var user = userService.GetUser(User);
+            var client = context.Clients.Where(a => a.UserId == user.Id).FirstOrDefault();
 
             var appointment = new Appointment
             {
                 ClientId = client.Id,
-                PartnerUserId = partner.UserId,
-                CategoryId = category.Id,
+                PartnerUserId = dto.PartnerUserId,
+                CategoryId = dto.CategoryId,
                 AppointmentTime = dto.AppointmentTime,
                 Status = "Pending"
             };
@@ -85,8 +84,8 @@ namespace Law_Firm_Management_System_API.Controllers
 
         public class AppointmentDto
         {
-            public string? FullName { get; set; }
-            public string? Category { get; set; }
+            public int PartnerUserId { get; set; }
+            public int CategoryId { get; set; }
             public DateTime AppointmentTime { get; set; }
         }
 

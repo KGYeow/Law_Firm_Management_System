@@ -68,7 +68,7 @@
   </v-row>
 
   <!-- Add New Appointment Modal -->
-  <v-dialog v-model="addAppointmentModal" width="auto" persistent>
+  <v-dialog v-model="addAppointmentModal" width="auto">
     <v-card elevation="10" class="withbg rounded-3 overflow-visible" width="500px">
       <v-card-title class="px-4 py-4 d-sm-flex align-center justify-space-between bg-background rounded-top-3">
         <h5 class="text-h5 mb-0 d-flex align-center">
@@ -85,13 +85,13 @@
               <v-select
                 :items="partnerList"
                 item-title="fullName"
-                item-value="fullName"
+                item-value="userId"
                 placeholder="Select partner"
                 variant="outlined"
                 density="compact"
                 color="primary"
-                :error-messages="addAppointmentDetails.fullName.errorMessage"
-                v-model="addAppointmentDetails.fullName.value"
+                :error-messages="addAppointmentDetails.partnerUserId.errorMessage"
+                v-model="addAppointmentDetails.partnerUserId.value"
                 hide-details="auto"
               />
             </v-col>
@@ -102,13 +102,13 @@
               <v-select
                 :items="categoryList"
                 item-title="name"
-                item-value="name"
+                item-value="id"
                 placeholder="Select category"
                 variant="outlined"
                 density="compact"
                 color="primary"
-                :error-messages="addAppointmentDetails.category.errorMessage"
-                v-model="addAppointmentDetails.category.value"
+                :error-messages="addAppointmentDetails.categoryId.errorMessage"
+                v-model="addAppointmentDetails.categoryId.value"
                 hide-details="auto"
               />
             </v-col>
@@ -123,6 +123,7 @@
                 format="DD MMM YYYY, hh:mm A"
                 date-format="DD MMM YYYY"
                 time-format="HH:mm"
+                value-format="YYYY-MM-DDTHH:mm"
                 :teleported="false"
                 v-model="addAppointmentDetails.appointmentTime.value"
                 style="height: 40px;"
@@ -138,7 +139,7 @@
           </v-row>
         </v-card-item>
         <v-card-actions class="p-3 justify-content-end">
-          <v-btn color="primary" type="submit" @click="console.log(addAppointmentDetails.appointmentTime.value)">Submit</v-btn>
+          <v-btn color="primary" type="submit">Submit</v-btn>
         </v-card-actions>
       </form>
     </v-card>
@@ -169,8 +170,8 @@ const { handleSubmit } = useForm({
 })
 const addAppointmentModal = ref(false)
 const addAppointmentDetails = ref({
-  fullName: useField('partner'),
-  category: useField('category'),
+  partnerUserId: useField('partner'),
+  categoryId: useField('category'),
   appointmentTime: useField('appointmentTime'),
 })
 
@@ -182,11 +183,11 @@ useHead({
 // Methods
 const addAppointment = handleSubmit(async(values) => {
   try {
-    const result = await fetchData.$put(`/Appointment/ClientCreate/${user.value.id}`, values)
+    const result = await fetchData.$post(`/Appointment/ClientCreate`, values)
     if (!result.error) {
       addAppointmentModal.value = false
-      addAppointmentDetails.value.fullName.value = null
-      addAppointmentDetails.value.category.value = null
+      addAppointmentDetails.value.partnerUserId.value = null
+      addAppointmentDetails.value.categoryId.value = null
       addAppointmentDetails.value.appointmentTime.value = null
       ElNotification.success({ message: result.message })
     }

@@ -1,13 +1,12 @@
 //
 // Composable for $fetch
 //
-const headers = useRequestHeaders(['cookie']) as HeadersInit
 const baseURL = useRuntimeConfig().public.baseURL
 
 async function fetchResult(url: string, method: any, body: any = null) {
   return $fetch(baseURL + url, {
     method: method,
-    headers: headers,
+    headers: { 'Authorization': `${useAuth().token.value}` },
     body: body ? JSON.stringify(body) : undefined,
   })
 }

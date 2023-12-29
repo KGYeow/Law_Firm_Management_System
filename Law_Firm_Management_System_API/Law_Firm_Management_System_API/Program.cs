@@ -8,24 +8,27 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+ConfigurationManager configuration = builder.Configuration;
+IWebHostEnvironment environment = builder.Environment;
+
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddDbContext<Law_Firm_Management_System_DBContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("ConnStr"));
+    options.UseSqlServer(configuration.GetConnectionString("ConnStr"));
 });
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
-{
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuer = true,
         ValidateAudience = true,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
-        ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
-        ValidAudience = builder.Configuration["JWT:ValidAudience"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"])),
-    };
-});
+        ValidIssuer = configuration["JWT:ValidIssuer"],
+        ValidAudience = configuration["JWT:ValidAudience"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"])),
+    }
+);
+builder.Services.AddAuthorization();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddControllers().AddNewtonsoftJson(options =>
 {
@@ -47,14 +50,14 @@ if (app.Environment.IsDevelopment())
 // Need to remove when using Window Auth Use
 app.UseCors(options => options.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 
+app.UseHttpsRedirection();
+
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
 
-app.UseStaticFiles();
-app.UseHttpsRedirection();
-
 app.UseExceptionHandler("/error");
+app.UseStaticFiles();
 
 app.Run();

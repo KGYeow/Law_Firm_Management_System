@@ -19,7 +19,7 @@ namespace Law_Firm_Management_System_API.Controllers
         public IActionResult GetPartnerList()
         {
             var l = context.Partners.Include(a => a.User).Include(a => a.ParalegalUser.User).OrderBy(a => a.User.FullName).ToList()
-                .Select(x => new { fullName = x.User.FullName, assignedParalegal = x.ParalegalUser?.User.FullName, phoneNumber = x.PhoneNumber, address = x.Address, email = x.User.Email});
+                .Select(x => new { userId = x.UserId, fullName = x.User.FullName, assignedParalegal = x.ParalegalUser?.User.FullName, phoneNumber = x.PhoneNumber, address = x.Address, email = x.User.Email});
             return Ok(l);
         }
 
