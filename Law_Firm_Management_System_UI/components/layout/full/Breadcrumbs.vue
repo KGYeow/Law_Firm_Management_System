@@ -1,11 +1,12 @@
 <template>
   <v-card elevation="10" class="mb-5 withbg">
     <v-breadcrumbs
-      class="px-7 py-2 text-subtitle-1"
-      :items="[]"
+      class="px-7 text-subtitle-1"
+      density="compact"
+      :items="useRoute().meta.breadcrumbs"
     >
       <template v-slot:prepend>
-        <v-icon size="small" :icon="CalendarIcon"></v-icon>
+        <v-icon class="me-1" size="small" :icon="useRoute().meta.breadcrumbsIcon"/>
       </template>
       <template v-slot:divider>
         <v-icon icon="mdi-chevron-right"></v-icon>
@@ -15,18 +16,5 @@
 </template>
 
 <script setup>
-import { CalendarIcon } from 'vue-tabler-icons';
-
-const route = useRoute()
-const currentBreadcrumbs = computed(() => {
-  return route.fullPath
-})
-console.log(currentBreadcrumbs.value)
-// Properties
-// defineProps({
-//   items: {
-//     type: Array,
-//     required: true,
-//   },
-// })
+import { useRoute } from 'vue-router'
 </script>

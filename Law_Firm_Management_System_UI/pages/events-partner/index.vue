@@ -1,7 +1,7 @@
 <template>
   <v-row>
     <v-col cols="12" md="12">
-      <UiParentCard title="Event Management"> 
+      <UiParentCard title="Events"> 
         <div class="pa-7 pt-1 text-body-1">
           <v-data-table
             v-model:page="currentPage"
@@ -37,6 +37,7 @@
 
 <script setup>
 import dayjs from 'dayjs';
+import { CalendarIcon } from "vue-tabler-icons"
 import UiParentCard from "@/components/shared/UiParentCard.vue";
 
 // Data
@@ -56,6 +57,17 @@ const { data: eventList } = await fetchData.$get("/Event")
 // Head
 useHead({
   title: "Events | CaseCraft",
+})
+
+// Page Meta
+definePageMeta({
+  breadcrumbsIcon: shallowRef(CalendarIcon),
+  breadcrumbs: [
+    {
+      title: 'Events',
+      disabled: false,
+    },
+  ],
 })
 
 // Methods

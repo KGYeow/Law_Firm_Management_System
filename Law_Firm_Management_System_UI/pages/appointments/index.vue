@@ -38,6 +38,7 @@
 
 <script setup>
 import dayjs from 'dayjs'
+import { Book2Icon } from "vue-tabler-icons"
 import UiParentCard from "@/components/shared/UiParentCard.vue"
 
 // Data
@@ -57,6 +58,17 @@ const { data: appointmentList } = await fetchData.$get(`/Appointment/List/Partne
 // Head
 useHead({
   title: "Appointments | CaseCraft",
+})
+
+// Page Meta
+definePageMeta({
+  breadcrumbsIcon: shallowRef(Book2Icon),
+  breadcrumbs: [
+    {
+      title: 'Appointments',
+      disabled: false,
+    },
+  ],
 })
 
 // Methods

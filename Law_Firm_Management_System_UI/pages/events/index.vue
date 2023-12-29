@@ -79,10 +79,22 @@
 </template>
 
 <script setup>
+import { CalendarIcon } from "vue-tabler-icons"
+
 // Head
 useHead({
   title: "Events | CaseCraft",
 })
 
+// Page Meta
+definePageMeta({
+  breadcrumbsIcon: shallowRef(CalendarIcon),
+  breadcrumbs: [
+    {
+      title: 'Events',
+      disabled: false,
+    },
+  ],
+})
 </script>
 

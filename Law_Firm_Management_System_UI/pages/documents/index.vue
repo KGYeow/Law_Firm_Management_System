@@ -1,7 +1,7 @@
 <template>
   <v-row>
     <v-col cols="12" md="12">
-      <UiParentCard title="Document Management">
+      <UiParentCard title="Documents">
         <div class="pa-7 pt-1 text-body-1">
           <v-data-table
             v-model:page="currentPage"
@@ -42,6 +42,7 @@
 </template>
 
 <script setup>
+import { FileDescriptionIcon } from "vue-tabler-icons"
 import UiParentCard from '@/components/shared/UiParentCard.vue';
 
 // Data
@@ -124,6 +125,17 @@ const desserts = ref([
 // Head
 useHead({
   title: "Documents | CaseCraft",
+})
+
+// Page Meta
+definePageMeta({
+  breadcrumbsIcon: shallowRef(FileDescriptionIcon),
+  breadcrumbs: [
+    {
+      title: 'Documents',
+      disabled: false,
+    },
+  ],
 })
 
 // Methods

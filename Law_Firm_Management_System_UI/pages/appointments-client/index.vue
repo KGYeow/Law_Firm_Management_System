@@ -148,6 +148,7 @@
 
 <script setup>
 import { useField, useForm } from 'vee-validate'
+import { Book2Icon } from "vue-tabler-icons"
 import dayjs from 'dayjs'
 
 // Data
@@ -182,10 +183,11 @@ useHead({
 
 // Page Meta
 definePageMeta({
+  breadcrumbsIcon: shallowRef(Book2Icon),
   breadcrumbs: [
     {
       title: 'Appointments',
-      disabled: true,
+      disabled: false,
     },
   ],
 })

@@ -31,6 +31,7 @@
 </template>
 
 <script setup>
+import { SettingsIcon } from "vue-tabler-icons"
 import UiParentCard from "@/components/shared/UiParentCard.vue";
 
 // Data
@@ -48,6 +49,21 @@ const { data: userList } = await fetchData.$get("/User")
 // Head
 useHead({
   title: "User Settings | CaseCraft",
+})
+
+// Page Meta
+definePageMeta({
+  breadcrumbsIcon: shallowRef(SettingsIcon),
+  breadcrumbs: [
+    {
+      title: 'Configuration',
+      disabled: false,
+    },
+    {
+      title: 'User Settings',
+      disabled: false,
+    },
+  ],
 })
 
 // Methods

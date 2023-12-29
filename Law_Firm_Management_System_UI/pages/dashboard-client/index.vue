@@ -31,6 +31,8 @@
 </template>
 
 <script setup>
+import { LayoutDashboardIcon } from "vue-tabler-icons"
+
 // Head
 useHead({
   title: "Dashboard | CaseCraft",
@@ -38,10 +40,11 @@ useHead({
 
 // Page Meta
 definePageMeta({
+  breadcrumbsIcon: shallowRef(LayoutDashboardIcon),
   breadcrumbs: [
     {
       title: 'Dashboard',
-      disabled: true,
+      disabled: false,
     },
   ],
 })

@@ -82,6 +82,7 @@
 </template>
 
 <script setup>
+import { AddressBookIcon } from "vue-tabler-icons"
 import UiParentCard from "@/components/shared/UiParentCard.vue";
 
 // Data
@@ -103,6 +104,21 @@ const { data: assignedParalegal } = await fetchData.$get(`/Paralegal/AssignedPar
 // Head
 useHead({
   title: "Paralegals | CaseCraft",
+})
+
+// Page Meta
+definePageMeta({
+  breadcrumbsIcon: shallowRef(AddressBookIcon),
+  breadcrumbs: [
+    {
+      title: 'Contacts',
+      disabled: false,
+    },
+    {
+      title: 'Paralegals',
+      disabled: false,
+    },
+  ],
 })
 
 // Methods

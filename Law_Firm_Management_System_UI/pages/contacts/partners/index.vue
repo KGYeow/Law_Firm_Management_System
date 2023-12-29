@@ -70,6 +70,7 @@
 </template>
 
 <script setup>
+import { AddressBookIcon } from "vue-tabler-icons"
 import UiParentCard from "@/components/shared/UiParentCard.vue";
 
 // Data
@@ -90,6 +91,21 @@ const { data: assignedPartner } = await fetchData.$get(`/Partner/AssignedPartner
 // Head
 useHead({
   title: "Partners | CaseCraft",
+})
+
+// Page Meta
+definePageMeta({
+  breadcrumbsIcon: shallowRef(AddressBookIcon),
+  breadcrumbs: [
+    {
+      title: 'Contacts',
+      disabled: false,
+    },
+    {
+      title: 'Partners',
+      disabled: false,
+    },
+  ],
 })
 
 // Methods

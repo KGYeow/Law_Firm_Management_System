@@ -40,6 +40,7 @@
 
 <script setup>
 import dayjs from 'dayjs';
+import { BriefcaseIcon } from "vue-tabler-icons"
 import UiParentCard from "@/components/shared/UiParentCard.vue";
 
 // Data
@@ -60,6 +61,17 @@ const { data: clientList } = await fetchData.$get("/Case")
 // Head
 useHead({
   title: "Cases | CaseCraft",
+})
+
+// Page Meta
+definePageMeta({
+  breadcrumbsIcon: shallowRef(BriefcaseIcon),
+  breadcrumbs: [
+    {
+      title: 'Cases',
+      disabled: false,
+    },
+  ],
 })
 
 // Methods

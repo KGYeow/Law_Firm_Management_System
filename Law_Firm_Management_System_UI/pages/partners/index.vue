@@ -41,11 +41,24 @@
 </template>
 
 <script setup>
+import { ScaleIcon } from "vue-tabler-icons"
+
 // Data
 const { data: partnerList } = await fetchData.$get("/Partner")
 
 // Head
 useHead({
   title: "Partners | CaseCraft",
+})
+
+// Page Meta
+definePageMeta({
+  breadcrumbsIcon: shallowRef(ScaleIcon),
+  breadcrumbs: [
+    {
+      title: 'Partners',
+      disabled: false,
+    },
+  ],
 })
 </script>
