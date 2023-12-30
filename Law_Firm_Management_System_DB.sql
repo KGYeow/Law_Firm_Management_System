@@ -356,7 +356,7 @@ INSERT [dbo].[Page] ([ID], [Name], [AccessName]) VALUES (3, N'Appointments', N'A
 INSERT [dbo].[Page] ([ID], [Name], [AccessName]) VALUES (4, N'Appointments', N'Appointments_Employee')
 INSERT [dbo].[Page] ([ID], [Name], [AccessName]) VALUES (5, N'Cases', N'Cases')
 INSERT [dbo].[Page] ([ID], [Name], [AccessName]) VALUES (6, N'Tasks', N'Tasks')
-INSERT [dbo].[Page] ([ID], [Name], [AccessName]) VALUES (7, N'Events', N'Events')
+INSERT [dbo].[Page] ([ID], [Name], [AccessName]) VALUES (7, N'Events', N'Events_Client')
 INSERT [dbo].[Page] ([ID], [Name], [AccessName]) VALUES (8, N'Documents', N'Documents')
 INSERT [dbo].[Page] ([ID], [Name], [AccessName]) VALUES (9, N'Clients', N'Clients')
 INSERT [dbo].[Page] ([ID], [Name], [AccessName]) VALUES (10, N'Paralegals', N'Paralegals')
@@ -364,7 +364,7 @@ INSERT [dbo].[Page] ([ID], [Name], [AccessName]) VALUES (11, N'Partners', N'Part
 INSERT [dbo].[Page] ([ID], [Name], [AccessName]) VALUES (12, N'Partners', N'Partners_Employee')
 INSERT [dbo].[Page] ([ID], [Name], [AccessName]) VALUES (13, N'User Settings', N'UserSettings')
 INSERT [dbo].[Page] ([ID], [Name], [AccessName]) VALUES (14, N'Legal Information', N'LegalInformation')
-INSERT [dbo].[Page] ([ID], [Name], [AccessName]) VALUES (15, N'Events', N'Events_Partner')
+INSERT [dbo].[Page] ([ID], [Name], [AccessName]) VALUES (15, N'Events', N'Events')
 SET IDENTITY_INSERT [dbo].[Page] OFF
 GO
 

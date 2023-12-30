@@ -64,16 +64,16 @@ const sidebarItem: menu[] = [
   {
     title: "Events",
     icon: tablerIcon.CalendarIcon,
-    to: "/events",
+    to: "/events-client",
     auth: true,
-    accessName: "Events",
+    accessName: "Events_Client",
   },
   {
     title: "Events",
     icon: tablerIcon.CalendarIcon,
-    to: "/events-partner",
+    to: "/events",
     auth: true,
-    accessName: "Events_Partner",
+    accessName: "Events",
   },
   {
     title: "Documents",

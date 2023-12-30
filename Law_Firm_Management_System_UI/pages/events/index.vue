@@ -1,85 +1,58 @@
 <template>
-  <!-- Rightbar -->
-  <v-navigation-drawer
-    elevation="0"
-    location="right"
-    width="350"
-    absolute
-    permanent
-  >
-    <el-scrollbar>
-      <div class="d-flex flex-column">
-        <!-- Calendar -->
-        <DashboardCalendar/>
-        
-      </div>
-    </el-scrollbar>
-  </v-navigation-drawer>
-  <!-- Events Items -->
   <v-row>
-    <v-col cols="12">
-      <v-row>
-      
-
-        
-        
-        <!---If Caption-->
-       
-        
-        <v-col cols="12">
-          
-          
-
-          <!-- Upcoming Event -->
-          <div>
-            <h5 class="text-h5 pl-7 d-flex align-center">
-              Upcoming Events
-            </h5>
-            <el-scrollbar height="0vh">
-              <div class="pa-7 py-1 text-body-1">
+    <v-col cols="12" md="12">
+      <UiParentCard title="Events"> 
+        <div class="pa-7 pt-1 text-body-1">
+          <v-data-table
+            v-model:page="currentPage"
+            :headers="headers"
+            :items="eventList"
+            :items-per-page="itemsPerPage"
+          >
+            <template v-slot:item.number="{ index }">
+              <span>{{ index + 1 }}</span>
+            </template>
+            <template v-slot:item.createdTime="{ item }">
+              {{ dayjs(item.createdTime).format("DD MMM YYYY, hh:mm A") }}
+            </template>
+            <template v-slot:item.eventTime="{ item }">
+              {{ dayjs(item.eventTime).format("DD MMM YYYY, hh:mm A") }}
+            </template>
+            <template v-slot:bottom>
+              <div class="d-flex justify-content-end pt-2">
+                <el-pagination
+                  layout="total, prev, pager, next"
+                  v-model:current-page="currentPage"
+                  :page-size="eventList.length/pageCount()"
+                  :total="eventList.length"
+                />
               </div>
-            </el-scrollbar>
-          </div>
-        
-        <v-list items="events" style="background-color: rgb(243, 244, 248);">
-            <v-row>
-              <v-col v-for="n in 3" :key="n" cols="12" lg="6">
-                <EventItem />
-              </v-col>
-            </v-row>
-          </v-list>
-        </v-col>
-        
-        <v-col cols="12">
-         <!-- Past Event -->
-         <div>
-          <h5 class="text-h5 pl-7 d-flex align-center">
-            Past Events
-          </h5>
-          <el-scrollbar height="0vh">
-            <div class="pa-7 py-1 text-body-1">
-            </div>
-          </el-scrollbar>
+            </template>
+          </v-data-table>
         </div>
-        
-        
-        
-        <v-list items="events" style="background-color: rgb(243, 244, 248);">
-            <v-row>
-              <v-col v-for="n in 3" :key="n" cols="12" lg="6">
-                <EventItem />
-              </v-col>
-            </v-row>
-          </v-list>
-        </v-col>
-    </v-row>
-      
+      </UiParentCard>
     </v-col>
   </v-row>
 </template>
 
 <script setup>
+import dayjs from 'dayjs';
 import { CalendarIcon } from "vue-tabler-icons"
+import UiParentCard from "@/components/shared/UiParentCard.vue";
+
+// Data
+const { data: user } = useAuth()
+const currentPage = ref(1)
+const itemsPerPage = ref(10)
+const headers = ref([
+  { key: "number", title: "No." },
+  { key: "caseID", title: "Case ID" },
+  { key: "name", title: "Event Name" },
+  { key: "createdTime" , title: "Created Time" },
+  { key: "eventTime", title: "Event Time"},
+  { key: "isCompleted", title: "Is Complete"},
+])
+const { data: eventList } = await fetchData.$get("/Event")
 
 // Head
 useHead({
@@ -96,5 +69,9 @@ definePageMeta({
     },
   ],
 })
-</script>
 
+// Methods
+const pageCount = () => {
+  return Math.ceil(eventList.value.length / itemsPerPage.value)
+}
+</script>
