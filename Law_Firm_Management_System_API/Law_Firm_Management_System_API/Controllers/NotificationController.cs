@@ -13,18 +13,20 @@ namespace Law_Firm_Management_System_API.Controllers
         }
 
         [HttpGet]
-        [Route("NotificationLog/{Id}")]
-        public IActionResult GetNotificationLog(int id)
+        [Route("NotificationLog")]
+        public IActionResult GetNotificationLog()
         {
-            var l = context.UserNotifications.Where(a => a.UserId == id).OrderByDescending(a => a.Id).ToList();
+            var user = userService.GetUser(User);
+            var l = context.UserNotifications.Where(a => a.UserId == user.Id).OrderByDescending(a => a.Id).ToList();
             return Ok(l);
         }
 
         [HttpGet]
-        [Route("UserNotifications/{Id}")]
-        public IActionResult GetUserNotifications(int id)
+        [Route("UserNotifications")]
+        public IActionResult GetUserNotifications()
         {
-            var l = context.UserNotifications.Where(a => a.UserId == id && a.IsRead == false).OrderByDescending(a => a.Id).ToList();
+            var user = userService.GetUser(User);
+            var l = context.UserNotifications.Where(a => a.UserId == user.Id && a.IsRead == false).OrderByDescending(a => a.Id).ToList();
             return Ok(l);
         }
     }

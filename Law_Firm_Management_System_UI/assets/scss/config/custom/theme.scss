@@ -1,0 +1,21 @@
+//
+// Vuetify Theme Color Palettes
+//
+// #f3f4f8 (background color)
+// #95b4cc
+// #6b8ba4 (secondary)
+// #2b4c65 (primary)
+// #1d1c22 (border color)
+// #ffffff
+
+// Element Plus Theme
+:root {
+  --el-color-primary: rgb(var(--v-theme-primary)) !important;
+
+  .el-button--primary {
+    --el-button-hover-bg-color: rgb(var(--v-theme-secondary)) !important;
+    --el-button-hover-border-color: rgb(var(--v-theme-secondary)) !important;
+    --el-button-active-bg-color: rgb(var(--v-theme-primary)) !important;
+    --el-button-active-border-color: rgb(var(--v-theme-primary)) !important;
+  }
+}

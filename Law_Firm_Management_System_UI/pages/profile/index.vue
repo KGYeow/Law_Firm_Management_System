@@ -39,7 +39,7 @@
                 </div>
                 <div class="col">
                   <label class="my-1 fw-bold">Role</label>
-                  <v-text-field variant="outlined" density="compact" v-model="role" disabled/>
+                  <v-text-field variant="outlined" density="compact" v-model="userRole" disabled/>
                 </div>
               </div>
               <div class="row">
@@ -63,9 +63,11 @@
 </template>
 
 <script setup>
+import { UserIcon } from "vue-tabler-icons"
+
 // Data
 const { data: user } = useAuth()
-const { data: role } = fetchData.$get(`/UserRole/RoleName/${user.value?.userRoleId}`)
+const { data: userRole } = await fetchData.$get("/UserRole/RoleName")
 const isEdit = ref(false)
 const editUserDetails = ref({
   username: user.value.username,
@@ -76,6 +78,17 @@ const editUserDetails = ref({
 // Head
 useHead({
   title: `${user.value.fullName} | CaseCraft`,
+})
+
+// Page Meta
+definePageMeta({
+  breadcrumbsIcon: shallowRef(UserIcon),
+  breadcrumbs: [
+    {
+      title: 'My Profile',
+      disabled: false,
+    },
+  ],
 })
 
 // Methods

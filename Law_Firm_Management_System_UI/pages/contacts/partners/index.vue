@@ -1,5 +1,5 @@
 <template>
-  <v-row v-if="user.role === 'Paralegal'">
+  <v-row v-if="userRole === 'Paralegal'">
     <v-col cols="12" md="12">
       <v-card elevation="10" class="withbg bg-primary">
         <v-card-item>
@@ -86,7 +86,8 @@ const headers = ref([
   { key: "address" , title: "Address" },
 ])
 const { data: partnerList } = await fetchData.$get("/Partner")
-const { data: assignedPartner } = await fetchData.$get(`/Partner/AssignedPartner/${user.value.id}`)
+const { data: userRole } = await fetchData.$get("/UserRole/RoleName")
+const { data: assignedPartner } = await fetchData.$get("/Partner/AssignedPartner")
 
 // Head
 useHead({

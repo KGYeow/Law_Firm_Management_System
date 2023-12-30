@@ -15,9 +15,27 @@
             <template v-slot:item.appointmentTime="{ item }">
               {{ dayjs(item.appointmentTime).format("DD MMM YYYY, hh:mm A") }}
             </template>
-            <template v-slot:item.actions>
-              <v-btn icon="mdi-check" size="small" color="#68058d" variant="text" class="me-1"/>
-              <v-btn icon="mdi-close" size="small" color="#68058d" variant="text"/>
+            <template v-slot:item.actions="{ item }">
+              <el-popconfirm
+                title="Are you sure to approve this appointment?"
+                icon-color="green"
+                width="190"
+                @confirm="appointmentApproval(item.id, 'Approved')"
+              >
+                <template #reference>
+                  <v-btn icon="mdi-check" size="small" variant="text" :disabled="item.status != 'Pending'"/>
+                </template>
+              </el-popconfirm>
+              <el-popconfirm
+                title="Are you sure to reject this appointment?"
+                icon-color="red"
+                width="190"
+                @confirm="appointmentApproval(item.id, 'Rejected')"
+              >
+                <template #reference>
+                  <v-btn icon="mdi-close" size="small" variant="text" :disabled="item.status != 'Pending'"/>
+                </template>
+              </el-popconfirm>
             </template>
             <template v-slot:bottom>
               <div class="d-flex justify-content-end pt-2">
@@ -42,7 +60,7 @@ import { Book2Icon } from "vue-tabler-icons"
 import UiParentCard from "@/components/shared/UiParentCard.vue"
 
 // Data
-const { data: user } = useAuth()
+const { data: appointmentList } = await fetchData.$get("/Appointment/PartnerPerspectiveList")
 const currentPage = ref(1)
 const itemsPerPage = ref(10)
 const headers = ref([
@@ -53,7 +71,6 @@ const headers = ref([
   { key: "status" , title: "Status" },
   { key: "actions", title: "Actions", sortable: false }
 ])
-const { data: appointmentList } = await fetchData.$get(`/Appointment/List/PartnerPerspective/${user.value.id}`)
 
 // Head
 useHead({
@@ -74,5 +91,21 @@ definePageMeta({
 // Methods
 const pageCount = () => {
   return Math.ceil(appointmentList.value.length / itemsPerPage.value)
+}
+const appointmentApproval = async(appointmentId, approvalStatus) => {
+  try {
+    const result = await fetchData.$put("/Appointment/PartnerApproval", {
+      appointmentId: appointmentId,
+      status: approvalStatus,
+    })
+
+    if (!result.error) {
+      ElNotification.success({ message: result.message })
+      refreshNuxtData()
+    }
+    else {
+      ElNotification.error({ message: result.message })
+    }
+  } catch { ElNotification.error({ message: "There is a problem with the server. Please try again later." }) }
 }
 </script>

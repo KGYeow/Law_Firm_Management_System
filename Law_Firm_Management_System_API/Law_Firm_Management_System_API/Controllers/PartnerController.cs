@@ -25,10 +25,11 @@ namespace Law_Firm_Management_System_API.Controllers
 
         // Get the assigned partner of a specific paralegal.
         [HttpGet]
-        [Route("AssignedPartner/{ParalegalId}")]
-        public IActionResult GetAssignedPartner(int paralegalId)
+        [Route("AssignedPartner")]
+        public IActionResult GetAssignedPartner()
         {
-            var assignedPartner = context.Partners.Where(a => a.ParalegalUserId == paralegalId)
+            var user = userService.GetUser(User);
+            var assignedPartner = context.Partners.Where(a => a.ParalegalUserId == user.Id)
                 .Select(x => new { fullName = x.User.FullName, email = x.User.Email, phoneNumber = x.PhoneNumber })
                 .FirstOrDefault();
             return Ok(assignedPartner);

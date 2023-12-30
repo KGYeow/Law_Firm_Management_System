@@ -3,7 +3,6 @@ import sidebarItems from '@/data/sidebarItem'
 export default defineNuxtRouteMiddleware(async(to, from) => {
   const baseURL = useRuntimeConfig().public.baseURL
   const { data: user, status } = useAuth()
-  const { data: role } = useFetch(`${baseURL}/UserRole/RoleName/${user.value?.userRoleId}`)
   
   // If user is authenticated user
   if (status.value == "authenticated") {
@@ -20,7 +19,7 @@ export default defineNuxtRouteMiddleware(async(to, from) => {
 
     // Redirect to the dashboard if not authorized
     if (!isAuthorized) {
-      if (role.value == "Client")
+      if (user.value?.userRoleId == 3)
         return navigateTo('/dashboard-client')
       else
         return navigateTo('/dashboard')

@@ -3,6 +3,7 @@ export type ThemeTypes = {
     dark: boolean;
     variables?: object;
     colors: {
+        background?: string;
         primary?: string;
         secondary?: string;
         info?: string;

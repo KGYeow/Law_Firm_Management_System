@@ -18,7 +18,7 @@ export default defineNuxtConfig({
 
   // Global css: https://nuxt.com/docs/api/configuration/nuxt-config#css
   css: [
-    '@/assets/scss/config/app/main.scss',
+    '@/assets/scss/config/custom/main.scss',
   ],
 
   // devServer: https://nuxt.com/docs/api/nuxt-config#devserver

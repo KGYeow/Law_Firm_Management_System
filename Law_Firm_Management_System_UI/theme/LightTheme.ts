@@ -4,12 +4,13 @@ const PurpleTheme: ThemeTypes = {
   name: 'PurpleTheme',
   dark: false,
   variables: {
-    'border-color': '#eeeeee',
-    'carousel-control-size': 10
+    'border-color': '#1d1c22',
+    'carousel-control-size': 10,
   },
   colors: {
-    primary: '#5D87FF',
-    secondary: '#49BEFF',
+    background: '#f3f4f8',
+    primary: '#2b4c65',
+    secondary: '#6b8ba4',
     info: '#539BFF',
     success: '#13DEB9',
     accent: '#FFAB91',

@@ -99,7 +99,7 @@ const headers = ref([
   { key: "isActive" , title: "Status" },
 ])
 const { data: paralegalList } = await fetchData.$get("/Paralegal")
-const { data: assignedParalegal } = await fetchData.$get(`/Paralegal/AssignedParalegal/${user.value.id}`)
+const { data: assignedParalegal } = await fetchData.$get("/Paralegal/AssignedParalegal")
 
 // Head
 useHead({

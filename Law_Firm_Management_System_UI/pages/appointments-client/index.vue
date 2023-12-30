@@ -152,10 +152,9 @@ import { Book2Icon } from "vue-tabler-icons"
 import dayjs from 'dayjs'
 
 // Data
-const { data: user } = useAuth()
 const { data: partnerList } = await fetchData.$get("/Partner")
 const { data: categoryList } = await fetchData.$get("/Appointment/Category")
-const { data: appointmentList } = await fetchData.$get(`/Appointment/List/ClientPerspective/${user.value.id}`)
+const { data: appointmentList } = await fetchData.$get("/Appointment/ClientPerspectiveList")
 const { handleSubmit } = useForm({
   validationSchema: {
     partnerUserId(value) {

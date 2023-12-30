@@ -15,13 +15,15 @@ export const fetchData = {
   $post(requestURL: string, body: {}) {
     return fetchResult(requestURL, 'POST', body)
   },
-  $put(requestURL: string, body: {}){
+  $put(requestURL: string, body: {}) {
     return fetchResult(requestURL, 'PUT', body)
   },
-  $get(requestURL: string){
-    return useFetch(baseURL + requestURL)
+  $get(requestURL: string) {
+    return useFetch(baseURL + requestURL, {
+      headers: { 'Authorization': `${useAuth().token.value}` },
+    })
   },
-  $delete(requestURL: string){
+  $delete(requestURL: string) {
     return fetchResult(requestURL, 'DELETE')
   }
 }

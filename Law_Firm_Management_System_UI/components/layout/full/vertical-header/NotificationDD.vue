@@ -7,7 +7,7 @@
           color="primary"
           offset-x="-5"
           offset-y="-3"
-          v-if="hasNotifications"
+          v-if="notifications.length > 0"
         >
           <BellRingingIcon stroke-width="1.5" size="22" />
         </v-badge>
@@ -33,7 +33,7 @@
         </v-card-item>
         <v-divider class="m-0"/>
         <v-card-text class="p-0">
-          <el-scrollbar height="200px" v-if="hasNotifications">
+          <el-scrollbar height="200px" v-if="notifications.length > 0">
             <v-list class="pt-0 pb-3">
               <v-list-item
                 class="p-0 px-3"
@@ -58,7 +58,5 @@
 import { BellRingingIcon } from 'vue-tabler-icons';
 
 // Data
-const { data: user } = useAuth()
-const notifications = fetchData.$get(`/Notification/UserNotifications/${user.value?.id}`).data
-const hasNotifications = computed(() => notifications.value?.length > 0)
+const { data: notifications } = await fetchData.$get("/Notification/UserNotifications")
 </script>

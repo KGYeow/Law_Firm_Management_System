@@ -23,10 +23,11 @@ namespace Law_Firm_Management_System_API.Controllers
 
         // Get the user's role.
         [HttpGet]
-        [Route("RoleName/{UserRoleId}")]
-        public IActionResult GetUserRole(int userRoleId)
+        [Route("RoleName")]
+        public IActionResult GetUserRole()
         {
-            var role = context.UserRoles.Where(a => a.Id == userRoleId).FirstOrDefault();
+            var user = userService.GetUser(User);
+            var role = context.UserRoles.Where(a => a.Id == user.UserRoleId).FirstOrDefault();
             return Ok(role?.Name);
         }
     }
