@@ -9,9 +9,9 @@ namespace Law_Firm_Management_System_API.Models
         {
             Announcements = new HashSet<Announcement>();
             Appointments = new HashSet<Appointment>();
+            Cases = new HashSet<Case>();
             Clients = new HashSet<Client>();
             TaskAssignments = new HashSet<TaskAssignment>();
-            UserCaseInvolvements = new HashSet<UserCaseInvolvement>();
             UserNotifications = new HashSet<UserNotification>();
         }
 
@@ -28,9 +28,9 @@ namespace Law_Firm_Management_System_API.Models
         public virtual Partner? Partner { get; set; }
         public virtual ICollection<Announcement> Announcements { get; set; }
         public virtual ICollection<Appointment> Appointments { get; set; }
+        public virtual ICollection<Case> Cases { get; set; }
         public virtual ICollection<Client> Clients { get; set; }
         public virtual ICollection<TaskAssignment> TaskAssignments { get; set; }
-        public virtual ICollection<UserCaseInvolvement> UserCaseInvolvements { get; set; }
         public virtual ICollection<UserNotification> UserNotifications { get; set; }
     }
 }

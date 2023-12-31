@@ -165,21 +165,6 @@ CREATE TABLE [dbo].[Case](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[UserCaseInvolvement]    Script Date: 24/11/2023 11:16:00 PM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [dbo].[UserCaseInvolvement](
-	[ID] [int] IDENTITY(1,1) NOT NULL,
-	[UserID] [int] NOT NULL,
-	[CaseID] [int] NOT NULL,
- CONSTRAINT [PK_UserCaseInvolvement] PRIMARY KEY CLUSTERED 
-(
-	[ID] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
-GO
 /****** Object:  Table [dbo].[Task]    Script Date: 19/11/2023 3:27:00 PM ******/
 SET ANSI_NULLS ON
 GO
@@ -556,17 +541,6 @@ ALTER TABLE [dbo].[Appointment]  WITH CHECK ADD  CONSTRAINT [FK_Appointment_Appo
 REFERENCES [dbo].[AppointmentCategory] ([Id])
 GO
 ALTER TABLE [dbo].[Appointment] CHECK CONSTRAINT [FK_Appointment_AppointmentCategory]
-GO
-
-ALTER TABLE [dbo].[UserCaseInvolvement] WITH CHECK ADD CONSTRAINT [FK_UserCaseInvolvement_Case] FOREIGN KEY([CaseID])
-REFERENCES [dbo].[Case] ([ID])
-GO
-ALTER TABLE [dbo].[UserCaseInvolvement] CHECK CONSTRAINT [FK_UserCaseInvolvement_Case]
-GO
-ALTER TABLE [dbo].[UserCaseInvolvement] WITH CHECK ADD CONSTRAINT [FK_UserCaseInvolvement_User] FOREIGN KEY([UserID])
-REFERENCES [dbo].[User] ([ID])
-GO
-ALTER TABLE [dbo].[UserCaseInvolvement] CHECK CONSTRAINT [FK_UserCaseInvolvement_User]
 GO
 
 ALTER TABLE [dbo].[TaskAssignment] WITH CHECK ADD CONSTRAINT [FK_TaskAssignment_Task] FOREIGN KEY([TaskID])

@@ -8,6 +8,7 @@ namespace Law_Firm_Management_System_API.Models
         public Client()
         {
             Appointments = new HashSet<Appointment>();
+            Cases = new HashSet<Case>();
         }
 
         public int Id { get; set; }
@@ -19,5 +20,6 @@ namespace Law_Firm_Management_System_API.Models
 
         public virtual User? User { get; set; }
         public virtual ICollection<Appointment> Appointments { get; set; }
+        public virtual ICollection<Case> Cases { get; set; }
     }
 }
