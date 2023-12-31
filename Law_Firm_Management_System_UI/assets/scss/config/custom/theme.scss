@@ -11,6 +11,9 @@
 // Element Plus Theme
 :root {
   --el-color-primary: rgb(var(--v-theme-primary)) !important;
+  --el-color-success: rgb(var(--v-theme-success)) !important;
+  --el-color-danger: rgb(var(--v-theme-error)) !important;
+  --el-color-warning: rgb(var(--v-theme-warning)) !important;
 
   .el-button--primary {
     --el-button-hover-bg-color: rgb(var(--v-theme-secondary)) !important;

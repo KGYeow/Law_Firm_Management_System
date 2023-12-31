@@ -1,0 +1,13 @@
+.clientAppointmentList {
+  .v-table__wrapper {
+    overflow: unset;
+
+    tbody {
+      display: flex;
+      flex-wrap: wrap;
+      flex: 1 1 auto;
+      margin: -12px;
+      justify-content: flex-start !important
+    }
+  }
+}

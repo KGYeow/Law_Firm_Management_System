@@ -18,9 +18,10 @@ export const fetchData = {
   $put(requestURL: string, body: {}) {
     return fetchResult(requestURL, 'PUT', body)
   },
-  $get(requestURL: string) {
+  $get(requestURL: string, params: {}) {
     return useFetch(baseURL + requestURL, {
       headers: { 'Authorization': `${useAuth().token.value}` },
+      params: params,
     })
   },
   $delete(requestURL: string) {

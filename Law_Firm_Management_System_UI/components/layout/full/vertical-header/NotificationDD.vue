@@ -36,7 +36,7 @@
           <el-scrollbar height="200px" v-if="notifications.length > 0">
             <v-list class="pt-0 pb-3">
               <v-list-item
-                class="p-0 px-3"
+                class="m-0 p-0 px-3"
                 v-for="item in notifications"
               >
                 <v-alert class="p-2">
