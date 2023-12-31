@@ -13,6 +13,8 @@ namespace Law_Firm_Management_System_API.Models
         }
 
         public int Id { get; set; }
+        public int ClientId { get; set; }
+        public int UserId { get; set; }
         public string? Name { get; set; }
         public string? UpdatedBy { get; set; }
         public DateTime CreatedTime { get; set; }
@@ -22,5 +24,8 @@ namespace Law_Firm_Management_System_API.Models
         public virtual ICollection<Document> Documents { get; set; }
         public virtual ICollection<Event> Events { get; set; }
         public virtual ICollection<UserCaseInvolvement> UserCaseInvolvements { get; set; }
+
+        public virtual Client Client { get; set; } = null!;
+        public virtual User PartnerUser { get; set; } = null!;
     }
 }

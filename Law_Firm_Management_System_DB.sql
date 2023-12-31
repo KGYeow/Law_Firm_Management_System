@@ -152,6 +152,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Case](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[UserID] [int] NULL,
+	[ClientID] [int] NULL,
 	[Name] [varchar](max) NULL,
 	[UpdatedBy] [nvarchar](100) NULL,
 	[CreatedTime] [datetime] NOT NULL,
@@ -485,8 +487,8 @@ SET IDENTITY_INSERT [dbo].[Client] OFF
 GO
 
 SET IDENTITY_INSERT [dbo].[Case] ON
-INSERT [dbo].[Case] ([ID], [Name], [UpdatedBy], [CreatedTime], [UpdatedTime], [ClosedTime]) VALUES (1, N'School', NULL, CAST(N'2023-11-15T10:54:11.157'AS DateTime), CAST(N'2023-12-10T10:54:11.157' AS DateTime), CAST(N'2023-12-10T10:54:11.157' AS DateTime))
-INSERT [dbo].[Case] ([ID], [Name], [UpdatedBy], [CreatedTime], [UpdatedTime], [ClosedTime]) VALUES (2, N'Hospital', NULL, CAST(N'2023-11-15T10:54:11.157'AS DateTime), CAST(N'2023-12-10T10:54:11.157' AS DateTime), CAST(N'2023-12-10T10:54:11.157' AS DateTime))
+INSERT [dbo].[Case] ([ID], [UserID], [ClientID], [Name], [UpdatedBy], [CreatedTime], [UpdatedTime], [ClosedTime]) VALUES (1, 1, 1, N'School', NULL, CAST(N'2023-11-15T10:54:11.157'AS DateTime), CAST(N'2023-12-10T10:54:11.157' AS DateTime), CAST(N'2023-12-10T10:54:11.157' AS DateTime))
+INSERT [dbo].[Case] ([ID], [UserID], [ClientID], [Name], [UpdatedBy], [CreatedTime], [UpdatedTime], [ClosedTime]) VALUES (2, 17, 2, N'Hospital', NULL, CAST(N'2023-11-15T10:54:11.157'AS DateTime), CAST(N'2023-12-10T10:54:11.157' AS DateTime), CAST(N'2023-12-10T10:54:11.157' AS DateTime))
 SET IDENTITY_INSERT [dbo].[Case] OFF
 GO
 
@@ -576,6 +578,18 @@ ALTER TABLE [dbo].[TaskAssignment] WITH CHECK ADD CONSTRAINT [FK_TaskAssignment_
 REFERENCES [dbo].[User] ([ID])
 GO
 ALTER TABLE [dbo].[TaskAssignment] CHECK CONSTRAINT [FK_TaskAssignment_User]
+GO
+
+ALTER TABLE [dbo].[Case] WITH CHECK ADD CONSTRAINT [FK_Partner_Case] FOREIGN KEY([UserID])
+REFERENCES [dbo].[User] ([ID])
+GO
+ALTER TABLE [dbo].[Case] CHECK CONSTRAINT [FK_Partner_Case]
+GO
+
+ALTER TABLE [dbo].[Case] WITH CHECK ADD CONSTRAINT [FK_Client_Case] FOREIGN KEY([ClientID])
+REFERENCES [dbo].[Client] ([ID])
+GO
+ALTER TABLE [dbo].[Case] CHECK CONSTRAINT [FK_Client_Case]
 GO
 
 ALTER TABLE [dbo].[Event] WITH CHECK ADD CONSTRAINT [FK_Event_Case] FOREIGN KEY([CaseID])
