@@ -1,9 +1,10 @@
 <template>
   <v-form @submit.prevent="login">
     <v-row class="d-flex mb-3">
-      <v-col cols="12">
-        <v-label class="font-weight-bold mb-1">Username</v-label>
+      <v-col class="pb-0" cols="12">
         <v-text-field
+          placeholder="Username"
+          prepend-inner-icon="mdi-account fs-5"
           density="compact"
           variant="outlined"
           hide-details="auto"
@@ -13,9 +14,10 @@
         ></v-text-field>
       </v-col>
       <v-col cols="12">
-        <v-label class="font-weight-bold mb-1">Password</v-label>
         <v-text-field
-          :append-inner-icon="passwordVisible ? 'mdi-eye-off' : 'mdi-eye'"
+          placeholder="Password"
+          prepend-inner-icon="mdi-lock fs-5"
+          :append-inner-icon="passwordVisible ? 'mdi-eye-off fs-5' : 'mdi-eye fs-5'"
           :type="passwordVisible ? 'text' : 'password'"
           density="compact"
           variant="outlined"

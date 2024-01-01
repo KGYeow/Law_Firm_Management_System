@@ -2,8 +2,9 @@
   <v-form @submit.prevent="register">
     <v-row class="d-flex mb-3">
       <v-col cols="12">
-        <v-label class="font-weight-bold mb-1">Username</v-label>
         <v-text-field
+          placeholder="Username"
+          prepend-inner-icon="mdi-account fs-5"
           density="compact"
           variant="outlined"
           hide-details="auto"
@@ -13,8 +14,9 @@
         ></v-text-field>
       </v-col>
       <v-col cols="12">
-        <v-label class="font-weight-bold mb-1">Email Address</v-label>
         <v-text-field
+          placeholder="Email Address"
+          prepend-inner-icon="mdi-email fs-5"
           density="compact"
           variant="outlined"
           type="email"
@@ -22,12 +24,13 @@
           color="primary"
           :error-messages="registrationDetails.email.errorMessage"
           v-model="registrationDetails.email.value"
-        ></v-text-field>
+        />
       </v-col>
       <v-col cols="12">
-        <v-label class="font-weight-bold mb-1">Password</v-label>
         <v-text-field
-          :append-inner-icon="passwordVisible ? 'mdi-eye-off' : 'mdi-eye'"
+          placeholder="Password"
+          prepend-inner-icon="mdi-lock fs-5"
+          :append-inner-icon="passwordVisible ? 'mdi-eye-off fs-5' : 'mdi-eye fs-5'"
           :type="passwordVisible ? 'text' : 'password'"
           density="compact"
           variant="outlined"
@@ -36,9 +39,23 @@
           :error-messages="registrationDetails.password.errorMessage"
           v-model="registrationDetails.password.value"
           @click:append-inner="passwordVisible = !passwordVisible"
-        ></v-text-field>
+        />
       </v-col>
-      <v-col cols="12" >
+      <v-col cols="12">
+        <v-select
+          prepend-inner-icon="mdi-account-question fs-5"
+          :items="userRoleList"
+          item-title="name"
+          item-value="id"
+          placeholder="Role"
+          variant="outlined"
+          density="compact"
+          :error-messages="registrationDetails.roleId.errorMessage"
+          v-model="registrationDetails.roleId.value"
+          hide-details="auto"
+        />
+      </v-col>
+      <v-col cols="12">
         <v-btn color="primary" size="large" type="submit" block flat>Sign up</v-btn>
       </v-col>
     </v-row>
@@ -61,6 +78,9 @@ const { handleSubmit } = useForm({
     },
     password(value){
       return value ? true : 'Password is required'
+    },
+    roleId(value){
+      return value ? true : 'User role is required'
     }
   }
 })
@@ -68,7 +88,9 @@ const registrationDetails = ref({
   username: useField('username'),
   email: useField('email'),
   password: useField('password'),
+  roleId: useField('roleId'),
 })
+const { data: userRoleList } = await fetchData.$get("/UserRole")
 
 // Methods
 const register = handleSubmit(async(values) => {

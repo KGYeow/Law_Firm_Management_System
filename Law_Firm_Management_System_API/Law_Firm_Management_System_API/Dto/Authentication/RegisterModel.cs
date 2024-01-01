@@ -12,5 +12,8 @@ namespace Law_Firm_Management_System_API.Dto.Authentication
 
         [Required(ErrorMessage = "Password is required")]
         public string Password { get; set; }
+
+        [Required(ErrorMessage = "User Role is required")]
+        public int RoleId { get; set; }
     }
 }
