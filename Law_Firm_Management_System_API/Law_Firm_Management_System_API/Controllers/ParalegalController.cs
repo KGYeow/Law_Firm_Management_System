@@ -38,7 +38,7 @@ namespace Law_Firm_Management_System_API.Controllers
         {
             var user = userService.GetUser(User);
             var assignedParalegal = context.Partners.Where(a => a.UserId == user.Id)
-                .Select(x => new { fullName = x.ParalegalUser.User.FullName, email = x.ParalegalUser.User.Email, phoneNumber = x.ParalegalUser.PhoneNumber })
+                .Select(x => new { userId = x.ParalegalUserId, fullName = x.ParalegalUser.User.FullName, email = x.ParalegalUser.User.Email, phoneNumber = x.ParalegalUser.PhoneNumber })
                 .FirstOrDefault();
             return Ok(assignedParalegal);
         }

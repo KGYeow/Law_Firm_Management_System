@@ -88,8 +88,33 @@ namespace RnD_Traceability_System_API
                 Username = model.Username,
                 Email = model.Email
             };
-
             var createUser = userService.Create(newUser, model.Password);
+
+            if (newUser.UserRoleId == 1) // New user is partner
+            {
+                var newPartner = new Partner();
+                newPartner.UserId = newUser.Id;
+                context.Partners.Add(newPartner);
+                context.SaveChanges();
+            }
+            else if (newUser.UserRoleId == 2) // New user is paralegal
+            {
+                var newParalegal = new Paralegal();
+                newParalegal.UserId = newUser.Id;
+                newParalegal.IsActive = true;
+                context.Paralegals.Add(newParalegal);
+                context.SaveChanges();
+            }
+            else // New user is client
+            {
+                var newClient = new Client();
+                newClient.UserId = newUser.Id;
+                newClient.FullName = newUser.Username;
+                newClient.Email = newUser.Email;
+                context.Clients.Add(newClient);
+                context.SaveChanges();
+            }
+
             if (createUser != null)
                 return Ok(new { Error = false, Message = "User register successfully!" }); 
             else

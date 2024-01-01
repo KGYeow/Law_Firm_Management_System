@@ -172,19 +172,15 @@ namespace Law_Firm_Management_System_API.Models
 
                 entity.Property(e => e.CategoryId).HasColumnName("CategoryID");
 
-                entity.Property(e => e.CreatedBy).HasMaxLength(100);
-
-                entity.Property(e => e.CreatedDate).HasColumnType("datetime");
+                entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
 
                 entity.Property(e => e.Name).IsUnicode(false);
+
+                entity.Property(e => e.PartnerUserId).HasColumnName("PartnerUserID");
 
                 entity.Property(e => e.Type)
                     .HasMaxLength(10)
                     .IsUnicode(false);
-
-                entity.Property(e => e.UpdatedBy).HasMaxLength(100);
-
-                entity.Property(e => e.UpdatedDate).HasColumnType("datetime");
 
                 entity.HasOne(d => d.Case)
                     .WithMany(p => p.Documents)
@@ -196,6 +192,12 @@ namespace Law_Firm_Management_System_API.Models
                     .HasForeignKey(d => d.CategoryId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Document_DocumentCategory");
+
+                entity.HasOne(d => d.PartnerUser)
+                    .WithMany(p => p.Documents)
+                    .HasForeignKey(d => d.PartnerUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Document_Partner");
             });
 
             modelBuilder.Entity<DocumentCategory>(entity =>

@@ -4,17 +4,20 @@
       <UiParentCard title="Clients"> 
         <div class="pa-7 pt-1 text-body-1">
           <v-data-table
+            density="comfortable"
             v-model:page="currentPage"
             :headers="headers"
             :items="clientList"
             :items-per-page="itemsPerPage"
           >
-            <template v-slot:item.number="{ index }">
-              <span>{{ index + 1 }}</span>
-            </template>
-            <template v-slot:item.phoneNumber="{ item }">
-              <span v-if="item.phoneNumber">{{ item.phoneNumber }}</span>
-              <span v-else>-</span>
+            <template v-slot:item="{ item }">
+              <tr>
+                <td>{{ clientList.indexOf(item) + 1 }}</td>
+                <td>{{ item.fullName }}</td>
+                <td>{{ item.email }}</td>
+                <td>{{ item.phoneNumber ?? '-' }}</td>
+                <td>{{ item.address ?? '-' }}</td>
+              </tr>
             </template>
             <template v-slot:bottom>
               <div class="d-flex justify-content-end pt-2">

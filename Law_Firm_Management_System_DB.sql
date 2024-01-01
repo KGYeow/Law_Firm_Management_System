@@ -222,13 +222,11 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Document](
 	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [varchar](max) NOT NULL,
 	[CategoryID] [int] NOT NULL,
 	[CaseID] [int] NULL,
-	[Name] [varchar](max) NOT NULL,
-	[CreatedBy] [nvarchar](100) NOT NULL,
-	[UpdatedBy] [nvarchar](100) NULL,
-	[CreatedDate] [datetime] NOT NULL,
-	[UpdatedDate] [datetime] NULL,
+	[PartnerUserID] [int] NOT NULL,
+	[ModifiedDate] [datetime] NOT NULL,
 	[Attachment] [varbinary](max) NOT NULL,
 	[Type] [varchar](10) NOT NULL,
 	[IsArchived] [bit] NOT NULL,
@@ -582,6 +580,12 @@ ALTER TABLE [dbo].[Document]  WITH CHECK ADD  CONSTRAINT [FK_Document_Case] FORE
 REFERENCES [dbo].[Case] ([Id])
 GO
 ALTER TABLE [dbo].[Document] CHECK CONSTRAINT [FK_Document_Case]
+GO
+
+ALTER TABLE [dbo].[Document] WITH CHECK ADD CONSTRAINT [FK_Document_Partner] FOREIGN KEY([PartnerUserID])
+REFERENCES [dbo].[User] ([ID])
+GO
+ALTER TABLE [dbo].[Document] CHECK CONSTRAINT [FK_Document_Partner]
 GO
 
 ALTER TABLE [dbo].[Client] WITH CHECK ADD CONSTRAINT [FK_Client_User] FOREIGN KEY([UserID])

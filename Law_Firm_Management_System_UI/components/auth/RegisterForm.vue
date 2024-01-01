@@ -1,7 +1,7 @@
 <template>
   <v-form @submit.prevent="register">
     <v-row class="d-flex mb-3">
-      <v-col cols="12">
+      <v-col class="pb-0" cols="12">
         <v-text-field
           placeholder="Username"
           prepend-inner-icon="mdi-account fs-5"
@@ -13,7 +13,7 @@
           v-model="registrationDetails.username.value"
         ></v-text-field>
       </v-col>
-      <v-col cols="12">
+      <v-col class="pb-0" cols="12">
         <v-text-field
           placeholder="Email Address"
           prepend-inner-icon="mdi-email fs-5"
@@ -26,7 +26,7 @@
           v-model="registrationDetails.email.value"
         />
       </v-col>
-      <v-col cols="12">
+      <v-col class="pb-0" cols="12">
         <v-text-field
           placeholder="Password"
           prepend-inner-icon="mdi-lock fs-5"
