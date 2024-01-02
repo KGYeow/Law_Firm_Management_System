@@ -44,14 +44,13 @@
       <v-col cols="12">
         <v-select
           prepend-inner-icon="mdi-account-question fs-5"
-          :items="userRoleList"
+          :items="['Partner', 'Paralegal', 'Client']"
           item-title="name"
-          item-value="id"
           placeholder="Role"
           variant="outlined"
           density="compact"
-          :error-messages="registrationDetails.roleId.errorMessage"
-          v-model="registrationDetails.roleId.value"
+          :error-messages="registrationDetails.role.errorMessage"
+          v-model="registrationDetails.role.value"
           hide-details="auto"
         />
       </v-col>
@@ -79,7 +78,7 @@ const { handleSubmit } = useForm({
     password(value){
       return value ? true : 'Password is required'
     },
-    roleId(value){
+    role(value){
       return value ? true : 'User role is required'
     }
   }
@@ -88,9 +87,8 @@ const registrationDetails = ref({
   username: useField('username'),
   email: useField('email'),
   password: useField('password'),
-  roleId: useField('roleId'),
+  role: useField('role'),
 })
-const { data: userRoleList } = await fetchData.$get("/UserRole")
 
 // Methods
 const register = handleSubmit(async(values) => {

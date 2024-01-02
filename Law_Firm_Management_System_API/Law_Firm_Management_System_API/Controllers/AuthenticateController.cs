@@ -35,9 +35,9 @@ namespace RnD_Traceability_System_API
             if (user != null)
             {
                 if (!userService.CheckPassword(user, model.Password))
-                    throw new Exception("Incorrect password.");
+                    throw new Exception("Incorrect password");
             }
-            return Ok(new Response { Status = "Success", Message = "User login successfully!" });
+            return Ok(new Response { Status = "Success", Message = "User login successfully" });
         }
 
         [HttpPost]
@@ -66,7 +66,7 @@ namespace RnD_Traceability_System_API
         [Route("Logout")]
         public IActionResult Logout()
         {
-            return Ok(new Response { Status = "Success", Message = "User logout successfully!" });
+            return Ok(new Response { Status = "Success", Message = "User logout successfully" });
         }
 
         [HttpPost]
@@ -77,27 +77,28 @@ namespace RnD_Traceability_System_API
             var existingEmail = context.Users.Where(a => a.Email == model.Email).FirstOrDefault();
 
             if (existingUser != null)
-                throw new Exception("Username has been used.");
+                throw new Exception("Username has been used");
             if (existingEmail != null)
-                throw new Exception("Email has been used.");
+                throw new Exception("Email has been used");
 
+            var role = context.UserRoles.Where(a => a.Name == model.Role).FirstOrDefault();
             var newUser = new User
             {
-                UserRoleId = model.RoleId,
+                UserRoleId = role.Id,
                 FullName = model.Username,
                 Username = model.Username,
                 Email = model.Email
             };
             var createUser = userService.Create(newUser, model.Password);
 
-            if (newUser.UserRoleId == 1) // New user is partner
+            if (role.Name == "Partner")
             {
                 var newPartner = new Partner();
                 newPartner.UserId = newUser.Id;
                 context.Partners.Add(newPartner);
                 context.SaveChanges();
             }
-            else if (newUser.UserRoleId == 2) // New user is paralegal
+            else if (role.Name == "Paralegal")
             {
                 var newParalegal = new Paralegal();
                 newParalegal.UserId = newUser.Id;
@@ -105,7 +106,7 @@ namespace RnD_Traceability_System_API
                 context.Paralegals.Add(newParalegal);
                 context.SaveChanges();
             }
-            else // New user is client
+            else
             {
                 var newClient = new Client();
                 newClient.UserId = newUser.Id;
@@ -116,9 +117,9 @@ namespace RnD_Traceability_System_API
             }
 
             if (createUser != null)
-                return Ok(new { Error = false, Message = "User register successfully!" }); 
+                return Ok(new { Error = false, Message = "User register successfully" }); 
             else
-                return Ok(new { Error = true, Message = "User register unsuccessful." });
+                return Ok(new { Error = true, Message = "User register unsuccessful" });
         }
 
         [HttpGet]
