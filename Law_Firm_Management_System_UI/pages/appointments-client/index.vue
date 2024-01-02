@@ -72,7 +72,7 @@
   >
     <template #headers/>
     <template #body v-if="appointmentList.length == 0">
-      <div class="p-2 w-100 fs-6 text-center">
+      <div class="p-3 w-100 fs-6 text-center">
         No Appointments
       </div>
     </template>

@@ -1,43 +1,91 @@
 <template>
   <v-row>
     <v-col cols="12" md="12">
-      <UiParentCard title="Documents">
+      <UiParentCard title="Archives">
         <v-row class="px-7">
           <!-- Filters -->
           <v-col class="pe-0" cols="2">
             <v-select
-              :items="categoryList"
+              :items="archiveList"
               item-title="name"
-              placeholder="Category"
+              item-value="id"
+              placeholder="Documents"
               density="compact"
               variant="outlined"
-              v-model="filter.category"
+              v-model="filter.docId"
               hide-details
             >     
               <template v-slot:prepend-item>
-                <v-list-item title="All Categories" @click="filter.category = null"/>
+                <v-list-item title="All Documents" @click="filter.docId = null"/>
+              </template>
+            </v-select>
+          </v-col>
+          <v-col class="pe-0" cols="2">
+            <v-select
+              :items="categoryList"
+              item-title="name"
+              item-value="id"
+              placeholder="Categories"
+              density="compact"
+              variant="outlined"
+              v-model="filter.categoryId"
+              hide-details
+            >     
+              <template v-slot:prepend-item>
+                <v-list-item title="All Categories" @click="filter.categoryId = null"/>
+              </template>
+            </v-select>
+          </v-col>
+          <v-col class="pe-0" cols="2">
+            <v-select
+              :items="caseList"
+              item-title="name"
+              item-value="id"
+              placeholder="Cases"
+              density="compact"
+              variant="outlined"
+              v-model="filter.caseId"
+              hide-details
+            >     
+              <template v-slot:prepend-item>
+                <v-list-item title="All Cases" @click="filter.caseId = null"/>
+              </template>
+            </v-select>
+          </v-col>
+          <v-col class="pe-0" cols="2">
+            <v-select
+              :items="partnerList"
+              item-title="fullName"
+              item-value="userId"
+              placeholder="Modified By"
+              density="compact"
+              variant="outlined"
+              v-model="filter.userId"
+              hide-details
+            >     
+              <template v-slot:prepend-item>
+                <v-list-item title="All Partners" @click="filter.userId = null"/>
               </template>
             </v-select>
           </v-col>
         </v-row>
 
         <!-- Document List Table -->
-        <div class="pa-7 pt-1 text-body-1">
+        <div class="pa-7 pt-3 text-body-1">
           <v-data-table
             density="comfortable"
             v-model:page="currentPage"
             :headers="headers"
-            :items="documentList"
+            :items="archiveList"
             :items-per-page="itemsPerPage"
           >
             <template v-slot:item="{ item }">
               <tr>
-                <td>{{ documentList.indexOf(item) + 1 }}</td>
                 <td>{{ item.name }}</td>
-                <td>{{ item.category }}</td>
-                <td>{{ item.case }}</td>
-                <td>{{ dayjs(item.modifiedDate).format("DD MMM YYYY") }}</td>
+                <td>{{ item.categoryName }}</td>
+                <td>{{ item.caseName ?? '-' }}</td>
                 <td>{{ item.modifiedBy }}</td>
+                <td>{{ dayjs(item.modifiedDate).format("DD MMM YYYY") }}</td>
                 <td class="list-inline hstack">
                   <li>
                     <v-tooltip text="Download" activator="parent" location="top" offset="2"/>
@@ -57,7 +105,7 @@
                       title="Are you sure to archive this document?"
                       icon-color="orange"
                       width="190"
-                      @confirm=""
+                      @confirm="deleteDocument(item.id)"
                     >
                       <template #reference>
                         <v-btn icon="mdi-archive-outline" size="small" variant="text"/>
@@ -72,8 +120,8 @@
                 <el-pagination
                   layout="total, prev, pager, next"
                   v-model:current-page="currentPage"
-                  :page-size="documentList.length/pageCount()"
-                  :total="documentList.length"
+                  :page-size="archiveList.length/pageCount()"
+                  :total="archiveList.length"
                 />
               </div>
             </template>
@@ -82,67 +130,38 @@
       </UiParentCard>
     </v-col>
   </v-row>
-  <!-- Add New Document -->
-  <el-affix
-    class="position-absolute"
-    position="bottom"
-    :offset="30"
-    style="right: 30px; bottom: 100px;"
-  >
-    <v-btn icon="mdi-file-document-plus-outline" color="primary" size="large" @click="addDocumentModal = true"/>
-  </el-affix>
 </template>
 
 <script setup>
-import { useField, useForm } from 'vee-validate'
 import { FileDescriptionIcon } from "vue-tabler-icons"
 import dayjs from 'dayjs'
 import UiParentCard from '@/components/shared/UiParentCard.vue';
 
 // Data
-const { handleSubmit } = useForm({
-  validationSchema: {
-    name(value) {
-      return value ? true : 'Document name is required'
-    },
-    categoryId(value) {
-      return value ? true : 'Category is required'
-    },
-    caseId(value) {
-      return value ? true : 'Case is required'
-    }
-  }
-})
 const filter = ref({
-  category: null,
-})
-const addDocumentModal = ref(false)
-const renameDocumentModal = ref(false)
-const addDocumentDetails = ref({
-  name: useField('name'),
-  categoryId: useField('categoryId'),
-  caseId: useField('caseId'),
-})
-const renameDocumentDetails = ref({
-  name: useField('name'),
+  docId: null,
+  categoryId: null,
+  caseId: null,
+  type: null,
 })
 const currentPage = ref(1)
 const itemsPerPage = ref(10)
 const headers = ref([
-  { key: "number", title: "No." },
   { key: "name", title: "Name" },
   { key: "category", title: "Category" },
   { key: "case", title: "Case" },
-  { key: "modifiedDate", title: "Modified Date" },
   { key: "modifiedBy", title: "Modified By" },
+  { key: "modifiedDate", title: "Modified Date" },
   { key: "actions", sortable: false },
 ])
+const { data: caseList } = await fetchData.$get("/Case")
 const { data: categoryList } = await fetchData.$get("/Document/Category")
-const { data: documentList } = await fetchData.$get("/Document", filter.value)
+const { data: partnerList } = await fetchData.$get("/Partner")
+const { data: archiveList } = await fetchData.$get("/Archive", filter.value)
 
 // Head
 useHead({
-  title: "Documents | CaseCraft",
+  title: "Archives | CaseCraft",
 })
 
 // Page Meta
@@ -153,46 +172,20 @@ definePageMeta({
       title: 'Documents',
       disabled: false,
     },
+    {
+      title: 'Archives',
+      disabled: false,
+    },
   ],
 })
 
 // Methods
 const pageCount = () => {
-  return Math.ceil(documentList.value.length / itemsPerPage.value)
+  return Math.ceil(archiveList.value.length / itemsPerPage.value)
 }
-const addDocument = handleSubmit(async(values) => {
+const deleteDocument = async(docId) => {
   try {
-    const result = await fetchData.$post("/Document", values)
-    if (!result.error) {
-      addDocumentModal.value = false
-      addDocumentDetails.value.name.resetField()
-      addDocumentDetails.value.categoryId.resetField()
-      addDocumentDetails.value.caseId.resetField()
-      ElNotification.success({ message: result.message })
-      refreshNuxtData()
-    }
-    else {
-      ElNotification.error({ message: result.message })
-    }
-  } catch { ElNotification.error({ message: "There is a problem with the server. Please try again later." }) }
-})
-const renameDocument = handleSubmit(async(values) => {
-  try {
-    const result = await fetchData.$put("/Document/Rename", values)
-    if (!result.error) {
-      renameDocumentModal.value = false
-      renameDocumentDetails.value.name.resetField()
-      ElNotification.success({ message: result.message })
-      refreshNuxtData()
-    }
-    else {
-      ElNotification.error({ message: result.message })
-    }
-  } catch { ElNotification.error({ message: "There is a problem with the server. Please try again later." }) }
-})
-const archiveDocument = async(docId) => {
-  try {
-    const result = await fetchData.$put(`/Document/Archive/${docId}`)
+    const result = await fetchData.$delete(`/Archive/${docId}`)
     if (!result.error) {
       ElNotification.success({ message: result.message })
       refreshNuxtData()

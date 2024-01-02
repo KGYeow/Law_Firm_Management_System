@@ -60,7 +60,7 @@
         </v-row>
 
         <!-- Appointment List Table -->
-        <div class="pa-7 pt-1 text-body-1">
+        <div class="pa-7 pt-3 text-body-1">
           <v-data-table
             density="comfortable"
             v-model:page="currentPage"

@@ -83,7 +83,7 @@ namespace Law_Firm_Management_System_API.Controllers
             context.Appointments.Add(appointment);
             context.SaveChanges();
 
-            return Ok(new Response { Status = "Success", Message = "New appointment created successfully!" });
+            return Ok(new Response { Status = "Success", Message = "New appointment created successfully" });
         }
 
         // Create the appointment made by the partner.
@@ -104,7 +104,7 @@ namespace Law_Firm_Management_System_API.Controllers
             context.Appointments.Add(appointment);
             context.SaveChanges();
 
-            return Ok(new Response { Status = "Success", Message = "New appointment created successfully!" });
+            return Ok(new Response { Status = "Success", Message = "New appointment created successfully" });
         }
 
         // Create the appointment made by the client.
@@ -118,7 +118,7 @@ namespace Law_Firm_Management_System_API.Controllers
             context.Appointments.Remove(appointment);
             context.SaveChanges();
 
-            return Ok(new Response { Status = "Success", Message = "Appointment deleted successfully!" });
+            return Ok(new Response { Status = "Success", Message = "Appointment deleted successfully" });
         }
 
         // Approve or reject the pending appointment.
@@ -133,11 +133,11 @@ namespace Law_Firm_Management_System_API.Controllers
 
             var notifyMessage = "";
             if (dto.Status == "Approved")
-                notifyMessage = "Appointment approved successfully!";
+                notifyMessage = "Appointment approved successfully";
             else if (dto.Status == "Rejected")
-                notifyMessage = "Appointment rejected successfully!";
+                notifyMessage = "Appointment rejected successfully";
             else
-                notifyMessage = "Appointment cancelled successfully!";
+                notifyMessage = "Appointment cancelled successfully";
 
             return Ok(new Response { Status = "Success", Message = notifyMessage });
         }
