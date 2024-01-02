@@ -28,8 +28,8 @@ namespace Law_Firm_Management_System_API.Controllers
         public IActionResult GetCasePartnerPerspective()
         {
             var user = userService.GetUser(User);
-            var l = context.Cases.Include(a => a.User).Include(a => a.Client).Where(a => a.UserId == user.Id).OrderByDescending(a => a.Id).ToList()
-                .Select(x => new { name = x.Name, partnerName = x.User?.FullName, clientName = x.Client?.FullName, createdTime = x.CreatedTime, updatedTime = x.UpdatedTime, closedTime = x.ClosedTime });
+            var l = context.Cases.Include(a => a.User).Include(a => a.Client).Include(a => a.CaseStatus).Where(a => a.PartnerUserId == user.Id).OrderByDescending(a => a.Id).ToList()
+                .Select(x => new { id = x.Id, name = x.Name, partnerName = x.User?.FullName, clientName = x.Client?.FullName, createdTime = x.CreatedTime, updatedTime = x.UpdatedTime, closedTime = x.ClosedTime, status = x.CaseStatus?.StatusName });
             return Ok(l);
         }
     }

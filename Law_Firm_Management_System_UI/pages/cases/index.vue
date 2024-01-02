@@ -1,25 +1,25 @@
 <template>
   <v-row>
-    <v-col cols="12" md="12">
+    <v-col>
       <UiParentCard title="Case Management"> 
         <div class="pa-7 pt-1 text-body-1">
           <v-data-table
+            density="comfortable"
             v-model:page="currentPage"
             :headers="headers"
             :items="caseList"
             :items-per-page="itemsPerPage"
           >
-            <template v-slot:item.number="{ index }">
-              <span>{{ index + 1 }}</span>
-            </template>
-            <template v-slot:item.updatedTime="{ item }">
-              {{ dayjs(item.updatedTime).format("DD MMM YYYY, hh:mm A") }}
-            </template>
-            <template v-slot:item.createdTime="{ item }">
-              {{ dayjs(item.createdTime).format("DD MMM YYYY, hh:mm A") }}
-            </template>
-            <template v-slot:item.closedTime="{ item }">
-              {{ dayjs(item.closedTime).format("DD MMM YYYY, hh:mm A") }}
+            <template v-slot:item="{ item }">
+              <tr>
+                <td>{{ caseList.indexOf(item) + 1 }}</td>
+                <td>{{ item.name }}</td>
+                <td>{{ item.clientName }}</td>
+                <td>{{ dayjs(item.createdTime).format("DD MMM YYYY, hh:mm A") }}</td>
+                <td>{{ dayjs(item.updatedTime).format("DD MMM YYYY, hh:mm A") }}</td>
+                <td>{{ dayjs(item.closedTime).format("DD MMM YYYY, hh:mm A") }}</td>
+                <td>{{ item.status }}</td>
+              </tr>
             </template>
             <template v-slot:bottom>
               <div class="d-flex justify-content-end pt-2">
@@ -54,6 +54,7 @@ const headers = ref([
   { key: "createdTime" , title: "Created Time" },
   { key: "updatedTime" , title: "Updated Time" },
   { key: "closedTime", title: "Closed Time"},
+  { key: "status", title: "Case Status"},
 ])
 const { data: caseList } = await fetchData.$get("/Case/PartnerPerspectiveCaseList")
 //const { data: caseList } = await fetchData.$get("/Case")

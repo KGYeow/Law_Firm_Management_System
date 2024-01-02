@@ -127,11 +127,11 @@ namespace Law_Firm_Management_System_API.Models
 
                 entity.Property(e => e.Name).IsUnicode(false);
 
-                entity.Property(e => e.UpdatedBy).HasMaxLength(100);
-
                 entity.Property(e => e.UpdatedTime).HasColumnType("datetime");
 
-                entity.Property(e => e.UserId).HasColumnName("UserID");
+                entity.Property(e => e.PartnerUserId).HasColumnName("PartnerUserID");
+
+                entity.Property(e => e.Status).HasColumnName("Status");
 
                 entity.HasOne(d => d.Client)
                     .WithMany(p => p.Cases)
@@ -140,8 +140,13 @@ namespace Law_Firm_Management_System_API.Models
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Cases)
-                    .HasForeignKey(d => d.UserId)
+                    .HasForeignKey(d => d.PartnerUserId)
                     .HasConstraintName("FK_Partner_Case");
+                
+                entity.HasOne(d => d.CaseStatus)
+                    .WithMany(p => p.Cases)
+                    .HasForeignKey(d => d.Status)
+                    .HasConstraintName("FK_Case_Status");
             });
 
             modelBuilder.Entity<Client>(entity =>

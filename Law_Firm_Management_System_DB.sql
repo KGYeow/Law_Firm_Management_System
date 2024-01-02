@@ -152,14 +152,29 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Case](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
-	[UserID] [int] NULL,
+	[PartnerUserID] [int] NULL,
 	[ClientID] [int] NULL,
 	[Name] [varchar](max) NULL,
-	[UpdatedBy] [nvarchar](100) NULL,
 	[CreatedTime] [datetime] NOT NULL,
 	[UpdatedTime] [datetime] NULL,
 	[ClosedTime] [datetime] NULL,
+	[Status] [int] NULL,
  CONSTRAINT [PK_Case] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[CaseStatus]    Script Date: 1/2/2024 12:07:00 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[CaseStatus](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[StatusName] [varchar](100) NULL,
+	[StatusDescription] [nvarchar](max) NULL,
+ CONSTRAINT [PK_Case_Status] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
@@ -480,9 +495,20 @@ SET IDENTITY_INSERT [dbo].[Client] OFF
 GO
 
 SET IDENTITY_INSERT [dbo].[Case] ON
-INSERT [dbo].[Case] ([ID], [UserID], [ClientID], [Name], [UpdatedBy], [CreatedTime], [UpdatedTime], [ClosedTime]) VALUES (1, 1, 1, N'School', NULL, CAST(N'2023-11-15T10:54:11.157'AS DateTime), CAST(N'2023-12-10T10:54:11.157' AS DateTime), CAST(N'2023-12-10T10:54:11.157' AS DateTime))
-INSERT [dbo].[Case] ([ID], [UserID], [ClientID], [Name], [UpdatedBy], [CreatedTime], [UpdatedTime], [ClosedTime]) VALUES (2, 18, 2, N'Hospital', NULL, CAST(N'2023-11-15T10:54:11.157'AS DateTime), CAST(N'2023-12-10T10:54:11.157' AS DateTime), CAST(N'2023-12-10T10:54:11.157' AS DateTime))
+INSERT [dbo].[Case] ([ID], [PartnerUserID], [ClientID], [Name], [CreatedTime], [UpdatedTime], [ClosedTime], [Status]) VALUES (1, 1, 1, N'Civil Case A', CAST(N'2023-11-15T10:54:11.157'AS DateTime), CAST(N'2023-12-10T10:54:11.157' AS DateTime), NULL, 1)
+INSERT [dbo].[Case] ([ID], [PartnerUserID], [ClientID], [Name], [CreatedTime], [UpdatedTime], [ClosedTime], [Status]) VALUES (2, 18, 2, N'Civil Case B', CAST(N'2023-11-15T10:54:11.157'AS DateTime), CAST(N'2023-11-30T10:54:11.157' AS DateTime), CAST(N'2023-12-10T10:54:11.157' AS DateTime), 6)
+INSERT [dbo].[Case] ([ID], [PartnerUserID], [ClientID], [Name], [CreatedTime], [UpdatedTime], [ClosedTime], [Status]) VALUES (3, 1, 5, N'Criminal Case', CAST(N'2023-10-24T10:54:11.157'AS DateTime), CAST(N'2023-10-10T10:54:11.157' AS DateTime), NULL, 3)
 SET IDENTITY_INSERT [dbo].[Case] OFF
+GO
+
+SET IDENTITY_INSERT [dbo].[CaseStatus] ON
+INSERT [dbo].[CaseStatus] ([ID], [StatusName], [StatusDescription])VALUES (1, N'Active', N'Lawyer accept the case and start working on it.')
+INSERT [dbo].[CaseStatus] ([ID], [StatusName], [StatusDescription])VALUES (2, N'Under Review', N'Lawyer assess the case details, identify legal issues, determine the appropriate strategy, and prepare for potential court filings.')
+INSERT [dbo].[CaseStatus] ([ID], [StatusName], [StatusDescription])VALUES (3, N'Negotiation', N'Lawyer engage in negotiations with clients, draft settlement agreements, prepare relevant court documents, and work towards a resolution.')
+INSERT [dbo].[CaseStatus] ([ID], [StatusName], [StatusDescription])VALUES (4, N'Court Proceedings', N'Lawyer: Conduct investigations, prepare legal documents, engage in discovery, file necessary court documents, and actively participate in court proceedings.')
+INSERT [dbo].[CaseStatus] ([ID], [StatusName], [StatusDescription])VALUES (5, N'On Hold', N'Lawyer inform the court about the temporary pause, state the reasons for the hold, monitor any external factors causing the delay, and plan for resumption.')
+INSERT [dbo].[CaseStatus] ([ID], [StatusName], [StatusDescription])VALUES (6, N'Settled', N'Lawyer finalize all necessary documentation, inform the client of case resolution, and ensure any post-settlement tasks are completed. ')
+SET IDENTITY_INSERT [dbo].[CaseStatus] OFF
 GO
 
 SET IDENTITY_INSERT [dbo].[Event] ON
@@ -562,7 +588,7 @@ GO
 ALTER TABLE [dbo].[TaskAssignment] CHECK CONSTRAINT [FK_TaskAssignment_User]
 GO
 
-ALTER TABLE [dbo].[Case] WITH CHECK ADD CONSTRAINT [FK_Partner_Case] FOREIGN KEY([UserID])
+ALTER TABLE [dbo].[Case] WITH CHECK ADD CONSTRAINT [FK_Partner_Case] FOREIGN KEY([PartnerUserID])
 REFERENCES [dbo].[User] ([ID])
 GO
 ALTER TABLE [dbo].[Case] CHECK CONSTRAINT [FK_Partner_Case]
@@ -572,6 +598,12 @@ ALTER TABLE [dbo].[Case] WITH CHECK ADD CONSTRAINT [FK_Client_Case] FOREIGN KEY(
 REFERENCES [dbo].[Client] ([ID])
 GO
 ALTER TABLE [dbo].[Case] CHECK CONSTRAINT [FK_Client_Case]
+GO
+
+ALTER TABLE [dbo].[Case] WITH CHECK ADD CONSTRAINT [FK_Case_Status] FOREIGN KEY([Status])
+REFERENCES [dbo].[CaseStatus] ([ID])
+GO
+ALTER TABLE [dbo].[Case] CHECK CONSTRAINT [FK_Case_Status]
 GO
 
 ALTER TABLE [dbo].[Event] WITH CHECK ADD CONSTRAINT [FK_Event_Case] FOREIGN KEY([CaseID])
