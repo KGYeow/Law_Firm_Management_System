@@ -131,7 +131,7 @@ namespace Law_Firm_Management_System_API.Models
 
                 entity.Property(e => e.PartnerUserId).HasColumnName("PartnerUserID");
 
-                entity.Property(e => e.Status).HasColumnName("Status");
+                entity.Property(e => e.StatusID).HasColumnName("StatusID");
 
                 entity.HasOne(d => d.Client)
                     .WithMany(p => p.Cases)
@@ -145,7 +145,7 @@ namespace Law_Firm_Management_System_API.Models
                 
                 entity.HasOne(d => d.CaseStatus)
                     .WithMany(p => p.Cases)
-                    .HasForeignKey(d => d.Status)
+                    .HasForeignKey(d => d.StatusID)
                     .HasConstraintName("FK_Case_Status");
             });
 

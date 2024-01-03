@@ -158,7 +158,7 @@ CREATE TABLE [dbo].[Case](
 	[CreatedTime] [datetime] NOT NULL,
 	[UpdatedTime] [datetime] NULL,
 	[ClosedTime] [datetime] NULL,
-	[Status] [int] NULL,
+	[StatusID] [int] NULL,
  CONSTRAINT [PK_Case] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
@@ -495,9 +495,9 @@ SET IDENTITY_INSERT [dbo].[Client] OFF
 GO
 
 SET IDENTITY_INSERT [dbo].[Case] ON
-INSERT [dbo].[Case] ([ID], [PartnerUserID], [ClientID], [Name], [CreatedTime], [UpdatedTime], [ClosedTime], [Status]) VALUES (1, 1, 1, N'Civil Case A', CAST(N'2023-11-15T10:54:11.157'AS DateTime), CAST(N'2023-12-10T10:54:11.157' AS DateTime), NULL, 1)
-INSERT [dbo].[Case] ([ID], [PartnerUserID], [ClientID], [Name], [CreatedTime], [UpdatedTime], [ClosedTime], [Status]) VALUES (2, 18, 2, N'Civil Case B', CAST(N'2023-11-15T10:54:11.157'AS DateTime), CAST(N'2023-11-30T10:54:11.157' AS DateTime), CAST(N'2023-12-10T10:54:11.157' AS DateTime), 6)
-INSERT [dbo].[Case] ([ID], [PartnerUserID], [ClientID], [Name], [CreatedTime], [UpdatedTime], [ClosedTime], [Status]) VALUES (3, 1, 5, N'Criminal Case', CAST(N'2023-10-24T10:54:11.157'AS DateTime), CAST(N'2023-10-10T10:54:11.157' AS DateTime), NULL, 3)
+INSERT [dbo].[Case] ([ID], [PartnerUserID], [ClientID], [Name], [CreatedTime], [UpdatedTime], [ClosedTime], [StatusID]) VALUES (1, 1, 1, N'Civil Case A', CAST(N'2023-11-15T10:54:11.157'AS DateTime), CAST(N'2023-12-10T10:54:11.157' AS DateTime), NULL, 1)
+INSERT [dbo].[Case] ([ID], [PartnerUserID], [ClientID], [Name], [CreatedTime], [UpdatedTime], [ClosedTime], [StatusID]) VALUES (2, 18, 2, N'Civil Case B', CAST(N'2023-11-15T10:54:11.157'AS DateTime), CAST(N'2023-11-30T10:54:11.157' AS DateTime), CAST(N'2023-12-10T10:54:11.157' AS DateTime), 6)
+INSERT [dbo].[Case] ([ID], [PartnerUserID], [ClientID], [Name], [CreatedTime], [UpdatedTime], [ClosedTime], [StatusID]) VALUES (3, 1, 5, N'Criminal Case', CAST(N'2023-10-24T10:54:11.157'AS DateTime), CAST(N'2023-10-10T10:54:11.157' AS DateTime), NULL, 3)
 SET IDENTITY_INSERT [dbo].[Case] OFF
 GO
 
@@ -600,7 +600,7 @@ GO
 ALTER TABLE [dbo].[Case] CHECK CONSTRAINT [FK_Client_Case]
 GO
 
-ALTER TABLE [dbo].[Case] WITH CHECK ADD CONSTRAINT [FK_Case_Status] FOREIGN KEY([Status])
+ALTER TABLE [dbo].[Case] WITH CHECK ADD CONSTRAINT [FK_Case_Status] FOREIGN KEY([StatusID])
 REFERENCES [dbo].[CaseStatus] ([ID])
 GO
 ALTER TABLE [dbo].[Case] CHECK CONSTRAINT [FK_Case_Status]
