@@ -45,6 +45,7 @@
             :headers="headers"
             :items="paralegalList"
             :items-per-page="itemsPerPage"
+            hover
           >
             <template v-slot:item="{ item }">
               <tr>

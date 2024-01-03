@@ -2,33 +2,37 @@
   <v-row>
     <v-col cols="12" md="12">
       <v-card elevation="0" class="bg-transparent">
-        <!-- Cover Image -->
-        <div>
+        <div class="position-relative">
+          <!-- Cover Image -->
           <v-img
             height="200"
             src="/images/background/default-cover.jpg"
             cover
-          ></v-img>
+          />
+          <!-- Profile Image -->
+          <v-avatar
+            class="border position-absolute"
+            image="/images/users/avatar.jpg"
+            size="110"
+            style="border-width: 5px !important; border-color: white !important; left: 40px; bottom: -60px;"
+          />
         </div>
         <form @submit.prevent="editUser">
-          <v-card-item class="position-relative pt-4">
-            <!-- Profile Image -->
-            <v-avatar
-              class="border position-absolute"
-              image="/images/users/avatar.jpg"
-              size="110"
-              style="border-width: 5px !important; border-color: white !important; left: 40px; bottom: 0px;"
-            />
-            <div class="d-flex justify-content-between">
-              <v-card-title class="fs-3 fw-bold" style="margin-left: 155px;">{{ user.fullName }}</v-card-title>
-              <div>
-                <v-btn color="primary" elevation="0" @click="isEdit = !isEdit" v-if="!isEdit">Edit Profile</v-btn>
-                <div v-else>
-                  <v-btn color="primary" variant="outlined" @click="editUserCancel">Cancel</v-btn>
-                  <v-btn color="primary" class="ms-2" elevation="0" type="submit">Save Profile</v-btn>
+          <v-card-item class="pt-4">
+            <v-row class="d-flex justify-content-between">
+              <v-col cols="9">
+                <div class="fs-3 fw-bold" style="margin-left: 155px;">{{ user.fullName }}</div>
+              </v-col>
+              <v-col cols="3">
+                <div class="float-end">
+                  <v-btn color="primary" elevation="0" @click="isEdit = !isEdit" v-if="!isEdit">Edit Profile</v-btn>
+                  <div v-else>
+                    <v-btn color="primary" variant="outlined" @click="editUserCancel">Cancel</v-btn>
+                    <v-btn color="primary" class="ms-2" elevation="0" type="submit">Save Profile</v-btn>
+                  </div>
                 </div>
-              </div>
-            </div>
+              </v-col>
+            </v-row>
           </v-card-item>
           <v-card-text class="pb-7 pt-10 px-10 text-body-1">
             <div style="width: 500px;">

@@ -20,6 +20,7 @@ namespace Law_Firm_Management_System_API.Models
         public virtual DbSet<Appointment> Appointments { get; set; } = null!;
         public virtual DbSet<AppointmentCategory> AppointmentCategories { get; set; } = null!;
         public virtual DbSet<Case> Cases { get; set; } = null!;
+        public virtual DbSet<CaseStatus> CaseStatuses { get; set; } = null!;
         public virtual DbSet<Client> Clients { get; set; } = null!;
         public virtual DbSet<Document> Documents { get; set; } = null!;
         public virtual DbSet<DocumentCategory> DocumentCategories { get; set; } = null!;
@@ -127,26 +128,35 @@ namespace Law_Firm_Management_System_API.Models
 
                 entity.Property(e => e.Name).IsUnicode(false);
 
-                entity.Property(e => e.UpdatedTime).HasColumnType("datetime");
-
                 entity.Property(e => e.PartnerUserId).HasColumnName("PartnerUserID");
 
-                entity.Property(e => e.StatusID).HasColumnName("StatusID");
+                entity.Property(e => e.StatusId).HasColumnName("StatusID");
+
+                entity.Property(e => e.UpdatedTime).HasColumnType("datetime");
 
                 entity.HasOne(d => d.Client)
                     .WithMany(p => p.Cases)
                     .HasForeignKey(d => d.ClientId)
                     .HasConstraintName("FK_Client_Case");
 
-                entity.HasOne(d => d.User)
+                entity.HasOne(d => d.PartnerUser)
                     .WithMany(p => p.Cases)
                     .HasForeignKey(d => d.PartnerUserId)
                     .HasConstraintName("FK_Partner_Case");
-                
-                entity.HasOne(d => d.CaseStatus)
+
+                entity.HasOne(d => d.Status)
                     .WithMany(p => p.Cases)
-                    .HasForeignKey(d => d.StatusID)
+                    .HasForeignKey(d => d.StatusId)
                     .HasConstraintName("FK_Case_Status");
+            });
+
+            modelBuilder.Entity<CaseStatus>(entity =>
+            {
+                entity.ToTable("CaseStatus");
+
+                entity.Property(e => e.StatusName)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<Client>(entity =>

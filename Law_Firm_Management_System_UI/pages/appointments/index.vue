@@ -55,7 +55,7 @@
           </v-col>
           <v-col>
             <!-- Add New Appointment -->
-            <v-btn class="float-end" color="primary" flat @click="addAppointmentModal = true">New Appointment</v-btn>
+            <v-btn class="float-end" color="primary" prepend-icon="mdi-plus" flat @click="addAppointmentModal = true">New Appointment</v-btn>
           </v-col>
         </v-row>
 
@@ -67,6 +67,7 @@
             :headers="headers"
             :items="appointmentList"
             :items-per-page="itemsPerPage"
+            hover
           >
             <template v-slot:item="{ item }">
               <tr>

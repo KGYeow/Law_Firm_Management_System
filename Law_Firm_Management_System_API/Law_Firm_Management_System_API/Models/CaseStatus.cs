@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace Law_Firm_Management_System_API.Models
@@ -11,8 +11,8 @@ namespace Law_Firm_Management_System_API.Models
         }
 
         public int Id { get; set; }
-        public string StatusName { get; set; } = null!;
-        public string StatusDescription { get; set; } = null!;
+        public string? StatusName { get; set; }
+        public string? StatusDescription { get; set; }
 
         public virtual ICollection<Case> Cases { get; set; }
     }

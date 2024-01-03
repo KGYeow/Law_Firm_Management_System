@@ -9,6 +9,7 @@
             :headers="headers"
             :items="clientList"
             :items-per-page="itemsPerPage"
+            hover
           >
             <template v-slot:item="{ item }">
               <tr>

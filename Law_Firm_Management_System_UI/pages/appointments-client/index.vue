@@ -57,7 +57,7 @@
         </v-col>
         <v-col cols="6">
           <!-- Add New Appointment -->
-          <v-btn class="float-end" color="primary" flat @click="addAppointmentModal = true">New Appointment</v-btn>
+          <v-btn class="float-end" color="primary" prepend-icon="mdi-plus" flat @click="addAppointmentModal = true">New Appointment</v-btn>
         </v-col>
       </v-row>
     </v-col>

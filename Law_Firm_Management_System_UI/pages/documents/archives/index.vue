@@ -70,16 +70,17 @@
           </v-col>
         </v-row>
 
-        <!-- Document List Table -->
+        <!-- Archive List Table -->
         <div class="pa-7 pt-3 text-body-1">
           <v-data-table
             density="comfortable"
             v-model:page="currentPage"
             :headers="headers"
-            :items="archiveList"
+            :items="archiveFilterList"
             :items-per-page="itemsPerPage"
+            hover
           >
-            <template v-slot:item="{ item }">
+            <template #item="{ item }">
               <tr>
                 <td>{{ item.name }}</td>
                 <td>{{ item.categoryName }}</td>
@@ -120,8 +121,8 @@
                 <el-pagination
                   layout="total, prev, pager, next"
                   v-model:current-page="currentPage"
-                  :page-size="archiveList.length/pageCount()"
-                  :total="archiveList.length"
+                  :page-size="archiveFilterList.length/pageCount()"
+                  :total="archiveFilterList.length"
                 />
               </div>
             </template>
@@ -157,7 +158,8 @@ const headers = ref([
 const { data: caseList } = await fetchData.$get("/Case")
 const { data: categoryList } = await fetchData.$get("/Document/Category")
 const { data: partnerList } = await fetchData.$get("/Partner")
-const { data: archiveList } = await fetchData.$get("/Archive", filter.value)
+const { data: archiveList } = await fetchData.$get("/Archive")
+const { data: archiveFilterList } = await fetchData.$get("/Archive/Filter", filter.value)
 
 // Head
 useHead({
@@ -181,7 +183,7 @@ definePageMeta({
 
 // Methods
 const pageCount = () => {
-  return Math.ceil(archiveList.value.length / itemsPerPage.value)
+  return Math.ceil(archiveFilterList.value.length / itemsPerPage.value)
 }
 const deleteDocument = async(docId) => {
   try {

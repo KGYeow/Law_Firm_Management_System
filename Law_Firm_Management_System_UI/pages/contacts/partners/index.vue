@@ -35,6 +35,7 @@
             :headers="headers"
             :items="partnerList"
             :items-per-page="itemsPerPage"
+            hover
           >
             <template v-slot:item="{ item }">
               <tr>

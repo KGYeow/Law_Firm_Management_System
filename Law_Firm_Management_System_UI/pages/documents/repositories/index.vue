@@ -76,16 +76,43 @@
             density="comfortable"
             v-model:page="currentPage"
             :headers="headers"
-            :items="documentList"
+            :items="documentFilterList"
             :items-per-page="itemsPerPage"
+            hover
+            c
           >
-            <template v-slot:item="{ item }">
+            <template #item="{ item }">
               <tr>
-                <td>{{ item.name }}</td>
-                <td>{{ item.categoryName }}</td>
-                <td>{{ item.caseName ?? '-' }}</td>
-                <td>{{ item.modifiedBy }}</td>
-                <td>{{ dayjs(item.modifiedDate).format("DD MMM YYYY") }}</td>
+                <td style="max-width: 300px;">
+                  <el-text truncated>
+                    <v-tooltip :text="item.name" activator="parent" location="top" offset="2"/>
+                    {{ item.name }}aaaaaaaaaaaaaaaaaaaaaaaaaaa
+                  </el-text>
+                </td>
+                <td style="max-width: 150px;">
+                  <el-text truncated>
+                    <v-tooltip :text="item.categoryName" activator="parent" location="top" offset="2"/>
+                    {{ item.categoryName }}aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                  </el-text>
+                </td>
+                <td style="max-width: 150px;">
+                  <el-text truncated>
+                    <v-tooltip :text="item.caseName" activator="parent" location="top" offset="2" v-if="item.caseName"/>
+                    {{ item.caseName ?? '-' }}aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                  </el-text>
+                </td>
+                <td class="flex">
+                  <el-text truncated>
+                    <v-tooltip :text="item.modifiedBy" activator="parent" location="top" offset="2"/>
+                    {{ item.modifiedBy }}
+                  </el-text>
+                </td>
+                <td style="max-width: 0;">
+                  <el-text truncated>
+                    <v-tooltip :text="dayjs(item.modifiedDate).format('DD MMM YYYY')" activator="parent" location="top" offset="2"/>
+                    {{ dayjs(item.modifiedDate).format("DD MMM YYYY") }}aaaaaaaaaaaa
+                  </el-text>
+                </td>
                 <td class="list-inline hstack">
                   <li>
                     <v-tooltip text="Download" activator="parent" location="top" offset="2"/>
@@ -115,13 +142,13 @@
                 </td>
               </tr>
             </template>
-            <template v-slot:bottom>
+            <template #bottom>
               <div class="d-flex justify-content-end pt-2">
                 <el-pagination
                   layout="total, prev, pager, next"
                   v-model:current-page="currentPage"
-                  :page-size="documentList.length/pageCount()"
-                  :total="documentList.length"
+                  :page-size="documentFilterList.length/pageCount()"
+                  :total="documentFilterList.length"
                 />
               </div>
             </template>
@@ -253,7 +280,8 @@ const headers = ref([
 const { data: caseList } = await fetchData.$get("/Case")
 const { data: categoryList } = await fetchData.$get("/Document/Category")
 const { data: partnerList } = await fetchData.$get("/Partner")
-const { data: documentList } = await fetchData.$get("/Document", filter.value)
+const { data: documentList } = await fetchData.$get("/Document")
+const { data: documentFilterList } = await fetchData.$get("/Document/Filter", filter.value)
 
 // Head
 useHead({
@@ -277,7 +305,7 @@ definePageMeta({
 
 // Methods
 const pageCount = () => {
-  return Math.ceil(documentList.value.length / itemsPerPage.value)
+  return Math.ceil(documentFilterList.value.length / itemsPerPage.value)
 }
 const addDocument = handleSubmit(async(values) => {
   try {

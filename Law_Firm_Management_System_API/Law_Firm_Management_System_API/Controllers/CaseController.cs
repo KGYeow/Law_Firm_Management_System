@@ -30,8 +30,8 @@ namespace Law_Firm_Management_System_API.Controllers
         public IActionResult GetCasePartnerPerspective([FromQuery] CaseFilterDto dto)
         {
             var user = userService.GetUser(User);
-            var l = context.Cases.Include(a => a.User).Include(a => a.Client).Include(a => a.CaseStatus).Where(a => a.PartnerUserId == user.Id).OrderByDescending(a => a.Id).ToList()
-                .Select(x => new { id = x.Id, name = x.Name, clientId = x.ClientId, clientName = x.Client?.FullName, createdTime = x.CreatedTime, updatedTime = x.UpdatedTime, closedTime = x.ClosedTime, statusId = x.StatusID, status = x.CaseStatus?.StatusName });
+            var l = context.Cases.Include(a => a.PartnerUser).Include(a => a.Client).Include(a => a.Status).Where(a => a.PartnerUserId == user.Id).OrderByDescending(a => a.Id).ToList()
+                .Select(x => new { id = x.Id, name = x.Name, clientId = x.ClientId, clientName = x.Client?.FullName, createdTime = x.CreatedTime, updatedTime = x.UpdatedTime, closedTime = x.ClosedTime, statusId = x.StatusId, status = x.Status?.StatusName });
 
             if (dto.ClientId != null)
                 l = l.Where(a => a.clientId == dto.ClientId);
@@ -57,7 +57,7 @@ namespace Law_Firm_Management_System_API.Controllers
                 CreatedTime = DateTime.Now,
                 UpdatedTime = null,
                 ClosedTime = null,
-                StatusID = 1,
+                StatusId = 1,
                 // Add other necessary properties based on your Case model
             };
 

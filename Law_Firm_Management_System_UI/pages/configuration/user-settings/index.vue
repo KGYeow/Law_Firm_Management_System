@@ -4,10 +4,12 @@
       <UiParentCard title="User Account List"> 
         <div class="pa-7 pt-1 text-body-1">
           <v-data-table
+            density="comfortable"
             v-model:page="currentPage"
             :headers="headers"
             :items="userList"
             :items-per-page="itemsPerPage"
+            hover
           >
             <!-- <template v-slot:item.phoneNumber="{ item }">
               <span v-if="item.phoneNumber">{{ item.phoneNumber }}</span>

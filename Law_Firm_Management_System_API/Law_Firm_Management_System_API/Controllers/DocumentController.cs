@@ -27,7 +27,17 @@ namespace Law_Firm_Management_System_API.Controllers
         // Get the list of documents.
         [HttpGet]
         [Route("")]
-        public IActionResult GetDocumentList([FromQuery] DocFilterDto dto)
+        public IActionResult GetDocumentList()
+        {
+            var l = context.Documents.Where(a => a.IsArchived == false).ToList()
+                .Select(x => new { id = x.Id, name = x.Name });
+            return Ok(l);
+        }
+
+        // Get the list of filtered documents.
+        [HttpGet]
+        [Route("Filter")]
+        public IActionResult GetDocumentFilteredList([FromQuery] DocFilterDto dto)
         {
             var l = context.Documents.Include(a => a.Category).Include(a => a.Case).Include(a => a.PartnerUser).Where(a => a.IsArchived == false).ToList()
                 .Select(x => new { id = x.Id, categoryId = x.CategoryId, categoryName = x.Category.Name, caseId = x.CaseId, caseName = x.Case?.Name, name = x.Name, modifiedDate = x.ModifiedDate, userId = x.PartnerUserId, modifiedBy = x.PartnerUser.FullName, type = x.Type, isArchived = x.IsArchived });
