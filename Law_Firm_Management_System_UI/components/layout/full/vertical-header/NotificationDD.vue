@@ -39,7 +39,7 @@
                 class="m-0 p-0 px-3"
                 v-for="item in notifications"
               >
-                <v-alert class="p-2">
+                <v-alert class="p-2" style="background-color: rgb(245, 245, 245);">
                   <v-alert-title class="fw-bold" style="font-size: small;">{{ item.title }}</v-alert-title>
                   <span style="font-size: smaller;">{{ item.description }}</span>
                 </v-alert>
@@ -58,5 +58,5 @@
 import { BellRingingIcon } from 'vue-tabler-icons';
 
 // Data
-const { data: notifications } = await fetchData.$get("/Notification/UserNotifications")
+const { data: notifications } = await fetchData.$get("/Notification/UnreadList")
 </script>

@@ -83,6 +83,16 @@ namespace Law_Firm_Management_System_API.Controllers
             context.Appointments.Add(appointment);
             context.SaveChanges();
 
+            var notification = new Notification
+            {
+                UserId = dto.PartnerUserId,
+                Title = "New Pending Appointment",
+                Description = "There is a new client appointment, " + client.FullName + ", waiting for your approval.",
+                IsRead = false,
+            };
+            context.Notifications.Add(notification);
+            context.SaveChanges();
+
             return Ok(new Response { Status = "Success", Message = "New appointment created successfully" });
         }
 
@@ -104,10 +114,20 @@ namespace Law_Firm_Management_System_API.Controllers
             context.Appointments.Add(appointment);
             context.SaveChanges();
 
+            var notification = new Notification
+            {
+                UserId = dto.ClientId,
+                Title = "New Created Appointment",
+                Description = "There is a new appointment created by the partner, " + user.FullName + ", for you.",
+                IsRead = false,
+            };
+            context.Notifications.Add(notification);
+            context.SaveChanges();
+
             return Ok(new Response { Status = "Success", Message = "New appointment created successfully" });
         }
 
-        // Create the appointment made by the client.
+        // Delete the appointment made by the client.
         [HttpDelete]
         [Route("")]
         public IActionResult DeleteAppointment(int appointmentId)
@@ -126,18 +146,43 @@ namespace Law_Firm_Management_System_API.Controllers
         [Route("PartnerApproval")]
         public IActionResult AppointmentApproval([FromBody] AppointmentApprovalDto dto)
         {
+            var user = userService.GetUser(User);
             var appointment = context.Appointments.Where(a => a.Id == dto.AppointmentId).FirstOrDefault();
             appointment.Status = dto.Status;
             context.Appointments.Update(appointment);
             context.SaveChanges();
 
             var notifyMessage = "";
+            var notificationTitle = "";
+            var notificationDescription = "";
             if (dto.Status == "Approved")
+            {
                 notifyMessage = "Appointment approved successfully";
+                notificationTitle = "Appointment Approved";
+                notificationDescription = "Your appointment has been approved by partner, " + user.FullName + ".";
+            }
             else if (dto.Status == "Rejected")
+            {
                 notifyMessage = "Appointment rejected successfully";
+                notificationTitle = "Appointment Rejected";
+                notificationDescription = "Your appointment has been rejected by partner, " + user.FullName + ".";
+            }
             else
+            {
                 notifyMessage = "Appointment cancelled successfully";
+                notificationTitle = "Appointment Cancelled";
+                notificationDescription = "Your appointment has been cancelled by partner, " + user.FullName + ".";
+            }
+
+            var notification = new Notification
+            {
+                UserId = appointment.ClientId,
+                Title = notificationTitle,
+                Description = notificationDescription,
+                IsRead = false,
+            };
+            context.Notifications.Add(notification);
+            context.SaveChanges();
 
             return Ok(new Response { Status = "Success", Message = notifyMessage });
         }

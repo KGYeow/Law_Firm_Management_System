@@ -59,7 +59,7 @@ namespace Law_Firm_Management_System_API.Controllers
 
         // Get the dashboard data from partner's perspective.
         [HttpGet]
-        [Route("Employee/DashboardData")]
+        [Route("Partner/DashboardData")]
         public IActionResult GetPartnerDashboardData()
         {
             var user = userService.GetUser(User);
@@ -79,10 +79,31 @@ namespace Law_Firm_Management_System_API.Controllers
             var numCompletedEvent = context.Events.Include(a => a.Case).Where(a => a.Case.PartnerUserId == user.Id && a.IsCompleted == true)
                 .ToList().Count;
 
-            var numCompletedTasks = context.Tasks.Where(a => a.Id == user.Id && a.CompletedTime != null)
+            var numToDoTasks = context.Tasks.Where(a => a.PartnerUserId == user.Id && a.CompletedTime == null && a.InProgress == false)
+                .ToList().Count;
+            var numInProgressTasks = context.Tasks.Where(a => a.PartnerUserId == user.Id && a.InProgress == true)
+                .ToList().Count;
+            var numCompletedTasks = context.Tasks.Where(a => a.PartnerUserId == user.Id && a.CompletedTime != null)
                 .ToList().Count;
 
-            return Ok(new { numAppointments, numPendingAppointments, numCases, numCompletedCases, numEvent, numCompletedEvent, numCompletedTasks });
+            return Ok(new { numAppointments, numPendingAppointments, numCases, numCompletedCases, numEvent, numCompletedEvent, numToDoTasks, numInProgressTasks, numCompletedTasks });
+        }
+
+        // Get the dashboard data from partner's perspective.
+        [HttpGet]
+        [Route("Paralegal/DashboardData")]
+        public IActionResult GetParalegalDashboardData()
+        {
+            var user = userService.GetUser(User);
+
+            var numToDoTasks = context.Tasks.Where(a => a.ParelegalUserId == user.Id && a.CompletedTime == null && a.InProgress == false)
+                .ToList().Count;
+            var numInProgressTasks = context.Tasks.Where(a => a.ParelegalUserId == user.Id && a.InProgress == true)
+                .ToList().Count;
+            var numCompletedTasks = context.Tasks.Where(a => a.ParelegalUserId == user.Id && a.CompletedTime != null)
+                .ToList().Count;
+
+            return Ok(new { numToDoTasks, numInProgressTasks, numCompletedTasks });
         }
 
         // Get the dashboard data from client's perspective.
