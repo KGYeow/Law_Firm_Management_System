@@ -1,16 +1,34 @@
 <template>
-  <h5 class="text-h5 mb-6 pl-7 d-flex align-center">
-    <LayoutFullVerticalSidebarIcon class="me-3" :item="CalendarIcon"/>
-    Calendar
-  </h5>
-  <div class="pa-7 pt-1 text-body-2">
-    <el-calendar v-model="value"/>
+  <div class="mt-3 pa-7 py-1 text-body-1">
+    <Calendar
+      ref="calendar"
+      :attributes="attrs"
+      expanded
+      borderless
+    >
+      <template #footer>
+        <div class="px-3 pb-1">
+          <v-btn variant="outlined" size="small" @click="moveToToday">Today</v-btn>
+        </div>
+      </template>
+    </Calendar>
   </div>
 </template>
 
 <script setup>
-import { CalendarIcon } from 'vue-tabler-icons';
+import { setupCalendar, Calendar, DatePicker } from 'v-calendar';
 
 // Data
-const value = ref(new Date())
+const calendar = ref(null)
+const attrs = ref([
+  {
+    highlight: true,
+    dates: new Date(),
+  },
+])
+
+// Methods
+const moveToToday = () => {
+  calendar.value.move(new Date());
+}
 </script>

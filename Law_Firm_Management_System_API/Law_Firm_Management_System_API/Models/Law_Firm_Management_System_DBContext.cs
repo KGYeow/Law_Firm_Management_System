@@ -33,7 +33,6 @@ namespace Law_Firm_Management_System_API.Models
         public virtual DbSet<Task> Tasks { get; set; } = null!;
         public virtual DbSet<TaskAssignment> TaskAssignments { get; set; } = null!;
         public virtual DbSet<User> Users { get; set; } = null!;
-        public virtual DbSet<UserNotification> UserNotifications { get; set; } = null!;
         public virtual DbSet<UserRole> UserRoles { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -253,6 +252,14 @@ namespace Law_Firm_Management_System_API.Models
                 entity.Property(e => e.Description).IsUnicode(false);
 
                 entity.Property(e => e.Title).IsUnicode(false);
+
+                entity.Property(e => e.UserId).HasColumnName("UserID");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.Notifications)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Notification_User");
             });
 
             modelBuilder.Entity<Page>(entity =>
@@ -389,32 +396,6 @@ namespace Law_Firm_Management_System_API.Models
                     .HasForeignKey(d => d.UserRoleId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_User_UserRole");
-            });
-
-            modelBuilder.Entity<UserNotification>(entity =>
-            {
-                entity.ToTable("UserNotification");
-
-                entity.Property(e => e.Id).HasColumnName("ID");
-
-                entity.Property(e => e.Description).IsUnicode(false);
-
-                entity.Property(e => e.NotificationId).HasColumnName("NotificationID");
-
-                entity.Property(e => e.Title).IsUnicode(false);
-
-                entity.Property(e => e.UserId).HasColumnName("UserID");
-
-                entity.HasOne(d => d.Notification)
-                    .WithMany(p => p.UserNotifications)
-                    .HasForeignKey(d => d.NotificationId)
-                    .HasConstraintName("FK_UserNotification_Notification");
-
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.UserNotifications)
-                    .HasForeignKey(d => d.UserId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_UserNotification_User");
             });
 
             modelBuilder.Entity<UserRole>(entity =>

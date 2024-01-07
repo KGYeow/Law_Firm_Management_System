@@ -5,6 +5,7 @@ import * as directives from "vuetify/directives";
 import VueApexCharts from 'vue3-apexcharts';
 import VueTablerIcons from 'vue-tabler-icons';
 import '@/assets/scss/config/modernize/style.scss';
+import 'v-calendar/style.css';
 import "@mdi/font/css/materialdesignicons.css";
 import '@/assets/scss/icons/icons.scss';
 import { PurpleTheme } from "@/theme/LightTheme";

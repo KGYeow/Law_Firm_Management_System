@@ -12,22 +12,37 @@ namespace Law_Firm_Management_System_API.Controllers
         {
         }
 
+        // Get the notification history.
         [HttpGet]
-        [Route("NotificationLog")]
-        public IActionResult GetNotificationLog()
+        [Route("Log")]
+        public IActionResult GetUserNotificationLog()
         {
             var user = userService.GetUser(User);
-            var l = context.UserNotifications.Where(a => a.UserId == user.Id).OrderByDescending(a => a.Id).ToList();
+            var l = context.Notifications.Where(a => a.UserId == user.Id).OrderByDescending(a => a.Id).ToList();
             return Ok(l);
         }
 
+        // Get the list of a specific user's unread notifications.
         [HttpGet]
-        [Route("UserNotifications")]
-        public IActionResult GetUserNotifications()
+        [Route("UnreadList")]
+        public IActionResult GetUnreadUserNotifications()
         {
             var user = userService.GetUser(User);
-            var l = context.UserNotifications.Where(a => a.UserId == user.Id && a.IsRead == false).OrderByDescending(a => a.Id).ToList();
+            var l = context.Notifications.Where(a => a.UserId == user.Id && a.IsRead == false).OrderByDescending(a => a.Id).ToList();
             return Ok(l);
+        }
+
+        // Read the user notification.
+        [HttpPut]
+        [Route("Read")]
+        public IActionResult ReadNotification(int notificationId)
+        {
+            var userNotification = context.Notifications.Where(a => a.Id == notificationId).FirstOrDefault();
+            userNotification.IsRead = true;
+            context.Notifications.Update(userNotification);
+            context.SaveChanges();
+
+            return Ok();
         }
     }
 }

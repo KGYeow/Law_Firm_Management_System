@@ -11,3 +11,37 @@
     }
   }
 }
+
+// v-calendar
+.vc-container {
+  font-family: "Plus Jakarta Sans", sans-serif !important;
+
+  .vc-header {
+    margin-bottom: 10px;
+    font-size: medium !important;
+
+    button {
+      transition: all 0.1s ease-in-out;
+
+      &.vc-arrow {
+        border-radius: 10px;
+        font-size: 100px !important;
+      }
+    }
+  }
+
+  .vc-weekday {
+    font-size: smaller !important;
+  }
+
+  .vc-day-content {
+    transition: all 0.1s ease-in-out;
+  }
+}
+.vc-light {
+  --vc-focus-ring: 0 0 0 1px rgb(var(--v-theme-primary)) !important;
+}
+.vc-light.vc-attr,
+.vc-light .vc-attr {
+  --vc-highlight-solid-bg: rgb(var(--v-theme-primary)) !important;
+}

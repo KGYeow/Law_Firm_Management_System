@@ -12,8 +12,8 @@ namespace Law_Firm_Management_System_API.Models
             Cases = new HashSet<Case>();
             Clients = new HashSet<Client>();
             Documents = new HashSet<Document>();
+            Notifications = new HashSet<Notification>();
             TaskAssignments = new HashSet<TaskAssignment>();
-            UserNotifications = new HashSet<UserNotification>();
         }
 
         public int Id { get; set; }
@@ -32,7 +32,7 @@ namespace Law_Firm_Management_System_API.Models
         public virtual ICollection<Case> Cases { get; set; }
         public virtual ICollection<Client> Clients { get; set; }
         public virtual ICollection<Document> Documents { get; set; }
+        public virtual ICollection<Notification> Notifications { get; set; }
         public virtual ICollection<TaskAssignment> TaskAssignments { get; set; }
-        public virtual ICollection<UserNotification> UserNotifications { get; set; }
     }
 }

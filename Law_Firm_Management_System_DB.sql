@@ -63,34 +63,18 @@ CREATE TABLE [dbo].[RoleAccessPage](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Notification]    Script Date: 20/11/2023 9:22:00 PM ******/
+/****** Object:  Table [dbo].[Notification]    Script Date: 20/11/2023 9:25:00 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Notification](
 	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[UserID] [int] NOT NULL,
 	[Title] [varchar](MAX) NOT NULL,
 	[Description] [varchar](MAX) NOT NULL,
- CONSTRAINT [PK_Notification] PRIMARY KEY CLUSTERED 
-(
-	[ID] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
-GO
-/****** Object:  Table [dbo].[UserNotification]    Script Date: 20/11/2023 9:25:00 PM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [dbo].[UserNotification](
-	[ID] [int] IDENTITY(1,1) NOT NULL,
-	[UserID] [int] NOT NULL,
-	[NotificationID] [int] NULL,
-	[Title] [varchar](MAX) NULL,
-	[Description] [varchar](MAX) NULL,
 	[IsRead] [bit] NOT NULL,
- CONSTRAINT [PK_UserNotification] PRIMARY KEY CLUSTERED 
+ CONSTRAINT [PK_Notification] PRIMARY KEY CLUSTERED 
 (
 	[ID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
@@ -404,12 +388,12 @@ INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (26, 3, 13)
 SET IDENTITY_INSERT [dbo].[RoleAccessPage] OFF
 GO
 
-SET IDENTITY_INSERT [dbo].[UserNotification] ON
-INSERT [dbo].[UserNotification] ([ID], [UserID], [NotificationID], [Title], [Description], [IsRead]) VALUES (1, 1, NULL, N'Title 1', N'This is notification 1.', 0)
-INSERT [dbo].[UserNotification] ([ID], [UserID], [NotificationID], [Title], [Description], [IsRead]) VALUES (2, 1, NULL, N'Title 2', N'This is notification 2.', 0)
-INSERT [dbo].[UserNotification] ([ID], [UserID], [NotificationID], [Title], [Description], [IsRead]) VALUES (3, 1, NULL, N'Title 3', N'This is notification 3.', 0)
-INSERT [dbo].[UserNotification] ([ID], [UserID], [NotificationID], [Title], [Description], [IsRead]) VALUES (4, 1, NULL, N'Title 4', N'This is notification 4.', 0)
-SET IDENTITY_INSERT [dbo].[UserNotification] OFF
+SET IDENTITY_INSERT [dbo].[Notification] ON
+INSERT [dbo].[Notification] ([ID], [UserID], [Title], [Description], [IsRead]) VALUES (1, 1, N'Title 1', N'This is notification 1.', 0)
+INSERT [dbo].[Notification] ([ID], [UserID], [Title], [Description], [IsRead]) VALUES (2, 1, N'Title 2', N'This is notification 2.', 0)
+INSERT [dbo].[Notification] ([ID], [UserID], [Title], [Description], [IsRead]) VALUES (3, 1, N'Title 3', N'This is notification 3.', 0)
+INSERT [dbo].[Notification] ([ID], [UserID], [Title], [Description], [IsRead]) VALUES (4, 1, N'Title 4', N'This is notification 4.', 0)
+SET IDENTITY_INSERT [dbo].[Notification] OFF
 GO
 
 SET IDENTITY_INSERT [dbo].[Announcement] ON
@@ -545,15 +529,10 @@ GO
 ALTER TABLE [dbo].[RoleAccessPage] CHECK CONSTRAINT [FK_RoleAccessPage_UserRole]
 GO
 
-ALTER TABLE [dbo].[UserNotification] WITH CHECK ADD CONSTRAINT [FK_UserNotification_User] FOREIGN KEY([UserID])
+ALTER TABLE [dbo].[Notification] WITH CHECK ADD CONSTRAINT [FK_Notification_User] FOREIGN KEY([UserID])
 REFERENCES [dbo].[User] ([ID])
 GO
-ALTER TABLE [dbo].[UserNotification] CHECK CONSTRAINT [FK_UserNotification_User]
-GO
-ALTER TABLE [dbo].[UserNotification] WITH CHECK ADD CONSTRAINT [FK_UserNotification_Notification] FOREIGN KEY([NotificationID])
-REFERENCES [dbo].[Notification] ([ID])
-GO
-ALTER TABLE [dbo].[UserNotification] CHECK CONSTRAINT [FK_UserNotification_Notification]
+ALTER TABLE [dbo].[Notification] CHECK CONSTRAINT [FK_Notification_User]
 GO
 
 ALTER TABLE [dbo].[Announcement] WITH CHECK ADD CONSTRAINT [FK_Announcement_Partner] FOREIGN KEY([PartnerUserID])
