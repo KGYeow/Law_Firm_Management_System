@@ -12,12 +12,16 @@ namespace Law_Firm_Management_System_API.Models
 
         public int Id { get; set; }
         public int? CaseId { get; set; }
+        public int? PartnerUserId { get; set; }
+        public int? ClientId { get; set; }
         public string Name { get; set; } = null!;
         public DateTime CreatedTime { get; set; }
         public DateTime EventTime { get; set; }
         public bool IsCompleted { get; set; }
 
         public virtual Case? Case { get; set; }
+        public virtual Client? Client { get; set; }
+        public virtual User? PartnerUser { get; set; }
         public virtual ICollection<Task> Tasks { get; set; }
     }
 }

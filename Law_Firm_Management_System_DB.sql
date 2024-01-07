@@ -196,6 +196,8 @@ GO
 CREATE TABLE [dbo].[Event](
 	[ID] [int] IDENTITY(1,1) NOT NULL,
 	[CaseID] [int] NULL,
+	[PartnerUserID] [int] NULL,
+	[ClientID] [int] NULL,
 	[Name] [varchar](max) NOT NULL,
 	[CreatedTime] [datetime] NOT NULL,
 	[EventTime] [datetime] NOT NULL,
@@ -497,8 +499,8 @@ SET IDENTITY_INSERT [dbo].[Task] OFF
 GO
 
 SET IDENTITY_INSERT [dbo].[Event] ON
-INSERT [dbo].[Event] ([ID], [CaseID], [Name], [CreatedTime], [EventTime], [IsCompleted]) VALUES (1, 1, N'Court Hearings', CAST(N'2023-11-15T10:54:11.157'AS DateTime), CAST(N'2023-12-10T10:54:11.157' AS DateTime), 0)
-INSERT [dbo].[Event] ([ID], [CaseID], [Name], [CreatedTime], [EventTime], [IsCompleted]) VALUES (2, 2, N'Trial Preparation', CAST(N'2023-12-10T10:54:11.157' AS DateTime), CAST(N'2023-12-10T10:54:11.157' AS DateTime), 1)
+INSERT [dbo].[Event] ([ID], [CaseID], [PartnerUserID], [ClientID],[Name], [CreatedTime], [EventTime], [IsCompleted]) VALUES (1, 1, 1, 1, N'Court Hearings', CAST(N'2023-11-15T10:54:11.157'AS DateTime), CAST(N'2023-12-10T10:54:11.157' AS DateTime), 0)
+INSERT [dbo].[Event] ([ID], [CaseID], [PartnerUserID], [ClientID], [Name], [CreatedTime], [EventTime], [IsCompleted]) VALUES (2, 2, 18,2, N'Trial Preparation', CAST(N'2023-12-10T10:54:11.157' AS DateTime), CAST(N'2023-12-10T10:54:11.157' AS DateTime), 1)
 SET IDENTITY_INSERT [dbo].[Event] OFF
 GO
 
@@ -605,6 +607,18 @@ ALTER TABLE [dbo].[Event] WITH CHECK ADD CONSTRAINT [FK_Event_Case] FOREIGN KEY(
 REFERENCES [dbo].[Case] ([ID])
 GO
 ALTER TABLE [dbo].[Event] CHECK CONSTRAINT [FK_Event_Case]
+GO
+
+ALTER TABLE [dbo].[Event] WITH CHECK ADD CONSTRAINT [FK_Event_Partner] FOREIGN KEY([PartnerUserID])
+REFERENCES [dbo].[User] ([ID])
+GO
+ALTER TABLE [dbo].[Event] CHECK CONSTRAINT [FK_Event_Partner]
+GO
+
+ALTER TABLE [dbo].[Event] WITH CHECK ADD CONSTRAINT [FK_Event_Client] FOREIGN KEY([ClientID])
+REFERENCES [dbo].[Client] ([ID])
+GO
+ALTER TABLE [dbo].[Event] CHECK CONSTRAINT [FK_Event_Client]
 GO
 
 ALTER TABLE [dbo].[Document]  WITH CHECK ADD  CONSTRAINT [FK_Document_DocumentCategory] FOREIGN KEY([CategoryId])
