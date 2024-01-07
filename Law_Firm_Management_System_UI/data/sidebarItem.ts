@@ -55,6 +55,20 @@ const sidebarItem: menu[] = [
     accessName: "Cases",
   },
   {
+    title: "Cases",
+    icon: tablerIcon.BriefcaseIcon,
+    to: "/cases-paralegal",
+    auth: true,
+    accessName: "Cases_Paralegal",
+  },
+  {
+    title: "Cases",
+    icon: tablerIcon.BriefcaseIcon,
+    to: "/cases-client",
+    auth: true,
+    accessName: "Cases_Client",
+  },
+  {
     title: "Tasks",
     icon: tablerIcon.ClipboardTextIcon,
     to: "/tasks",

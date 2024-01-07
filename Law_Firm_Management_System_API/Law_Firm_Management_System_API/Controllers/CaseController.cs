@@ -43,6 +43,53 @@ namespace Law_Firm_Management_System_API.Controllers
             return Ok(l);
         }
 
+        // Get the list of cases from paralegal's perspective.
+        [HttpGet]
+        [Route("ParalegalPerspectiveCaseList")]
+        public IActionResult GetCaseParalegalPerspective([FromQuery] CaseFilterDto dto)
+        {
+            var user = userService.GetUser(User);
+
+            // Retrieve the partner ID assigned to the paralegal
+            var partnerId = context.Partners
+                .Where(p => p.ParalegalUserId == user.Id)
+                .Select(p => p.UserId)
+                .FirstOrDefault();
+
+            var l = context.Cases
+                .Include(a => a.Status)
+                .Where(a => a.PartnerUserId == partnerId)  // Filter cases by assigned partner
+                .Select(x => new { id = x.Id, name = x.Name, clientId = x.ClientId, clientName = x.Client.FullName, createdTime = x.CreatedTime, updatedTime = x.UpdatedTime, closedTime = x.ClosedTime, statusId = x.StatusId, status = x.Status.StatusName });
+
+            if (dto.ClientId != null)
+                l = l.Where(a => a.clientId == dto.ClientId);
+            if (dto.Status != null)
+                l = l.Where(a => a.status == dto.Status);
+
+            l.ToList();
+
+            return Ok(l);
+        }
+
+        // Get the list of cases from client's perspective.
+        [HttpGet]
+        [Route("ClientPerspectiveCaseList")]
+        public IActionResult GetCaseClientPerspective([FromQuery] CaseFilterDto dto)
+        {
+            var user = userService.GetUser(User);
+            var l = context.Cases.Include(a => a.PartnerUser).Include(a => a.Client).Include(a => a.Status).Where(a => a.Client.UserId == user.Id).OrderByDescending(a => a.Id).ToList()
+                .Select(x => new { id = x.Id, name = x.Name, clientId = x.ClientId, partnerUserId = x.PartnerUserId, clientName = x.Client?.FullName, partnerName = x.PartnerUser.FullName, createdTime = x.CreatedTime, updatedTime = x.UpdatedTime, closedTime = x.ClosedTime, statusId = x.StatusId, status = x.Status?.StatusName });
+
+            if (dto.PartnerUserId != null)
+                l = l.Where(a => a.partnerUserId == dto.PartnerUserId);
+            if (dto.Status != null)
+                l = l.Where(a => a.status == dto.Status);
+
+            l.ToList();
+
+            return Ok(l);
+        }
+
         [HttpPost]
         [Route("CaseCreate")]
         public IActionResult CreateCasePartnerPerspective([FromBody] CasePartnerCreateDto dto)
@@ -84,6 +131,7 @@ namespace Law_Firm_Management_System_API.Controllers
         public class CaseFilterDto
         {
             public int? ClientId { get; set; }
+            public int? PartnerUserId { get; set; }
             public string? Status { get; set; }
         }
 

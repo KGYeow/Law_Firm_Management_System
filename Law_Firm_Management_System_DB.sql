@@ -366,6 +366,8 @@ INSERT [dbo].[Page] ([ID], [Name], [AccessName]) VALUES (13, N'Partners', N'Part
 INSERT [dbo].[Page] ([ID], [Name], [AccessName]) VALUES (14, N'Partners', N'Partners_Employee')
 INSERT [dbo].[Page] ([ID], [Name], [AccessName]) VALUES (15, N'User Settings', N'UserSettings')
 INSERT [dbo].[Page] ([ID], [Name], [AccessName]) VALUES (16, N'Legal Information', N'LegalInformation')
+INSERT [dbo].[Page] ([ID], [Name], [AccessName]) VALUES (17, N'Cases', N'Cases_Client')
+INSERT [dbo].[Page] ([ID], [Name], [AccessName]) VALUES (18, N'Cases', N'Cases_Paralegal')
 SET IDENTITY_INSERT [dbo].[Page] OFF
 GO
 
@@ -386,7 +388,7 @@ INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (12, 1, 16)
 /** Paralegal **/
 INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (13, 2, 2)
 INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (14, 2, 4)
-INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (15, 2, 5)
+INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (15, 2, 18)
 INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (16, 2, 6)
 INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (17, 2, 8)
 INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (18, 2, 9)
@@ -396,7 +398,7 @@ INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (21, 2, 16)
 /** Client **/
 INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (22, 3, 1)
 INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (23, 3, 3)
-INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (24, 3, 5)
+INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (24, 3, 17)
 INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (25, 3, 7)
 INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (26, 3, 13)
 SET IDENTITY_INSERT [dbo].[RoleAccessPage] OFF
