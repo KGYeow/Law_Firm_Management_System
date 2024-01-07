@@ -5,6 +5,11 @@ namespace Law_Firm_Management_System_API.Models
 {
     public partial class Document
     {
+        public Document()
+        {
+            Tasks = new HashSet<Task>();
+        }
+
         public int Id { get; set; }
         public string Name { get; set; } = null!;
         public int CategoryId { get; set; }
@@ -18,5 +23,6 @@ namespace Law_Firm_Management_System_API.Models
         public virtual Case? Case { get; set; }
         public virtual DocumentCategory Category { get; set; } = null!;
         public virtual User PartnerUser { get; set; } = null!;
+        public virtual ICollection<Task> Tasks { get; set; }
     }
 }

@@ -9,6 +9,7 @@ namespace Law_Firm_Management_System_API.Models
         {
             Documents = new HashSet<Document>();
             Events = new HashSet<Event>();
+            Tasks = new HashSet<Task>();
         }
 
         public int Id { get; set; }
@@ -25,5 +26,6 @@ namespace Law_Firm_Management_System_API.Models
         public virtual CaseStatus? Status { get; set; }
         public virtual ICollection<Document> Documents { get; set; }
         public virtual ICollection<Event> Events { get; set; }
+        public virtual ICollection<Task> Tasks { get; set; }
     }
 }

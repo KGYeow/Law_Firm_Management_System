@@ -170,31 +170,23 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Task](
-	[Id] [int] IDENTITY(1,1) NOT NULL,
-	[Name] [varchar](max) NOT NULL,
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[ParelegalUserID] [int] NULL,
+	[PartnerUserID] [int] NOT NULL,
+	[CaseID]  [int] NULL,
+	[EventID]  [int] NULL,
+	[DocumentID]  [int] NULL,
+	[Title] [varchar](max) NOT NULL,
+	[Description] [varchar](max) NOT NULL,
 	[AssignedTime] [datetime] NOT NULL,
 	[CompletedTime] [datetime] NULL,
+	[DueTime] [datetime] NOT NULL,
 	[InProgress] [bit] NOT NULL,
  CONSTRAINT [PK_Task] PRIMARY KEY CLUSTERED 
 (
-	[Id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
-GO
-/****** Object:  Table [dbo].[TaskAssignment]    Script Date: 19/11/2023 3:31:00 PM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [dbo].[TaskAssignment](
-	[ID] [int] IDENTITY(1,1) NOT NULL,
-	[UserID] [int] NOT NULL,
-	[TaskID] [int] NOT NULL,
- CONSTRAINT [PK_TaskAssignment] PRIMARY KEY CLUSTERED 
-(
 	[ID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 /****** Object:  Table [dbo].[Event]    Script Date: 19/11/2023 3:37:00 PM ******/
 SET ANSI_NULLS ON
@@ -497,6 +489,13 @@ INSERT [dbo].[CaseStatus] ([ID], [StatusName], [StatusDescription])VALUES (6, N'
 SET IDENTITY_INSERT [dbo].[CaseStatus] OFF
 GO
 
+/** wy task **/
+SET IDENTITY_INSERT [dbo].[Task] ON
+INSERT [dbo].[Task] ([ID], [PartnerUserID], [ParelegalUserID], [CaseID], [EventID], [DocumentID], [Title], [Description], [AssignedTime], [CompletedTime], [DueTime], [InProgress])
+	VALUES (1, 1, 2, 1, NULL, 1, N'First Task', N'This is the 1st...', CAST(N'2023-12-10T10:54:11.157' AS DateTime), NULL, CAST(N'2023-12-25T10:54:11.157' AS DateTime), 1)
+SET IDENTITY_INSERT [dbo].[Task] OFF
+GO
+
 SET IDENTITY_INSERT [dbo].[Event] ON
 INSERT [dbo].[Event] ([ID], [CaseID], [Name], [CreatedTime], [EventTime], [IsCompleted]) VALUES (1, 1, N'Court Hearings', CAST(N'2023-11-15T10:54:11.157'AS DateTime), CAST(N'2023-12-10T10:54:11.157' AS DateTime), 0)
 INSERT [dbo].[Event] ([ID], [CaseID], [Name], [CreatedTime], [EventTime], [IsCompleted]) VALUES (2, 2, N'Trial Preparation', CAST(N'2023-12-10T10:54:11.157' AS DateTime), CAST(N'2023-12-10T10:54:11.157' AS DateTime), 1)
@@ -558,15 +557,30 @@ GO
 ALTER TABLE [dbo].[Appointment] CHECK CONSTRAINT [FK_Appointment_AppointmentCategory]
 GO
 
-ALTER TABLE [dbo].[TaskAssignment] WITH CHECK ADD CONSTRAINT [FK_TaskAssignment_Task] FOREIGN KEY([TaskID])
-REFERENCES [dbo].[Task] ([ID])
-GO
-ALTER TABLE [dbo].[TaskAssignment] CHECK CONSTRAINT [FK_TaskAssignment_Task]
-GO
-ALTER TABLE [dbo].[TaskAssignment] WITH CHECK ADD CONSTRAINT [FK_TaskAssignment_User] FOREIGN KEY([UserID])
+ALTER TABLE [dbo].[Task] WITH CHECK ADD CONSTRAINT [FK_Task_Partner] FOREIGN KEY([PartnerUserID])
 REFERENCES [dbo].[User] ([ID])
 GO
-ALTER TABLE [dbo].[TaskAssignment] CHECK CONSTRAINT [FK_TaskAssignment_User]
+ALTER TABLE [dbo].[Task] CHECK CONSTRAINT [FK_Task_Partner]
+GO
+ALTER TABLE [dbo].[Task] WITH CHECK ADD CONSTRAINT [FK_Task_Parelegal] FOREIGN KEY([ParelegalUserID])
+REFERENCES [dbo].[User] ([ID])
+GO
+ALTER TABLE [dbo].[Task] CHECK CONSTRAINT [FK_Task_Parelegal]
+GO
+ALTER TABLE [dbo].[Task] WITH CHECK ADD CONSTRAINT [FK_Task_Case] FOREIGN KEY([CaseID])
+REFERENCES [dbo].[Case] ([ID])
+GO
+ALTER TABLE [dbo].[Task] CHECK CONSTRAINT [FK_Task_Case]
+GO
+ALTER TABLE [dbo].[Task] WITH CHECK ADD CONSTRAINT [FK_Task_Event] FOREIGN KEY([EventID])
+REFERENCES [dbo].[Event] ([ID])
+GO
+ALTER TABLE [dbo].[Task] CHECK CONSTRAINT [FK_Task_Event]
+GO
+ALTER TABLE [dbo].[Task] WITH CHECK ADD CONSTRAINT [FK_Task_Document] FOREIGN KEY([DocumentID])
+REFERENCES [dbo].[Document] ([ID])
+GO
+ALTER TABLE [dbo].[Task] CHECK CONSTRAINT [FK_Task_Document]
 GO
 
 ALTER TABLE [dbo].[Case] WITH CHECK ADD CONSTRAINT [FK_Partner_Case] FOREIGN KEY([PartnerUserID])

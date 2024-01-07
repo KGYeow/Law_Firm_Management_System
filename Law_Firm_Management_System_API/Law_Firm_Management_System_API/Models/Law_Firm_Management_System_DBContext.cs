@@ -31,7 +31,6 @@ namespace Law_Firm_Management_System_API.Models
         public virtual DbSet<Partner> Partners { get; set; } = null!;
         public virtual DbSet<RoleAccessPage> RoleAccessPages { get; set; } = null!;
         public virtual DbSet<Task> Tasks { get; set; } = null!;
-        public virtual DbSet<TaskAssignment> TaskAssignments { get; set; } = null!;
         public virtual DbSet<User> Users { get; set; } = null!;
         public virtual DbSet<UserRole> UserRoles { get; set; } = null!;
 
@@ -40,7 +39,7 @@ namespace Law_Firm_Management_System_API.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Server=ARTHURKG;Database=Law_Firm_Management_System_DB;Trusted_Connection=True;");
+                optionsBuilder.UseSqlServer("Server=ROBIN;Database=Law_Firm_Management_System_DB;Trusted_Connection=True;");
             }
         }
 
@@ -347,34 +346,53 @@ namespace Law_Firm_Management_System_API.Models
             {
                 entity.ToTable("Task");
 
+                entity.Property(e => e.Id).HasColumnName("ID");
+
                 entity.Property(e => e.AssignedTime).HasColumnType("datetime");
+
+                entity.Property(e => e.CaseId).HasColumnName("CaseID");
 
                 entity.Property(e => e.CompletedTime).HasColumnType("datetime");
 
-                entity.Property(e => e.Name).IsUnicode(false);
-            });
+                entity.Property(e => e.Description).IsUnicode(false);
 
-            modelBuilder.Entity<TaskAssignment>(entity =>
-            {
-                entity.ToTable("TaskAssignment");
+                entity.Property(e => e.DocumentId).HasColumnName("DocumentID");
 
-                entity.Property(e => e.Id).HasColumnName("ID");
+                entity.Property(e => e.DueTime).HasColumnType("datetime");
 
-                entity.Property(e => e.TaskId).HasColumnName("TaskID");
+                entity.Property(e => e.EventId).HasColumnName("EventID");
 
-                entity.Property(e => e.UserId).HasColumnName("UserID");
+                entity.Property(e => e.ParelegalUserId).HasColumnName("ParelegalUserID");
 
-                entity.HasOne(d => d.Task)
-                    .WithMany(p => p.TaskAssignments)
-                    .HasForeignKey(d => d.TaskId)
+                entity.Property(e => e.PartnerUserId).HasColumnName("PartnerUserID");
+
+                entity.Property(e => e.Title).IsUnicode(false);
+
+                entity.HasOne(d => d.Case)
+                    .WithMany(p => p.Tasks)
+                    .HasForeignKey(d => d.CaseId)
+                    .HasConstraintName("FK_Task_Case");
+
+                entity.HasOne(d => d.Document)
+                    .WithMany(p => p.Tasks)
+                    .HasForeignKey(d => d.DocumentId)
+                    .HasConstraintName("FK_Task_Document");
+
+                entity.HasOne(d => d.Event)
+                    .WithMany(p => p.Tasks)
+                    .HasForeignKey(d => d.EventId)
+                    .HasConstraintName("FK_Task_Event");
+
+                entity.HasOne(d => d.ParelegalUser)
+                    .WithMany(p => p.TaskParelegalUsers)
+                    .HasForeignKey(d => d.ParelegalUserId)
+                    .HasConstraintName("FK_Task_Parelegal");
+
+                entity.HasOne(d => d.PartnerUser)
+                    .WithMany(p => p.TaskPartnerUsers)
+                    .HasForeignKey(d => d.PartnerUserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_TaskAssignment_Task");
-
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.TaskAssignments)
-                    .HasForeignKey(d => d.UserId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_TaskAssignment_User");
+                    .HasConstraintName("FK_Task_Partner");
             });
 
             modelBuilder.Entity<User>(entity =>
