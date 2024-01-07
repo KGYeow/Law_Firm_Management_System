@@ -148,10 +148,6 @@ namespace Law_Firm_Management_System_API.Models
                     .WithMany(p => p.Cases)
                     .HasForeignKey(d => d.StatusId)
                     .HasConstraintName("FK_Case_Status");
-                entity.HasOne(d => d.PartnerUser)
-                    .WithMany()
-                    .HasForeignKey(c => c.PartnerUserId)
-                    .OnDelete(DeleteBehavior.Restrict);
             });
 
             modelBuilder.Entity<CaseStatus>(entity =>

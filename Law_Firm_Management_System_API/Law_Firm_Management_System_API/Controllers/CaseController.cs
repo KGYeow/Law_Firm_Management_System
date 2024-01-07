@@ -29,7 +29,7 @@ namespace Law_Firm_Management_System_API.Controllers
         [Route("PartnerPerspectiveCaseList")]
         public IActionResult GetCasePartnerPerspective([FromQuery] CaseFilterDto dto)
         {
-            var user = userService.GetUser(User);
+            /*var user = userService.GetUser(User);
             var l = context.Cases.Include(a => a.PartnerUser).Include(a => a.Client).Include(a => a.Status).Where(a => a.PartnerUserId == user.Id).OrderByDescending(a => a.Id).ToList()
                 .Select(x => new { id = x.Id, name = x.Name, clientId = x.ClientId, clientName = x.Client?.FullName, createdTime = x.CreatedTime, updatedTime = x.UpdatedTime, closedTime = x.ClosedTime, statusId = x.StatusId, status = x.Status?.StatusName });
 
@@ -38,6 +38,21 @@ namespace Law_Firm_Management_System_API.Controllers
             if (dto.Status != null)
                 l = l.Where(a => a.status == dto.Status);
            
+            l.ToList();
+
+            return Ok(l);*/
+            var user = userService.GetUser(User);
+
+            var l = context.Cases
+                .Include(a => a.Status)
+                .Where(a => a.PartnerUserId == user.Id)  // Filter cases by assigned partner
+                .Select(x => new { id = x.Id, name = x.Name, clientId = x.ClientId, clientName = x.Client.FullName, createdTime = x.CreatedTime, updatedTime = x.UpdatedTime, closedTime = x.ClosedTime, statusId = x.StatusId, status = x.Status.StatusName });
+
+            if (dto.ClientId != null)
+                l = l.Where(a => a.clientId == dto.ClientId);
+            if (dto.Status != null)
+                l = l.Where(a => a.status == dto.Status);
+
             l.ToList();
 
             return Ok(l);
@@ -76,9 +91,24 @@ namespace Law_Firm_Management_System_API.Controllers
         [Route("ClientPerspectiveCaseList")]
         public IActionResult GetCaseClientPerspective([FromQuery] CaseFilterDto dto)
         {
-            var user = userService.GetUser(User);
+            /*var user = userService.GetUser(User);
             var l = context.Cases.Include(a => a.PartnerUser).Include(a => a.Client).Include(a => a.Status).Where(a => a.Client.UserId == user.Id).OrderByDescending(a => a.Id).ToList()
                 .Select(x => new { id = x.Id, name = x.Name, clientId = x.ClientId, partnerUserId = x.PartnerUserId, clientName = x.Client?.FullName, partnerName = x.PartnerUser.FullName, createdTime = x.CreatedTime, updatedTime = x.UpdatedTime, closedTime = x.ClosedTime, statusId = x.StatusId, status = x.Status?.StatusName });
+
+            if (dto.PartnerUserId != null)
+                l = l.Where(a => a.partnerUserId == dto.PartnerUserId);
+            if (dto.Status != null)
+                l = l.Where(a => a.status == dto.Status);
+
+            l.ToList();
+
+            return Ok(l);*/
+            var user = userService.GetUser(User);
+
+            var l = context.Cases
+                .Include(a => a.Status)
+                .Where(a => a.Client.UserId == user.Id)  // Filter cases by assigned partner
+                .Select(x => new { id = x.Id, name = x.Name, clientId = x.ClientId, partnerUserId = x.PartnerUserId, clientName = x.Client.FullName, partnerName = x.PartnerUser.FullName, createdTime = x.CreatedTime, updatedTime = x.UpdatedTime, closedTime = x.ClosedTime, statusId = x.StatusId, status = x.Status.StatusName });
 
             if (dto.PartnerUserId != null)
                 l = l.Where(a => a.partnerUserId == dto.PartnerUserId);
