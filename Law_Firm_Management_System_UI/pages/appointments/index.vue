@@ -69,57 +69,59 @@
             :items-per-page="itemsPerPage"
             hover
           >
-            <template v-slot:item="{ item }">
+            <template #item="{ item }">
               <tr>
                 <td>{{ appointmentList.indexOf(item) + 1 }}</td>
                 <td>{{ item.fullName }}</td>
                 <td>{{ item.category }}</td>
                 <td>{{ dayjs(item.appointmentTime).format("DD MMM YYYY, hh:mm A") }}</td>
                 <td>{{ item.status }}</td>
-                <td class="list-inline hstack">
-                  <li>
-                    <v-tooltip text="Approve" activator="parent" location="top" offset="2"/>
-                    <el-popconfirm
-                      title="Are you sure to approve this appointment?"
-                      icon-color="green"
-                      width="190"
-                      @confirm="appointmentApproval(item.id, 'Approved')"
-                    >
-                      <template #reference>
-                        <v-btn icon="mdi-check" size="small" variant="text" :disabled="item.status != 'Pending'"/>
-                      </template>
-                    </el-popconfirm>
-                  </li>
-                  <li>
-                    <v-tooltip text="Reject" activator="parent" location="top" offset="2"/>
-                    <el-popconfirm
-                      title="Are you sure to reject this appointment?"
-                      icon-color="red"
-                      width="190"
-                      @confirm="appointmentApproval(item.id, 'Rejected')"
-                    >
-                      <template #reference>
-                        <v-btn icon="mdi-close" size="small" variant="text" :disabled="item.status != 'Pending'"/>
-                      </template>
-                    </el-popconfirm>
-                  </li>
-                  <li>
-                    <v-tooltip text="Cancel" activator="parent" location="top" offset="2"/>
-                    <el-popconfirm
-                      title="Are you sure to cancel this appointment?"
-                      icon-color="orange"
-                      width="190"
-                      @confirm="appointmentApproval(item.id, 'Cancelled')"
-                    >
-                      <template #reference>
-                        <v-btn icon="mdi-cancel" size="small" variant="text" :disabled="item.status != 'Approved'"/>
-                      </template>
-                    </el-popconfirm>
-                  </li>
+                <td>
+                  <ul class="m-0 list-inline hstack justify-content-end" style="width: 100px;">
+                    <li>
+                      <v-tooltip text="Approve" activator="parent" location="top" offset="2"/>
+                      <el-popconfirm
+                        title="Are you sure to approve this appointment?"
+                        icon-color="green"
+                        width="190"
+                        @confirm="appointmentApproval(item.id, 'Approved')"
+                      >
+                        <template #reference>
+                          <v-btn icon="mdi-check" size="small" variant="text" :disabled="item.status != 'Pending'"/>
+                        </template>
+                      </el-popconfirm>
+                    </li>
+                    <li>
+                      <v-tooltip text="Reject" activator="parent" location="top" offset="2"/>
+                      <el-popconfirm
+                        title="Are you sure to reject this appointment?"
+                        icon-color="red"
+                        width="190"
+                        @confirm="appointmentApproval(item.id, 'Rejected')"
+                      >
+                        <template #reference>
+                          <v-btn icon="mdi-close" size="small" variant="text" :disabled="item.status != 'Pending'"/>
+                        </template>
+                      </el-popconfirm>
+                    </li>
+                    <li>
+                      <v-tooltip text="Cancel" activator="parent" location="top" offset="2"/>
+                      <el-popconfirm
+                        title="Are you sure to cancel this appointment?"
+                        icon-color="orange"
+                        width="190"
+                        @confirm="appointmentApproval(item.id, 'Cancelled')"
+                      >
+                        <template #reference>
+                          <v-btn icon="mdi-cancel" size="small" variant="text" :disabled="item.status != 'Approved'"/>
+                        </template>
+                      </el-popconfirm>
+                    </li>
+                  </ul>
                 </td>
               </tr>
             </template>
-            <template v-slot:bottom>
+            <template #bottom>
               <div class="d-flex justify-content-end pt-2">
                 <el-pagination
                   layout="total, prev, pager, next"
@@ -243,12 +245,12 @@ const addAppointmentDetails = ref({
 const currentPage = ref(1)
 const itemsPerPage = ref(10)
 const headers = ref([
-  { key: "number", title: "No." },
+  { key: "number", title: "No.", width: 0 },
   { key: "fullName", title: "Full Name" },
-  { key: "category", title: "Category" },
-  { key: "appointmentTime", title: "Appointment Time" },
-  { key: "status", title: "Status" },
-  { key: "actions", sortable: false },
+  { key: "category", title: "Category", width: 240 },
+  { key: "appointmentTime", title: "Appointment Time", width: 200 },
+  { key: "status", title: "Status", width: 120 },
+  { key: "actions", sortable: false, width: 120 },
 ])
 const { data: clientList } = await fetchData.$get("/Client")
 const { data: categoryList } = await fetchData.$get("/Appointment/Category")

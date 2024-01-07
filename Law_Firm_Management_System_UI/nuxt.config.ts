@@ -57,6 +57,12 @@ export default defineNuxtConfig({
     serveStatic: true,
   },
 
+  // Experimental Vue Features
+  vue: {
+    defineModel: true,
+    propsDestructure: true
+  },
+
   // sidebase: https://sidebase.io/nuxt-auth/v0.6/getting-started/quick-start
   auth: {
     isEnabled: true,

@@ -82,37 +82,65 @@
           >
             <template #item="{ item }">
               <tr>
-                <td>{{ item.name }}</td>
-                <td>{{ item.categoryName }}</td>
-                <td>{{ item.caseName ?? '-' }}</td>
-                <td>{{ item.modifiedBy }}</td>
-                <td>{{ dayjs(item.modifiedDate).format("DD MMM YYYY") }}</td>
-                <td class="list-inline hstack">
-                  <li>
-                    <v-tooltip text="Download" activator="parent" location="top" offset="2"/>
-                    <v-btn icon="mdi-download" size="small" variant="text"/>
-                  </li>
-                  <li>
-                    <v-tooltip text="Rename" activator="parent" location="top" offset="2"/>
-                    <v-btn icon="mdi-rename-outline" size="small" variant="text"/>
-                  </li>
-                  <li>
-                    <v-tooltip text="Update" activator="parent" location="top" offset="2"/>
-                    <v-btn icon="mdi-update" size="small" variant="text"/>
-                  </li>
-                  <li>
-                    <v-tooltip text="Archive" activator="parent" location="top" offset="2"/>
-                    <el-popconfirm
-                      title="Are you sure to archive this document?"
-                      icon-color="orange"
-                      width="190"
-                      @confirm="deleteDocument(item.id)"
-                    >
-                      <template #reference>
-                        <v-btn icon="mdi-archive-outline" size="small" variant="text"/>
-                      </template>
-                    </el-popconfirm>
-                  </li>
+                <td style="max-width: 300px;">
+                  <span class="truncate">
+                    <v-tooltip :text="item.name" activator="parent" location="top" offset="2"/>
+                    {{ item.name }}
+                  </span>
+                </td>
+                <td style="max-width: 150px;">
+                  <span class="truncate">
+                    <v-tooltip :text="item.categoryName" activator="parent" location="top" offset="2"/>
+                    {{ item.categoryName }}
+                  </span>
+                </td>
+                <td style="max-width: 150px;">
+                  <span class="truncate">
+                    <v-tooltip :text="item.caseName" activator="parent" location="top" offset="2" v-if="item.caseName"/>
+                    {{ item.caseName ?? '-' }}
+                  </span>
+                </td>
+                <td style="max-width: 150px;">
+                  <span class="truncate">
+                    <v-tooltip :text="`Modified by ${item.modifiedBy}`" activator="parent" location="top" offset="2"/>
+                    {{ item.modifiedBy }}
+                  </span>
+                </td>
+                <td style="max-width: 0;">
+                  <span class="truncate">
+                    <v-tooltip :text="`Last modified date: ${dayjs(item.modifiedDate).format('DD MMM YYYY')}`" activator="parent" location="top" offset="2"/>
+                    {{ dayjs(item.modifiedDate).format("DD MMM YYYY") }}
+                  </span>
+                </td>
+                <td>
+                  <ul class="m-0 list-inline hstack">
+                    <li>
+                      <v-tooltip text="Restore" activator="parent" location="top" offset="2"/>
+                      <el-popconfirm
+                        title="Are you sure to restore this document?"
+                        icon-color="green"
+                        width="190"
+                        @confirm="restoreDocument(item.id)"
+                      >
+                        <template #reference>
+                          <v-btn icon="mdi-restore" size="small" variant="text"/>
+                        </template>
+                      </el-popconfirm>
+                    </li>
+                    <li>
+                      <v-tooltip text="Delete Forever" activator="parent" location="top" offset="2"/>
+                      <el-popconfirm
+                        title="Are you sure to delete this document forever?"
+                        icon-color="red"
+                        width="190"
+                        @confirm="deleteDocument(item.id)"
+                      >
+                        <template #reference>
+                          <v-btn icon="mdi-delete-forever-outline" size="small" variant="text"/>
+                        </template>
+                      </el-popconfirm>
+                    </li>
+                  </ul>
                 </td>
               </tr>
             </template>
@@ -153,7 +181,7 @@ const headers = ref([
   { key: "case", title: "Case" },
   { key: "modifiedBy", title: "Modified By" },
   { key: "modifiedDate", title: "Modified Date" },
-  { key: "actions", sortable: false },
+  { key: "actions", sortable: false, width: 0 },
 ])
 const { data: caseList } = await fetchData.$get("/Case")
 const { data: categoryList } = await fetchData.$get("/Document/Category")
@@ -184,6 +212,18 @@ definePageMeta({
 // Methods
 const pageCount = () => {
   return Math.ceil(archiveFilterList.value.length / itemsPerPage.value)
+}
+const restoreDocument = async(docId) => {
+  try {
+    const result = await fetchData.$put(`/Archive/Restore/${docId}`)
+    if (!result.error) {
+      ElNotification.success({ message: result.message })
+      refreshNuxtData()
+    }
+    else {
+      ElNotification.error({ message: result.message })
+    }
+  } catch { ElNotification.error({ message: "There is a problem with the server. Please try again later." }) }
 }
 const deleteDocument = async(docId) => {
   try {

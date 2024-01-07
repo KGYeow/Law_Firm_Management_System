@@ -62,7 +62,7 @@ namespace Law_Firm_Management_System_API.Controllers
         }
 
         // Delete the archived document permanently.
-        [HttpPut]
+        [HttpDelete]
         [Route("{DocId}")]
         public IActionResult Delete(int docId)
         {
@@ -71,7 +71,7 @@ namespace Law_Firm_Management_System_API.Controllers
             context.Documents.Remove(archivedDoc);
             context.SaveChanges();
 
-            return Ok(new Response { Status = "Success", Message = "Document deleted successfully" });
+            return Ok(new Response { Status = "Success", Message = "Document deleted forever successfully" });
         }
     }
 }
