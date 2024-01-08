@@ -20,7 +20,11 @@ namespace Law_Firm_Management_System_API.Controllers
         [Route("")]
         public IActionResult GetCaseList()
         {
-            var l = context.Cases.OrderBy(a => a.Name).ToList().Select(x => new { id = x.Id, name = x.Name });
+            var user = userService.GetUser(User);
+            var l = context.Cases
+                .Where(a => a.PartnerUserId == user.Id)
+                .Select(x => new { id = x.Id, name = x.Name })
+                .ToList();
             return Ok(l);
         }
 

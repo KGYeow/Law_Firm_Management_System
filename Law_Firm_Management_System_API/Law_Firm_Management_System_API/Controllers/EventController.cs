@@ -1,4 +1,5 @@
-﻿using Law_Firm_Management_System_API.Models;
+﻿using Law_Firm_Management_System_API.Authentication;
+using Law_Firm_Management_System_API.Models;
 using Law_Firm_Management_System_API.Service;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -44,7 +45,7 @@ namespace Law_Firm_Management_System_API.Controllers
 
             var l = context.Events
                 .Include(a => a.Case)
-                .Where(a => a.PartnerUserId == user.Id)  // Filter cases by assigned partner
+                .Where(a => a.PartnerUserId == user.Id)  // Filter events by assigned partner
                 .Select(x => new {
                     id = x.Id,
                     name = x.Name,
@@ -52,6 +53,7 @@ namespace Law_Firm_Management_System_API.Controllers
                     caseName = x.Case.Name,
                     clientId = x.Case.ClientId,
                     clientName = x.Client.FullName,
+                    paralegalName = x.PartnerUser.Partner.ParalegalUser.User.FullName,
                     createdTime = x.CreatedTime,
                     eventTime = x.EventTime,
                     isCompleted = x.IsCompleted
@@ -91,6 +93,7 @@ namespace Law_Firm_Management_System_API.Controllers
                     caseName = x.Case.Name,
                     clientId = x.Case.ClientId,
                     clientName = x.Client.FullName,
+                    partnerName = x.PartnerUser.FullName,
                     createdTime = x.CreatedTime,
                     eventTime = x.EventTime,
                     isCompleted = x.IsCompleted
@@ -106,6 +109,94 @@ namespace Law_Firm_Management_System_API.Controllers
             return Ok(l);
         }
 
+        // Get the list of events from client's perspective.
+        [HttpGet]
+        [Route("ClientPerspectiveEventList")]
+        public IActionResult GetEventClientPerspective([FromQuery] EventFilterDto dto)
+        {
+            var user = userService.GetUser(User);
+
+            var l = context.Events
+                .Include(a => a.Case)
+                .Where(a => a.Client.UserId == user.Id)  // Filter cases by assigned partner
+                .Select(x => new {
+                    id = x.Id,
+                    name = x.Name,
+                    caseID = x.Case.Id,
+                    caseName = x.Case.Name,
+                    createdTime = x.CreatedTime,
+                    eventTime = x.EventTime,
+                    isCompleted = x.IsCompleted
+                });
+            if (dto.CaseId != null)
+                l = l.Where(a => a.caseID == dto.CaseId);
+            if (dto.IsCompleted != null)
+                l = l.Where(a => a.isCompleted == dto.IsCompleted);
+
+            l.ToList();
+
+            return Ok(l);
+        }
+
+        /*
+        [HttpGet]
+        [Route("CasesForPartner")]
+        public IActionResult GetCasesForPartner()
+        {
+            var user = userService.GetUser(User);
+
+            var casesForPartner = context.Cases
+                .Where(c => c.PartnerUserId == user.Id)
+                .Select(x => new { id = x.Id, name = x.Name })
+                .ToList();
+
+            return Ok(casesForPartner);
+        }*/
+
+
+        //Add event from partner perspective
+        [HttpPost]
+        [Route("EventCreate")]
+        public IActionResult CreateEventPartnerPerspective([FromBody] EventPartnerCreateDto dto)
+        {
+            var user = userService.GetUser(User);
+
+            // Retrieve the Case entity based on CaseId
+            var selectedCase = context.Cases.Find(dto.CaseId);
+
+            if (selectedCase == null)
+            {
+                // Handle the case where the specified CaseId is not valid
+                return BadRequest(new Response { Status = "Error", Message = "Invalid CaseId" });
+            }
+
+            var newEvent = new Event
+            {
+                CaseId = dto.CaseId,
+                PartnerUserId = user.Id,
+                ClientId = selectedCase.ClientId,
+                Name = dto.Name,
+                CreatedTime = DateTime.Now,
+                EventTime = dto.EventTime,
+                IsCompleted = false,
+            };
+
+            context.Events.Add(newEvent);
+            context.SaveChanges();
+
+            /*
+            var notification = new Notification
+            {
+                UserId = (int)dto.ClientId,
+                Title = "New Created Event",
+                Description = "There is a new event created by the partner, " + user.FullName + ", for you.",
+                IsRead = false,
+            };
+            context.Notifications.Add(notification);
+            context.SaveChanges();*/
+
+            return Ok(new Response { Status = "Success", Message = "New event created successfully" });
+        }
         public class EventFilterDto
         {
             public int? CaseId { get; set; }
@@ -116,7 +207,9 @@ namespace Law_Firm_Management_System_API.Controllers
         public class EventPartnerCreateDto
         {
             public string? Name { get; set; }
-            public int? ClientId { get; set; }
+            public int? CaseId { get; set; }
+            public DateTime EventTime { get; set; }
+
         }
     }
 }
