@@ -46,7 +46,7 @@
               </template>
             </v-select>
           </v-col>
-          <v-col>
+          <v-col v-if="userRole == 'Partner'">
             <!-- Add New Event -->
             <v-btn class="float-end" color="primary" prepend-icon="mdi-plus" flat @click="addEventModal = true">New Event</v-btn>
           </v-col>
@@ -204,6 +204,7 @@ const { handleSubmit } = useForm({
 const { data: eventList } = await fetchData.$get("/Event/PartnerPerspectiveEventList", filter.value)
 const { data: caseList } = await fetchData.$get("/Case")
 const { data: clientList } = await fetchData.$get("/Client")
+const { data: userRole } = await fetchData.$get("/UserRole/RoleName")
 
 
 // Define reactive variable for adding event modal
