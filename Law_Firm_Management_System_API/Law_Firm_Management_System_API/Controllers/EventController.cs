@@ -124,6 +124,8 @@ namespace Law_Firm_Management_System_API.Controllers
                     name = x.Name,
                     caseID = x.Case.Id,
                     caseName = x.Case.Name,
+                    partnerName = x.PartnerUser.FullName,
+                    clientId = x.ClientId,
                     createdTime = x.CreatedTime,
                     eventTime = x.EventTime,
                     isCompleted = x.IsCompleted
