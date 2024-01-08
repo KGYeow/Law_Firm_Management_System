@@ -46,7 +46,7 @@ namespace Law_Firm_Management_System_API.Controllers
 
         // Delete the announcement.
         [HttpDelete]
-        [Route("Announcement/Delete")]
+        [Route("Announcement/Delete/{AnnouncementId}")]
         public IActionResult DeleteAnnouncement(int announcementId)
         {
             var user = userService.GetUser(User);

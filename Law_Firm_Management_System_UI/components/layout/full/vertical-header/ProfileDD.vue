@@ -15,12 +15,6 @@
           </template>
           <v-list-item-title class="pl-4 text-body-1">My Profile</v-list-item-title>
         </v-list-item>
-        <v-list-item value="item2" color="primary" to="/profile/notification-log">
-          <template v-slot:prepend>
-            <HistoryIcon stroke-width="1.5" size="20"/>
-          </template>
-          <v-list-item-title  class="pl-4 text-body-1">Notification Log</v-list-item-title>
-        </v-list-item>
       </v-list>
       <div class="pt-4 pb-4 px-5 text-center">
         <v-btn color="primary" variant="outlined" block @click="logout">Logout</v-btn>

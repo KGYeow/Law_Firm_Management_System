@@ -114,15 +114,19 @@ namespace Law_Firm_Management_System_API.Controllers
             context.Appointments.Add(appointment);
             context.SaveChanges();
 
-            var notification = new Notification
+            var client = context.Clients.Where(a => a.Id == dto.ClientId).FirstOrDefault();
+            if (client.UserId != null)
             {
-                UserId = dto.ClientId,
-                Title = "New Created Appointment",
-                Description = "There is a new appointment created by the partner, " + user.FullName + ", for you.",
-                IsRead = false,
-            };
-            context.Notifications.Add(notification);
-            context.SaveChanges();
+                var notification = new Notification
+                {
+                    UserId = (int)client.UserId,
+                    Title = "New Created Appointment",
+                    Description = "There is a new appointment created by the partner, " + user.FullName + ", for you.",
+                    IsRead = false,
+                };
+                context.Notifications.Add(notification);
+                context.SaveChanges();
+            }
 
             return Ok(new Response { Status = "Success", Message = "New appointment created successfully" });
         }
@@ -174,15 +178,19 @@ namespace Law_Firm_Management_System_API.Controllers
                 notificationDescription = "Your appointment has been cancelled by partner, " + user.FullName + ".";
             }
 
-            var notification = new Notification
+            var client = context.Clients.Where(a => a.Id == appointment.ClientId).FirstOrDefault();
+            if (client.UserId != null)
             {
-                UserId = appointment.ClientId,
-                Title = notificationTitle,
-                Description = notificationDescription,
-                IsRead = false,
-            };
-            context.Notifications.Add(notification);
-            context.SaveChanges();
+                var notification = new Notification
+                {
+                    UserId = (int)client.UserId,
+                    Title = notificationTitle,
+                    Description = notificationDescription,
+                    IsRead = false,
+                };
+                context.Notifications.Add(notification);
+                context.SaveChanges();
+            }
 
             return Ok(new Response { Status = "Success", Message = notifyMessage });
         }

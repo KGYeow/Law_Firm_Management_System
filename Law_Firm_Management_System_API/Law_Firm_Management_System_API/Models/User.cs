@@ -12,6 +12,7 @@ namespace Law_Firm_Management_System_API.Models
             Cases = new HashSet<Case>();
             Clients = new HashSet<Client>();
             Documents = new HashSet<Document>();
+            Events = new HashSet<Event>();
             Notifications = new HashSet<Notification>();
             TaskParelegalUsers = new HashSet<Task>();
             TaskPartnerUsers = new HashSet<Task>();
@@ -33,6 +34,7 @@ namespace Law_Firm_Management_System_API.Models
         public virtual ICollection<Case> Cases { get; set; }
         public virtual ICollection<Client> Clients { get; set; }
         public virtual ICollection<Document> Documents { get; set; }
+        public virtual ICollection<Event> Events { get; set; }
         public virtual ICollection<Notification> Notifications { get; set; }
         public virtual ICollection<Task> TaskParelegalUsers { get; set; }
         public virtual ICollection<Task> TaskPartnerUsers { get; set; }

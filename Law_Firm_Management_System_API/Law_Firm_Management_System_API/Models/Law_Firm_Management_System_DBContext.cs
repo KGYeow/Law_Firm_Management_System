@@ -39,7 +39,7 @@ namespace Law_Firm_Management_System_API.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Server=ROBIN;Database=Law_Firm_Management_System_DB;Trusted_Connection=True;");
+                optionsBuilder.UseSqlServer("Server=ARTHURKG;Database=Law_Firm_Management_System_DB;Trusted_Connection=True;");
             }
         }
 
@@ -230,16 +230,30 @@ namespace Law_Firm_Management_System_API.Models
 
                 entity.Property(e => e.CaseId).HasColumnName("CaseID");
 
+                entity.Property(e => e.ClientId).HasColumnName("ClientID");
+
                 entity.Property(e => e.CreatedTime).HasColumnType("datetime");
 
                 entity.Property(e => e.EventTime).HasColumnType("datetime");
 
                 entity.Property(e => e.Name).IsUnicode(false);
 
+                entity.Property(e => e.PartnerUserId).HasColumnName("PartnerUserID");
+
                 entity.HasOne(d => d.Case)
                     .WithMany(p => p.Events)
                     .HasForeignKey(d => d.CaseId)
                     .HasConstraintName("FK_Event_Case");
+
+                entity.HasOne(d => d.Client)
+                    .WithMany(p => p.Events)
+                    .HasForeignKey(d => d.ClientId)
+                    .HasConstraintName("FK_Event_Client");
+
+                entity.HasOne(d => d.PartnerUser)
+                    .WithMany(p => p.Events)
+                    .HasForeignKey(d => d.PartnerUserId)
+                    .HasConstraintName("FK_Event_Partner");
             });
 
             modelBuilder.Entity<Notification>(entity =>

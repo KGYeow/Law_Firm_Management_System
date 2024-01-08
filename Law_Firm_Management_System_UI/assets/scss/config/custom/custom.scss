@@ -1,3 +1,10 @@
+.announcement {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
 .clientAppointmentList {
   .v-table__wrapper {
     overflow: unset;
@@ -8,6 +15,30 @@
       flex: 1 1 auto;
       margin: -12px;
       justify-content: flex-start !important
+    }
+  }
+}
+
+.newNotification {
+  .v-alert {
+    background-color: #f8f9fa;
+    transition: all 0.1s ease-in-out;
+
+    &:hover {
+      background-color: #dee2e6 !important;
+    }
+
+    &:active {
+      background-color: #ced4da !important;
+    }
+  }
+}
+.notificationLog {
+  .v-alert {
+    transition: all 0.1s ease-in-out;
+
+    &:hover {
+      background-color: #dee2e6 !important;
     }
   }
 }

@@ -18,7 +18,7 @@ namespace Law_Firm_Management_System_API.Controllers
         public IActionResult GetUserNotificationLog()
         {
             var user = userService.GetUser(User);
-            var l = context.Notifications.Where(a => a.UserId == user.Id).OrderByDescending(a => a.Id).ToList();
+            var l = context.Notifications.Where(a => a.UserId == user.Id && a.IsRead == true).OrderByDescending(a => a.Id).ToList();
             return Ok(l);
         }
 
@@ -34,7 +34,7 @@ namespace Law_Firm_Management_System_API.Controllers
 
         // Read the user notification.
         [HttpPut]
-        [Route("Read")]
+        [Route("Read/{NotificationId}")]
         public IActionResult ReadNotification(int notificationId)
         {
             var userNotification = context.Notifications.Where(a => a.Id == notificationId).FirstOrDefault();

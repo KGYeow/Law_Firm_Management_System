@@ -54,23 +54,23 @@ namespace Law_Firm_Management_System_API.Controllers
         }
 
         // Get the list of in-progress tasks from partner's perspective.
-/*        [HttpGet]
+        [HttpGet]
         [Route("Partner/InProgress")]
         public IActionResult GetPartnerInProgressTask()
         {
             var user = userService.GetUser(User);
             var l = context.Tasks.Where(a => a.PartnerUserId == user.Id && a.InProgress == true).ToList();
             return Ok(l);
-        }*/
+        }
 
         // Get the list of in-progress tasks from paralegal's perspective.
-/*        [HttpGet]
+        [HttpGet]
         [Route("Paralegal/InProgress")]
         public IActionResult GetParalegalInProgressTask()
         {
             var user = userService.GetUser(User);
-            var l = context.Tasks.Where(a => a.ParalegalUserId == user.Id && a.InProgress == true).ToList();
+            var l = context.Tasks.Where(a => a.ParelegalUserId == user.Id && a.InProgress == true).ToList();
             return Ok(l);
-        }*/
+        }
     }
 }
