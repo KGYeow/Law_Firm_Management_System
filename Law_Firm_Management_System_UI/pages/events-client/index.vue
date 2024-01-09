@@ -65,7 +65,7 @@
               </div>
             </template>
             <template v-slot:item="{ item }">
-              <v-col class="pb-8" cols="3">
+              <v-col class="pb-8" cols="4">
                 <v-card elevation="10" class="withbg">
                   <el-tag
                     :type="item.status ? 'success' : 'danger'"
@@ -121,6 +121,22 @@
         </v-data-table>
       </v-col>
     </v-row>
+    <!-- Rightbar -->
+  <v-navigation-drawer
+    elevation="0"
+    location="right"
+    width="350"
+    absolute
+    permanent
+  >
+    <el-scrollbar>
+      <div class="d-flex flex-column">
+        <!-- Calendar -->
+        <DashboardCalendar/>
+        
+      </div>
+    </el-scrollbar>
+  </v-navigation-drawer>
 </template>
 
 <script setup>

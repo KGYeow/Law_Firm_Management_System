@@ -52,9 +52,9 @@
           </v-col>
         </v-row>
 
-        <!-- Event List Table -->
-        <div class="pa-7 pt-1 text-body-1">
-          <v-data-table
+        <!-- Event List Table Partner -->
+        <div class="pa-7 pt-1 text-body-1" v-if="userRole == 'Partner'">
+          <v-data-table 
             density="comfortable"
             v-model:page="currentPage"
             :headers="headers"
@@ -74,6 +74,23 @@
                   <el-tag type="success" v-if="item.isCompleted">Completed</el-tag>
                   <el-tag type="danger" v-else>Incompleted</el-tag>
                 </td>
+                <td>
+                  <ul class="m-0 list-inline hstack">
+                    <li>
+                      <v-tooltip text="Update Status" activator="parent" location="top" offset="2"/>
+                      <el-popconfirm
+                        title="Are you sure to complete this event?"
+                        icon-color="orange"
+                        width="190"
+                        @confirm="updateEvent(item.id)"
+                      >
+                        <template #reference>
+                          <v-btn icon="mdi-update" size="small" variant="text"/>
+                        </template>
+                      </el-popconfirm>
+                    </li>
+                  </ul>
+                </td>
               </tr>
             </template>
             <template v-slot:bottom>
@@ -83,6 +100,43 @@
                   v-model:current-page="currentPage"
                   :page-size="eventList.length/pageCount()"
                   :total="eventList.length"
+                />
+              </div>
+            </template>
+          </v-data-table>
+        </div>
+
+        <!-- Event List Table Paralegal-->
+        <div class="pa-7 pt-1 text-body-1" v-if="userRole == 'Paralegal'">
+          <v-data-table 
+            density="comfortable"
+            v-model:page="currentPage"
+            :headers="headers"
+            :items="eventListParalegal"
+            :items-per-page="itemsPerPage"
+            hover
+          >
+            <template v-slot:item="{ item }">
+              <tr>
+                <td>{{ eventListParalegal.indexOf(item) + 1 }}</td>
+                <td>{{ item.name }}</td>
+                <td>{{ item.caseName }}</td>
+                <td>{{ item.partnerName }}</td>
+                <td>{{ dayjs(item.CreatedTime).format("DD MMM YYYY, hh:mm A") }}</td>
+                <td>{{ dayjs(item.EventTime).format("DD MMM YYYY, hh:mm A") }}</td>
+                <td>
+                  <el-tag type="success" v-if="item.isCompleted">Completed</el-tag>
+                  <el-tag type="danger" v-else>Incompleted</el-tag>
+                </td>
+              </tr>
+            </template>
+            <template v-slot:bottom>
+              <div class="d-flex justify-content-end pt-2">
+                <el-pagination
+                  layout="total, prev, pager, next"
+                  v-model:current-page="currentPage"
+                  :page-size="eventListParalegal.length/pageCount()"
+                  :total="eventListParalegal.length"
                 />
               </div>
             </template>
@@ -175,15 +229,18 @@ const filter = ref({
 const { data: user } = useAuth()
 const currentPage = ref(1)
 const itemsPerPage = ref(10)
+
 const headers = ref([
   { key: "number", title: "No." },
   { key: "name", title: "Event Name" },
   { key: "caseName", title: "Case Name" },
-  { key: "paralegalName", title: "Paralegal Name" },
+  { key: "employeeName", title: "Related Employee" },
   { key: "createdTime" , title: "Created Time" },
   { key: "eventTime", title: "Event Time"},
   { key: "isCompleted", title: "Status"},
 ])
+
+
 // Data
 const { handleSubmit } = useForm({
   validationSchema: {
@@ -202,6 +259,7 @@ const { handleSubmit } = useForm({
 
 // Define reactive variables for dialog
 const { data: eventList } = await fetchData.$get("/Event/PartnerPerspectiveEventList", filter.value)
+const { data: eventListParalegal } = await fetchData.$get("/Event/ParalegalPerspectiveEventList", filter.value)
 const { data: caseList } = await fetchData.$get("/Case")
 const { data: clientList } = await fetchData.$get("/Client")
 const { data: userRole } = await fetchData.$get("/UserRole/RoleName")
@@ -254,5 +312,18 @@ const addEvent = handleSubmit(async(values) => {
   } catch { ElNotification.error({ message: "There is a problem with the server. Please try again later." }) }
 })
 
+//Complete event status
+const updateEvent = async(eventId) => {
+  try {
+    const result = await fetchData.$put(`/Event/Update/${eventId}`)
+    if (!result.error) {
+      ElNotification.success({ message: result.message })
+      refreshNuxtData()
+    }
+    else {
+      ElNotification.error({ message: result.message })
+    }
+  } catch { ElNotification.error({ message: "There is a problem with the server. Please try again later." }) }
+}
 
 </script>

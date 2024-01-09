@@ -45,6 +45,7 @@ namespace Law_Firm_Management_System_API.Controllers
 
             var l = context.Events
                 .Include(a => a.Case)
+                .OrderBy(a => a.Name)
                 .Where(a => a.PartnerUserId == user.Id)  // Filter events by assigned partner
                 .Select(x => new {
                     id = x.Id,
@@ -85,6 +86,7 @@ namespace Law_Firm_Management_System_API.Controllers
 
             var l = context.Events
                 .Include(a => a.Case)
+                .OrderBy(a => a.Name)
                 .Where(a => a.PartnerUserId == partnerId)  // Filter events by assigned partner
                 .Select(x => new {
                     id = x.Id,
@@ -118,6 +120,7 @@ namespace Law_Firm_Management_System_API.Controllers
 
             var l = context.Events
                 .Include(a => a.Case)
+                .OrderBy(a => a.Name)
                 .Where(a => a.Client.UserId == user.Id)  // Filter cases by assigned partner
                 .Select(x => new {
                     id = x.Id,
@@ -140,22 +143,6 @@ namespace Law_Firm_Management_System_API.Controllers
             return Ok(l);
         }
 
-        /*
-        [HttpGet]
-        [Route("CasesForPartner")]
-        public IActionResult GetCasesForPartner()
-        {
-            var user = userService.GetUser(User);
-
-            var casesForPartner = context.Cases
-                .Where(c => c.PartnerUserId == user.Id)
-                .Select(x => new { id = x.Id, name = x.Name })
-                .ToList();
-
-            return Ok(casesForPartner);
-        }*/
-
-
         //Add event from partner perspective
         [HttpPost]
         [Route("EventCreate")]
@@ -169,7 +156,8 @@ namespace Law_Firm_Management_System_API.Controllers
             if (selectedCase == null)
             {
                 // Handle the case where the specified CaseId is not valid
-                return BadRequest(new Response { Status = "Error", Message = "Invalid CaseId" });
+                //return BadRequest(new Response { Status = "Error", Message = "Invalid CaseId" });
+                throw new Exception("Invalid CaseId");
             }
 
             var newEvent = new Event
@@ -186,18 +174,36 @@ namespace Law_Firm_Management_System_API.Controllers
             context.Events.Add(newEvent);
             context.SaveChanges();
 
-            /*
-            var notification = new Notification
+            var client = context.Clients.Where(a => a.Id == selectedCase.ClientId).FirstOrDefault();
+            if (client.UserId != null)
             {
-                UserId = (int)dto.ClientId,
-                Title = "New Created Event",
-                Description = "There is a new event created by the partner, " + user.FullName + ", for you.",
-                IsRead = false,
-            };
-            context.Notifications.Add(notification);
-            context.SaveChanges();*/
+                var notification = new Notification
+                {
+                    UserId = (int)client.UserId,
+                    Title = "New Created Event",
+                    Description = "There is a new event created by the partner, " + user.FullName + ", for you.",
+                    IsRead = false,
+                };
+                context.Notifications.Add(notification);
+                context.SaveChanges();
+            }
 
             return Ok(new Response { Status = "Success", Message = "New event created successfully" });
+        }
+
+        // Update the current event.
+        [HttpPut]
+        [Route("Update/{eventId}")]
+        public IActionResult Archive(int eventId)
+        {
+            var user = userService.GetUser(User);
+            var existingDoc = context.Events.Where(a => a.Id == eventId).FirstOrDefault();
+
+            existingDoc.IsCompleted = !existingDoc.IsCompleted; ;
+            context.Events.Update(existingDoc);
+            context.SaveChanges();
+
+            return Ok(new Response { Status = "Success", Message = "Event status updated successfully" });
         }
         public class EventFilterDto
         {
