@@ -59,7 +59,7 @@ namespace Law_Firm_Management_System_API.Controllers
 
         // Get the dashboard data from partner's perspective.
         [HttpGet]
-        [Route("Partner/DashboardData")]
+        [Route("Data/Partner")]
         public IActionResult GetPartnerDashboardData()
         {
             var user = userService.GetUser(User);
@@ -105,9 +105,9 @@ namespace Law_Firm_Management_System_API.Controllers
             });
         }
 
-        // Get the dashboard data from partner's perspective.
+        // Get the dashboard data from paralegal's perspective.
         [HttpGet]
-        [Route("Paralegal/DashboardData")]
+        [Route("Data/Paralegal")]
         public IActionResult GetParalegalDashboardData()
         {
             var user = userService.GetUser(User);
@@ -122,7 +122,7 @@ namespace Law_Firm_Management_System_API.Controllers
 
         // Get the dashboard data from client's perspective.
         [HttpGet]
-        [Route("Client/DashboardData")]
+        [Route("Data/Client")]
         public IActionResult GetClientDashboardData()
         {
             var user = userService.GetUser(User);

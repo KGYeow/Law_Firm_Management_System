@@ -1,7 +1,7 @@
 <template>
-  <v-card elevation="10" class="withbg">
+  <v-card elevation="10" class="withbg h-100">
     <v-card-item>
-      <div class="d-flex align-center justify-space-between pt-sm-2">
+      <div class="d-flex align-center justify-space-between pt-sm-2 pb-2">
         <v-card-title class="text-h6 d-flex align-center">
           <v-avatar class="me-2" color="rgb(243, 244, 248)" size="small">
             <CalendarIcon color="gray" size="18"/>
@@ -9,23 +9,20 @@
           Events
         </v-card-title>
       </div>
-      <v-divider/>
       <v-row>
-        <v-col cols="7" sm="12">
-          <div>
-            <h3 class="text-h3">36,358</h3>
-            <div class="d-flex align-center flex-shrink-0">
-              <apexchart type="donut" height="145" :options="chartOptions" :series="Chart"> </apexchart>
-            </div>
+        <v-col cols="12" sm="12">
+          <h3 class="text-h3">{{ eventTotal }}</h3>
+          <div class="d-flex align-center flex-shrink-0">
+            <apexchart type="donut" height="145" :options="chartOptions" :series="chartSeries"/>
           </div>
         </v-col>
-        <v-col cols="5" sm="12" class="pt-0">
+        <v-col cols="12+" sm="12">
           <div class="d-flex flex-column">
             <h6 class="text-subtitle-1 text-muted">
-              <v-icon icon="mdi mdi-checkbox-blank-circle" class="mr-1" size="10" color="primary"></v-icon> 2022
+              <v-icon icon="mdi mdi-checkbox-blank-circle" class="mr-1" size="10" color="#0D47A1"></v-icon> Completed
             </h6>
             <h6 class="text-subtitle-1 text-muted">
-              <v-icon icon="mdi mdi-checkbox-blank-circle" class="mr-1" size="10" color="lightprimary"></v-icon> 2023
+              <v-icon icon="mdi mdi-checkbox-blank-circle" class="mr-1" size="10" color="#64B5F6"></v-icon> Incompleted
             </h6>
           </div>
         </v-col>
@@ -37,15 +34,16 @@
 <script setup lang="ts">
 // Properties
 const props = defineProps({
-  eventTotal: Number,
-  eventCompleted: Number,
-  eventIncompleted: Number,
+  eventTotal: { type: Number, default: 0 },
+  eventCompleted: { type: Number, default: 0 },
+  eventIncompleted: { type: Number, default: 0 },
 })
 
 // Data
+const chartSeries = [props.eventCompleted, props.eventIncompleted]
 const chartOptions = computed(() => {
   return {
-    labels: ['series-1', 'series-2', 'series-3'],
+    labels: ['Complete', 'Incomplete'],
     chart: {
       type: 'donut',
       fontFamily: `inherit`,
@@ -54,7 +52,7 @@ const chartOptions = computed(() => {
         show: false
       }
     },
-    colors: ['#0d47a1', '#64b5f6', '#bbdefb'],
+    colors: ['#0D47A1', '#64B5F6'],
     plotOptions: {
       pie: {
         startAngle: 0,
@@ -77,5 +75,4 @@ const chartOptions = computed(() => {
     tooltip: { theme: "light", fillSeriesColor: false },
   }
 })
-const Chart = [38, 40, 25]
 </script>

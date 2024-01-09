@@ -29,20 +29,38 @@
 
         <!-- Tasks Data -->
         <v-col cols="12">
-          <DashboardTaskToday/>
+          <DashboardTaskData
+            :task-to-do="dashboardData.numTasksToDo"
+            :task-in-progress="dashboardData.numTasksInProgress"
+            :task-completed="dashboardData.numTasksCompleted"
+          />
         </v-col>
 
-        <v-col cols="4" lg="4">
+        <v-col cols="4" lg="4" v-if="userRole == 'Partner'">
           <!-- Appointments Data -->
-          <DashboardAppointmentData/>
+          <DashboardAppointmentData
+            :appointment-total="dashboardData.numAppointmentsTotal"
+            :appointment-pending="dashboardData.numAppointmentsPending"
+            :appointment-approved="dashboardData.numAppointmentsApproved"
+            :appointment-rejected="dashboardData.numAppointmentsRejected"
+            :appointment-cancelled="dashboardData.numAppointmentsCancelled"
+          />
         </v-col>
-        <v-col cols="4" lg="4">
+        <v-col cols="4" lg="4" v-if="userRole == 'Partner'">
           <!-- Cases Data -->
-          <DashboardCaseData/>
+          <DashboardCaseData
+            :case-total="dashboardData.numCasesTotal"
+            :case-completed="dashboardData.numCasesCompleted"
+            :case-incompleted="dashboardData.numCasesIncompleted"
+          />
         </v-col>
-        <v-col cols="4" lg="4">
+        <v-col cols="4" lg="4" v-if="userRole == 'Partner'">
           <!-- Events Data -->
-          <DashboardEventData/>
+          <DashboardEventData
+            :event-total="dashboardData.numEventTotal"
+            :event-completed="dashboardData.numEventCompleted"
+            :event-incompleted="dashboardData.numEventIncompleted"
+          />
         </v-col>
       </v-row>
     </v-col>
@@ -53,7 +71,8 @@
 import { LayoutDashboardIcon } from "vue-tabler-icons"
 
 // Data
-const { data: dashboardData } = await fetchData.$get("/Dashboard/Partner/DashboardData")
+const { data: userRole } = await fetchData.$get("/UserRole/RoleName")
+const { data: dashboardData } = await fetchData.$get(`/Dashboard/Data/${userRole.value}`)
 
 // Head
 useHead({
