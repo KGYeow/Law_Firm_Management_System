@@ -64,29 +64,45 @@ namespace Law_Firm_Management_System_API.Controllers
         {
             var user = userService.GetUser(User);
 
-            var numAppointments = context.Appointments.Where(a => a.PartnerUserId == user.Id)
-                .ToList().Count;
-            var numPendingAppointments = context.Appointments.Where(a => a.PartnerUserId == user.Id && a.Status == "Pending")
-                .ToList().Count;
+            var appointmentList = context.Appointments.Where(a => a.PartnerUserId == user.Id);
+            var numAppointmentsTotal = appointmentList.Count();
+            var numAppointmentsPending = appointmentList.Where(a => a.Status == "Pending").Count();
+            var numAppointmentsApproved = appointmentList.Where(a => a.Status == "Approved").Count();
+            var numAppointmentsRejected = appointmentList.Where(a => a.Status == "Rejected").Count();
+            var numAppointmentsCancelled = appointmentList.Where(a => a.Status == "Cancelled").Count();
 
-            var numCases = context.Cases.Where(a => a.PartnerUserId == user.Id)
-                .ToList().Count;
-            var numCompletedCases = context.Cases.Where(a => a.PartnerUserId == user.Id && a.ClosedTime != null)
-                .ToList().Count;
+            var caseList = context.Cases.Where(a => a.PartnerUserId == user.Id);
+            var numCasesTotal = caseList.Count();
+            var numCasesCompleted = caseList.Where(a => a.ClosedTime != null).Count();
+            var numCasesIncompleted = numCasesTotal - numCasesCompleted;
 
-            var numEvent = context.Events.Include(a => a.Case).Where(a => a.Case.PartnerUserId == user.Id)
-                .ToList().Count;
-            var numCompletedEvent = context.Events.Include(a => a.Case).Where(a => a.Case.PartnerUserId == user.Id && a.IsCompleted == true)
-                .ToList().Count;
+            var eventList = context.Events.Where(a => a.PartnerUserId == user.Id);
+            var numEventTotal = eventList.Count();
+            var numEventCompleted = eventList.Where(a => a.IsCompleted == true).Count();
+            var numEventIncompleted = numEventTotal - numEventCompleted;
 
-            var numToDoTasks = context.Tasks.Where(a => a.PartnerUserId == user.Id && a.CompletedTime == null && a.InProgress == false)
-                .ToList().Count;
-            var numInProgressTasks = context.Tasks.Where(a => a.PartnerUserId == user.Id && a.InProgress == true)
-                .ToList().Count;
-            var numCompletedTasks = context.Tasks.Where(a => a.PartnerUserId == user.Id && a.CompletedTime != null)
-                .ToList().Count;
+            var taskList = context.Tasks.Where(a => a.PartnerUserId == user.Id);
+            var numTasksToDo = taskList.Where(a => a.CompletedTime == null && a.InProgress == false).Count();
+            var numTasksInProgress = taskList.Where(a => a.InProgress == true).Count();
+            var numTasksCompleted = taskList.Where(a => a.CompletedTime != null).Count();
 
-            return Ok(new { numAppointments, numPendingAppointments, numCases, numCompletedCases, numEvent, numCompletedEvent, numToDoTasks, numInProgressTasks, numCompletedTasks });
+            return Ok(new
+            {
+                numAppointmentsTotal,
+                numAppointmentsPending,
+                numAppointmentsApproved,
+                numAppointmentsRejected,
+                numAppointmentsCancelled,
+                numCasesTotal,
+                numCasesCompleted,
+                numCasesIncompleted,
+                numEventTotal,
+                numEventCompleted,
+                numEventIncompleted,
+                numTasksToDo,
+                numTasksInProgress,
+                numTasksCompleted
+            });
         }
 
         // Get the dashboard data from partner's perspective.
@@ -96,14 +112,12 @@ namespace Law_Firm_Management_System_API.Controllers
         {
             var user = userService.GetUser(User);
 
-            var numToDoTasks = context.Tasks.Where(a => a.ParelegalUserId == user.Id && a.CompletedTime == null && a.InProgress == false)
-                .ToList().Count;
-            var numInProgressTasks = context.Tasks.Where(a => a.ParelegalUserId == user.Id && a.InProgress == true)
-                .ToList().Count;
-            var numCompletedTasks = context.Tasks.Where(a => a.ParelegalUserId == user.Id && a.CompletedTime != null)
-                .ToList().Count;
+            var taskList = context.Tasks.Where(a => a.ParelegalUserId == user.Id);
+            var numTasksToDo = taskList.Where(a => a.CompletedTime == null && a.InProgress == false).Count();
+            var numTasksInProgress = taskList.Where(a => a.InProgress == true).Count();
+            var numTasksCompleted = taskList.Where(a => a.CompletedTime != null).Count();
 
-            return Ok(new { numToDoTasks, numInProgressTasks, numCompletedTasks });
+            return Ok(new { numTasksToDo, numTasksInProgress, numTasksCompleted });
         }
 
         // Get the dashboard data from client's perspective.
@@ -112,23 +126,39 @@ namespace Law_Firm_Management_System_API.Controllers
         public IActionResult GetClientDashboardData()
         {
             var user = userService.GetUser(User);
+            var client = context.Clients.Where(a => a.UserId == user.Id).FirstOrDefault();
 
-            var numAppointments = context.Appointments.Where(a => a.ClientId == user.Id)
-                .ToList().Count;
-            var numPendingAppointments = context.Appointments.Where(a => a.ClientId == user.Id && a.Status == "Pending")
-                .ToList().Count;
+            var appointmentList = context.Appointments.Where(a => a.ClientId == client.Id);
+            var numAppointmentsTotal = appointmentList.Count();
+            var numAppointmentsPending = appointmentList.Where(a => a.Status == "Pending").Count();
+            var numAppointmentsApproved = appointmentList.Where(a => a.Status == "Approved").Count();
+            var numAppointmentsRejected = appointmentList.Where(a => a.Status == "Rejected").Count();
+            var numAppointmentsCancelled = appointmentList.Where(a => a.Status == "Cancelled").Count();
 
-            var numCases = context.Cases.Where(a => a.ClientId == user.Id)
-                .ToList().Count;
-            var numCompletedCases = context.Cases.Where(a => a.ClientId == user.Id && a.ClosedTime != null)
-                .ToList().Count;
+            var caseList = context.Cases.Where(a => a.ClientId == client.Id);
+            var numCasesTotal = caseList.Count();
+            var numCasesCompleted = caseList.Where(a => a.ClosedTime != null).Count();
+            var numCasesIncompleted = numCasesTotal - numCasesCompleted;
 
-            var numEvent = context.Events.Include(a => a.Case).Where(a => a.Case.ClientId == user.Id)
-                .ToList().Count;
-            var numCompletedEvent = context.Events.Include(a => a.Case).Where(a => a.Case.ClientId == user.Id && a.IsCompleted == true)
-                .ToList().Count;
+            var eventList = context.Events.Where(a => a.ClientId == client.Id);
+            var numEventTotal = eventList.Count();
+            var numEventCompleted = eventList.Where(a => a.IsCompleted == true).Count();
+            var numEventIncompleted = numEventTotal - numEventCompleted;
 
-            return Ok(new { numAppointments, numPendingAppointments, numCases, numCompletedCases, numEvent, numCompletedEvent });
+            return Ok(new
+            {
+                numAppointmentsTotal,
+                numAppointmentsPending,
+                numAppointmentsApproved,
+                numAppointmentsRejected,
+                numAppointmentsCancelled,
+                numCasesTotal,
+                numCasesCompleted,
+                numCasesIncompleted,
+                numEventTotal,
+                numEventCompleted,
+                numEventIncompleted,
+            });
         }
 
         public class AnnouncementDto
