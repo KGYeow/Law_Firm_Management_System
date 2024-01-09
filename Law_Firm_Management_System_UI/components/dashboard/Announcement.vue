@@ -21,7 +21,7 @@
             <v-btn variant="text" v-bind="props" @click="props.onClick"/>
           </template>
           <v-carousel-item v-for="item in announcement" height="200px" max-height="200px">
-            <v-sheet class="px-16 pt-5 pb-6 h-100">
+            <div class="px-16 pt-5 pb-6 h-100">
               <h6 class="m-0 fw-bold">
                 {{ item.title }}
               </h6>
@@ -31,7 +31,7 @@
               <div ref="announcementRef" class="p-0 pt-2 text-justify announcement">
                 {{ item.description }}
               </div>
-            </v-sheet>
+            </div>
             <v-tooltip text="See More" location="top" offset="2">
               <template #activator="{ props }">
                 <v-btn class="m-2 position-absolute top-0 end-0" icon="mdi-open-in-new" size="small" variant="text" v-bind="props" @click="announcementDataGet(item)"/>

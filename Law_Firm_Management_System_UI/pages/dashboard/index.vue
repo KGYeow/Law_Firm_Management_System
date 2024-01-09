@@ -17,6 +17,7 @@
       </div>
     </el-scrollbar>
   </v-navigation-drawer>
+
   <!-- Dashboard Items -->
   <v-row>
     <v-col cols="12">
@@ -25,19 +26,23 @@
         <v-col cols="12">
           <DashboardAnnouncement/>
         </v-col>
+
+        <!-- Tasks Data -->
         <v-col cols="12">
-          <DashboardTodayTask/>
+          <DashboardTaskToday/>
         </v-col>
-        <v-col cols="12" lg="6">
-          <DashboardCaseCompleted/>
+
+        <v-col cols="4" lg="4">
+          <!-- Appointments Data -->
+          <DashboardAppointmentData/>
         </v-col>
-        <v-col cols="12" lg="6">
-          <div class="mb-6">
-            <DashboardCaseNew/>
-          </div>
-          <div>
-            <DashboardTaskCompleted/>
-          </div>
+        <v-col cols="4" lg="4">
+          <!-- Cases Data -->
+          <DashboardCaseData/>
+        </v-col>
+        <v-col cols="4" lg="4">
+          <!-- Events Data -->
+          <DashboardEventData/>
         </v-col>
       </v-row>
     </v-col>
@@ -46,6 +51,9 @@
 
 <script setup>
 import { LayoutDashboardIcon } from "vue-tabler-icons"
+
+// Data
+const { data: dashboardData } = await fetchData.$get("/Dashboard/Partner/DashboardData")
 
 // Head
 useHead({
