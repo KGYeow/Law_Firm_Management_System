@@ -112,7 +112,7 @@ namespace Law_Firm_Management_System_API.Controllers
         {
             var user = userService.GetUser(User);
 
-            var taskList = context.Tasks.Where(a => a.ParelegalUserId == user.Id);
+            var taskList = context.Tasks.Where(a => a.ParalegalUserId == user.Id);
             var numTasksToDo = taskList.Where(a => a.CompletedTime == null && a.InProgress == false).Count();
             var numTasksInProgress = taskList.Where(a => a.InProgress == true).Count();
             var numTasksCompleted = taskList.Where(a => a.CompletedTime != null).Count();

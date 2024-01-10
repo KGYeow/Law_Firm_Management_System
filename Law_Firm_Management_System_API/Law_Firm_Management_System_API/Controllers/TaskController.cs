@@ -33,8 +33,8 @@ namespace Law_Firm_Management_System_API.Controllers
         public IActionResult GetBacklogTasksParelegal()
         {
             var user = userService.GetUser(User);
-            var tasks = context.Tasks.Include(t => t.ParelegalUser).
-                Where(t => t.AssignedTime > t.DueTime && t.ParelegalUserId == user.Id).ToList();
+            var tasks = context.Tasks.Include(t => t.ParalegalUser).
+                Where(t => t.AssignedTime > t.DueTime && t.ParalegalUserId == user.Id).ToList();
 
             return Ok(tasks);
         }
@@ -56,7 +56,7 @@ namespace Law_Firm_Management_System_API.Controllers
         public IActionResult GetToDoTasksParelegal()
         {
             var user = userService.GetUser(User);
-            var tasks = context.Tasks.Include(t => t.ParelegalUser).
+            var tasks = context.Tasks.Include(t => t.ParalegalUser).
                 Where(t => t.InProgress == false && t.CompletedTime == null).ToList();
             return Ok(tasks);
         }
@@ -78,7 +78,7 @@ namespace Law_Firm_Management_System_API.Controllers
         public IActionResult GetInProgressTasksParelegal()
         {
             var user = userService.GetUser(User);
-            var tasks = context.Tasks.Include(t => t.ParelegalUser).
+            var tasks = context.Tasks.Include(t => t.ParalegalUser).
                 Where(t => t.InProgress == true).ToList();
             return Ok(tasks);
         }
@@ -99,7 +99,7 @@ namespace Law_Firm_Management_System_API.Controllers
         [Route("CompleteParelegal")]
         public IActionResult GetCompleteTasksParelegal()
         {
-            var tasks = context.Tasks.Include(t => t.ParelegalUser).
+            var tasks = context.Tasks.Include(t => t.ParalegalUser).
                 Where(t => t.CompletedTime != null).ToList();
             return Ok(tasks);
         }
@@ -163,7 +163,7 @@ namespace Law_Firm_Management_System_API.Controllers
             var task = new Models.Task
             {
                 PartnerUserId = user.Id,
-                ParelegalUserId = dto.IsAssignedParalegal ? partner.ParalegalUserId : null,
+                ParalegalUserId = dto.IsAssignedParalegal ? partner.ParalegalUserId : null,
                 CaseId = dto.CaseId,
                 EventId = dto.EventId,
                 DocumentId = dto.DocumentId,

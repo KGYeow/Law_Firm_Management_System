@@ -171,7 +171,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Task](
 	[ID] [int] IDENTITY(1,1) NOT NULL,
-	[ParelegalUserID] [int] NULL,
+	[ParalegalUserID] [int] NULL,
 	[PartnerUserID] [int] NOT NULL,
 	[CaseID]  [int] NULL,
 	[EventID]  [int] NULL,
@@ -493,7 +493,7 @@ GO
 
 /** wy task **/
 SET IDENTITY_INSERT [dbo].[Task] ON
-INSERT [dbo].[Task] ([ID], [PartnerUserID], [ParelegalUserID], [CaseID], [EventID], [DocumentID], [Title], [Description], [AssignedTime], [CompletedTime], [DueTime], [InProgress])
+INSERT [dbo].[Task] ([ID], [PartnerUserID], [ParalegalUserID], [CaseID], [EventID], [DocumentID], [Title], [Description], [AssignedTime], [CompletedTime], [DueTime], [InProgress])
 	VALUES (1, 1, 2, 1, NULL, 1, N'First Task', N'This is the 1st...', CAST(N'2023-12-10T10:54:11.157' AS DateTime), NULL, CAST(N'2023-12-25T10:54:11.157' AS DateTime), 1)
 SET IDENTITY_INSERT [dbo].[Task] OFF
 GO
@@ -564,10 +564,10 @@ REFERENCES [dbo].[User] ([ID])
 GO
 ALTER TABLE [dbo].[Task] CHECK CONSTRAINT [FK_Task_Partner]
 GO
-ALTER TABLE [dbo].[Task] WITH CHECK ADD CONSTRAINT [FK_Task_Parelegal] FOREIGN KEY([ParelegalUserID])
+ALTER TABLE [dbo].[Task] WITH CHECK ADD CONSTRAINT [FK_Task_Paralegal] FOREIGN KEY([ParalegalUserID])
 REFERENCES [dbo].[User] ([ID])
 GO
-ALTER TABLE [dbo].[Task] CHECK CONSTRAINT [FK_Task_Parelegal]
+ALTER TABLE [dbo].[Task] CHECK CONSTRAINT [FK_Task_Paralegal]
 GO
 ALTER TABLE [dbo].[Task] WITH CHECK ADD CONSTRAINT [FK_Task_Case] FOREIGN KEY([CaseID])
 REFERENCES [dbo].[Case] ([ID])

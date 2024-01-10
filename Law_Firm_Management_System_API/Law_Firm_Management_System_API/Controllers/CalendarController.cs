@@ -69,7 +69,7 @@ namespace Law_Firm_Management_System_API.Controllers
         public IActionResult GetParalegalInProgressTask()
         {
             var user = userService.GetUser(User);
-            var l = context.Tasks.Where(a => a.ParelegalUserId == user.Id && a.InProgress == true).ToList();
+            var l = context.Tasks.Where(a => a.ParalegalUserId == user.Id && a.InProgress == true).ToList();
             return Ok(l);
         }
     }

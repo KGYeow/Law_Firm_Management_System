@@ -39,7 +39,7 @@ namespace Law_Firm_Management_System_API.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Server=ARTHURKG;Database=Law_Firm_Management_System_DB;Trusted_Connection=True;");
+                optionsBuilder.UseSqlServer("Server=ROBIN;Database=Law_Firm_Management_System_DB;Trusted_Connection=True;");
             }
         }
 
@@ -376,7 +376,7 @@ namespace Law_Firm_Management_System_API.Models
 
                 entity.Property(e => e.EventId).HasColumnName("EventID");
 
-                entity.Property(e => e.ParelegalUserId).HasColumnName("ParelegalUserID");
+                entity.Property(e => e.ParalegalUserId).HasColumnName("ParalegalUserID");
 
                 entity.Property(e => e.PartnerUserId).HasColumnName("PartnerUserID");
 
@@ -397,10 +397,10 @@ namespace Law_Firm_Management_System_API.Models
                     .HasForeignKey(d => d.EventId)
                     .HasConstraintName("FK_Task_Event");
 
-                entity.HasOne(d => d.ParelegalUser)
-                    .WithMany(p => p.TaskParelegalUsers)
-                    .HasForeignKey(d => d.ParelegalUserId)
-                    .HasConstraintName("FK_Task_Parelegal");
+                entity.HasOne(d => d.ParalegalUser)
+                    .WithMany(p => p.TaskParalegalUsers)
+                    .HasForeignKey(d => d.ParalegalUserId)
+                    .HasConstraintName("FK_Task_Paralegal");
 
                 entity.HasOne(d => d.PartnerUser)
                     .WithMany(p => p.TaskPartnerUsers)

@@ -6,7 +6,7 @@ namespace Law_Firm_Management_System_API.Models
     public partial class Task
     {
         public int Id { get; set; }
-        public int? ParelegalUserId { get; set; }
+        public int? ParalegalUserId { get; set; }
         public int PartnerUserId { get; set; }
         public int? CaseId { get; set; }
         public int? EventId { get; set; }
@@ -21,7 +21,7 @@ namespace Law_Firm_Management_System_API.Models
         public virtual Case? Case { get; set; }
         public virtual Document? Document { get; set; }
         public virtual Event? Event { get; set; }
-        public virtual User? ParelegalUser { get; set; }
+        public virtual User? ParalegalUser { get; set; }
         public virtual User PartnerUser { get; set; } = null!;
     }
 }
