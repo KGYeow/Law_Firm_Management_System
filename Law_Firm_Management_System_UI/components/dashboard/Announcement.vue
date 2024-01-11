@@ -44,7 +44,7 @@
   </div>
 
   <!-- Announcement See More Modal -->
-  <SharedUiModal v-model="announcementModal" title="Announcement">
+  <SharedUiModal v-model="announcementModal" title="Announcement" width="600">
     <v-card-item class="px-8 py-4 text-body-1">
       <v-sheet>
         <h6 class="m-0 fw-bold">
@@ -74,7 +74,7 @@
   </SharedUiModal>
 
   <!-- Add Announcement Modal -->
-  <SharedUiModal v-model="addAnnouncementModal" title="Add New Announcement">
+  <SharedUiModal v-model="addAnnouncementModal" title="Add New Announcement" width="500">
     <form @submit.prevent="addAnnouncement">
       <v-card-item class="px-8 py-4 text-body-1">
         <v-row>
@@ -112,7 +112,7 @@
 <script setup>
 import { SpeakerphoneIcon } from 'vue-tabler-icons'
 import { useField, useForm } from 'vee-validate'
-import dayjs from 'dayjs';
+import dayjs from 'dayjs'
 
 // Data
 const { data: user } = useAuth()

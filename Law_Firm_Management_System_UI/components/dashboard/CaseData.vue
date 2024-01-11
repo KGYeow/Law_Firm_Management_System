@@ -12,11 +12,12 @@
       <v-row>
         <v-col cols="12" sm="12">
           <h3 class="text-h3">{{ caseTotal }}</h3>
-          <div class="d-flex align-center flex-shrink-0">
+          <div class="d-flex align-center flex-shrink-0" v-if="caseTotal != 0">
             <apexchart type="donut" height="145" :options="chartOptions" :series="chartSeries"/>
           </div>
+          <el-empty class="p-0 pb-2" :image-size="110" description="No case" v-else/>
         </v-col>
-        <v-col cols="12" sm="12">
+        <v-col cols="12" sm="12" v-if="caseTotal != 0">
           <div class="d-flex flex-column">
             <h6 class="text-subtitle-1 text-muted">
               <v-icon icon="mdi mdi-checkbox-blank-circle" class="mr-1" size="10" color="#0D47A1"></v-icon> Completed

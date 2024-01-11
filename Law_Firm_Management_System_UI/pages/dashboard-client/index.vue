@@ -8,12 +8,12 @@
     permanent
   >
     <el-scrollbar>
-      <div class="d-flex flex-column">
+      <div class="mt-3 mb-7 d-flex flex-column">
         <!-- Calendar -->
-        <DashboardCalendar/>
+        <DashboardCalendar :list="upcomingEventList"/>
         <v-divider class="mx-7"/>
         <!-- Events -->
-        <DashboardUpcomingEvent/>
+        <DashboardUpcomingEvent :list="upcomingEventList"/>
       </div>
     </el-scrollbar>
   </v-navigation-drawer>
@@ -63,6 +63,7 @@ import { LayoutDashboardIcon } from "vue-tabler-icons"
 
 // Data
 const { data: dashboardData } = await fetchData.$get("/Dashboard/Data/Client")
+const { data: upcomingEventList } = await fetchData.$get("/Dashboard/UpcomingEvents/Client")
 
 // Head
 useHead({

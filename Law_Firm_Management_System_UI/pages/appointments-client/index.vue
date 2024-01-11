@@ -134,77 +134,68 @@
   </v-data-table>
 
   <!-- Add New Appointment Modal -->
-  <v-dialog v-model="addAppointmentModal" width="auto">
-    <v-card elevation="10" class="withbg rounded-3 overflow-visible" width="500px">
-      <v-card-title class="px-4 py-4 d-sm-flex align-center justify-space-between bg-background rounded-top-3">
-        <h5 class="text-h5 mb-0 d-flex align-center">
-          Add New Appointment
-        </h5>
-        <v-btn density="compact" variant="plain" icon="mdi-close" @click="addAppointmentModal = false"/>
-      </v-card-title>
-      <v-divider class="m-0"/>
-      <form @submit.prevent="addAppointment">
-        <v-card-item class="px-8 py-4 text-body-1">
-          <v-row>
-            <v-col class="pb-0">
-              <v-label class="text-caption">Partner</v-label>
-              <v-select
-                :items="partnerList"
-                item-title="fullName"
-                item-value="userId"
-                placeholder="Select partner"
-                variant="outlined"
-                density="compact"
-                :error-messages="addAppointmentDetails.partnerUserId.errorMessage"
-                v-model="addAppointmentDetails.partnerUserId.value"
-                hide-details="auto"
-              />
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col>
-              <v-label class="text-caption">Category</v-label>
-              <v-select
-                :items="categoryList"
-                item-title="name"
-                item-value="id"
-                placeholder="Select category"
-                variant="outlined"
-                density="compact"
-                :error-messages="addAppointmentDetails.categoryId.errorMessage"
-                v-model="addAppointmentDetails.categoryId.value"
-                hide-details="auto"
-              />
-            </v-col>
-            <v-col>
-              <v-label class="text-caption">Time</v-label>
-              <el-date-picker
-                :class="{ 'error': addAppointmentDetails.appointmentTime.errorMessage }"
-                placeholder="Select date and time"
-                type="datetime"
-                format="DD MMM YYYY, hh:mm A"
-                date-format="DD MMM YYYY"
-                time-format="HH:mm"
-                :teleported="false"
-                v-model="addAppointmentDetails.appointmentTime.value"
-                style="height: 40px;"
-              />
-              <v-messages
-                :messages="addAppointmentDetails.appointmentTime.errorMessage"
-                :active="addAppointmentDetails.appointmentTime.errorMessage ? true : false"
-                color="#fa896b"
-                :transition="false"
-                style="padding: 3px 16px 3px; opacity: unset;"
-              />
-            </v-col>
-          </v-row>
-        </v-card-item>
-        <v-card-actions class="p-3 justify-content-end">
-          <v-btn color="primary" type="submit">Submit</v-btn>
-        </v-card-actions>
-      </form>
-    </v-card>
-  </v-dialog>
+  <SharedUiModal v-model="addAppointmentModal" title="Add New Appointment" width="500">
+    <form @submit.prevent="addAppointment">
+      <v-card-item class="px-8 py-4 text-body-1">
+        <v-row>
+          <v-col class="pb-0">
+            <v-label class="text-caption">Partner</v-label>
+            <v-select
+              :items="partnerList"
+              item-title="fullName"
+              item-value="userId"
+              placeholder="Select partner"
+              variant="outlined"
+              density="compact"
+              :error-messages="addAppointmentDetails.partnerUserId.errorMessage"
+              v-model="addAppointmentDetails.partnerUserId.value"
+              hide-details="auto"
+            />
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col>
+            <v-label class="text-caption">Category</v-label>
+            <v-select
+              :items="categoryList"
+              item-title="name"
+              item-value="id"
+              placeholder="Select category"
+              variant="outlined"
+              density="compact"
+              :error-messages="addAppointmentDetails.categoryId.errorMessage"
+              v-model="addAppointmentDetails.categoryId.value"
+              hide-details="auto"
+            />
+          </v-col>
+          <v-col>
+            <v-label class="text-caption">Time</v-label>
+            <el-date-picker
+              :class="{ 'error': addAppointmentDetails.appointmentTime.errorMessage }"
+              placeholder="Select date and time"
+              type="datetime"
+              format="DD MMM YYYY, hh:mm A"
+              date-format="DD MMM YYYY"
+              time-format="HH:mm"
+              :teleported="false"
+              v-model="addAppointmentDetails.appointmentTime.value"
+              style="height: 40px;"
+            />
+            <v-messages
+              :messages="addAppointmentDetails.appointmentTime.errorMessage"
+              :active="addAppointmentDetails.appointmentTime.errorMessage ? true : false"
+              color="#fa896b"
+              :transition="false"
+              style="padding: 3px 16px 3px; opacity: unset;"
+            />
+          </v-col>
+        </v-row>
+      </v-card-item>
+      <v-card-actions class="p-3 justify-content-end">
+        <v-btn color="primary" type="submit">Submit</v-btn>
+      </v-card-actions>
+    </form>
+  </SharedUiModal>
 </template>
 
 <script setup>

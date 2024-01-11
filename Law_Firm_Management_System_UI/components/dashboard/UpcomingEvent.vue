@@ -4,47 +4,45 @@
       <LayoutFullVerticalSidebarIcon class="me-3" :item="CalendarEventIcon"/>
       Upcoming Events
     </h5>
-    <el-scrollbar height="60vh">
-      <div class="pa-7 py-1 text-body-1">
-        <div class="recent-transaction mt-10 px-3">
-          <div v-for="list in recentTransaction" :key="list.title">
-            <v-row class="d-flex mb-4">
-              <v-col cols="4" lg="3" md="auto" sm="auto" class="px-0 pt-0 pb-1 d-flex align-start">
-                <h6 class="text-body-1 textSecondary text-no-wrap">{{ list.title }}</h6>
-              </v-col>
-              <v-col cols="1" sm="1" class="px-0 text-center pt-0 pb-1">
-                <CircleIcon size="13" :class="'text-' + list.textcolor" />
-                <div v-if="list.line" class="line mx-auto bg-grey100"></div>
-              </v-col>
-              <v-col cols="7" sm="8" class="pt-0">
-                <h6 v-if="list.boldtext" class="text-body-1 font-weight-bold">{{ list.subtitle }}</h6>
-                <h6 v-else class="text-body-1 textSecondary">{{ list.subtitle }}</h6>
-                <div class="mt-n1">
-                  <RouterLink :to="list.url" class="text-body-1 text-primary text-decoration-none" v-if="list.link">
-                    {{ list.link }}
-                  </RouterLink>
-                </div>
-              </v-col>
-            </v-row>
-          </div>
-        </div>
-      </div>
-    </el-scrollbar>
+    <div class="pa-7 py-1">
+      <v-timeline class="upcomingEvents" truncate-line="start" line-thickness="1" side="end" align="start" v-if="list.length > 0">
+        <v-timeline-item
+          v-for="upcomingEvent in list"
+          size="13"
+          line-inset="5"
+          dot-color="primary"
+          icon="mdi-circle-outline"
+        >
+          <template #opposite>
+            <h6 class="m-0 fw-bold text-body-2 textSecondary">{{ dayjs(upcomingEvent.time).format("DD MMM YYYY") }}</h6>
+          </template>
+          <v-sheet class="text-body-2">
+            <h6 class="m-0 text-body-2 fw-bold">{{ upcomingEvent.title }}</h6>
+            <span class="description">
+              <v-tooltip :text="upcomingEvent.description" activator="parent" location="left" offset="5" width="300px"/>
+              {{ upcomingEvent.description }}
+            </span>
+          </v-sheet>
+        </v-timeline-item>
+      </v-timeline>
+      <el-empty class="p-0 pb-2" :image-size="110" description="No upcoming event" v-else/>
+    </div>
   </div>
 </template>
 
-<script setup>
-import { CalendarEventIcon } from 'vue-tabler-icons';
-import { recentTransaction } from '@/data/dashboard/dashboardData';
+<script setup lang="ts">
+import { CalendarEventIcon } from 'vue-tabler-icons'
+import dayjs from 'dayjs'
 
-// Data
-</script>
-
-<style lang="scss">
-.recent-transaction {
-  .line {
-    width: 2px;
-    height: 35px;
-  }
+// Array Item Type
+type UpcomingList = {
+  title: string,
+  description: string,
+  time: Date,
 }
-</style>
+
+// Properties
+const props = defineProps({
+  list: { type: Array<UpcomingList>, default: [] },
+})
+</script>

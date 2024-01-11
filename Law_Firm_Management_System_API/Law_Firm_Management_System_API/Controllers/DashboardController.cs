@@ -3,7 +3,6 @@ using Law_Firm_Management_System_API.Models;
 using Law_Firm_Management_System_API.Service;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using static Law_Firm_Management_System_API.Controllers.AppointmentController;
 
 namespace Law_Firm_Management_System_API.Controllers
 {
@@ -161,10 +160,105 @@ namespace Law_Firm_Management_System_API.Controllers
             });
         }
 
+        // Get the upcoming events from partner's perspective.
+        [HttpGet]
+        [Route("UpcomingEvents/Partner")]
+        public IActionResult GetPartnerUpcomingEvents()
+        {
+            var user = userService.GetUser(User);
+
+            var upcomingAppointments = context.Appointments.Include(a => a.Category).Include(a => a.Client).Where(a => a.PartnerUserId == user.Id && a.Status == "Approved").ToList()
+                .Select(x => new UpcomingEvent
+                {
+                    Time = x.AppointmentTime,
+                    Title = x.Category.Name,
+                    Description = "There is an appointment between the client, " + x.Client.FullName + ", and you.",
+                });
+            var upcomingEvents = context.Events.Include(a => a.Client).Where(a => a.PartnerUserId == user.Id && a.IsCompleted == false).ToList()
+                .Select(x => new UpcomingEvent
+                {
+                    Time = x.EventTime,
+                    Title = x.Name,
+                    Description = "There is an event you need to attend with the client, " + x.Client.FullName + ".",
+                });
+            var upcomingTasks = context.Tasks.Where(a => a.PartnerUserId == user.Id && a.InProgress == true).ToList()
+                .Select(x => new UpcomingEvent
+                {
+                    Time = x.DueTime,
+                    Title = x.Title,
+                    Description = x.Description,
+                });
+
+            var upcomingEventsAll = new List<UpcomingEvent>();
+            upcomingEventsAll.AddRange(upcomingAppointments);
+            upcomingEventsAll.AddRange(upcomingEvents);
+            upcomingEventsAll.AddRange(upcomingTasks);
+
+            return Ok(upcomingEventsAll.OrderBy(a => a.Time).ToList());
+        }
+
+        // Get the upcoming events from paralegal's perspective.
+        [HttpGet]
+        [Route("UpcomingEvents/Paralegal")]
+        public IActionResult GetParalegalUpcomingEvents()
+        {
+            var user = userService.GetUser(User);
+
+            var upcomingTasks = context.Tasks.Where(a => a.ParalegalUserId == user.Id && a.InProgress == true).ToList()
+                .Select(x => new UpcomingEvent
+                {
+                    Time = x.DueTime,
+                    Title = x.Title,
+                    Description = x.Description,
+                });
+
+            var upcomingEventsAll = new List<UpcomingEvent>();
+            upcomingEventsAll.AddRange(upcomingTasks);
+
+            return Ok(upcomingEventsAll.OrderBy(a => a.Time).ToList());
+        }
+
+        // Get the upcoming events from client's perspective.
+        [HttpGet]
+        [Route("UpcomingEvents/Client")]
+        public IActionResult GetClientUpcomingEvents()
+        {
+            var user = userService.GetUser(User);
+            var client = context.Clients.Where(a => a.UserId == user.Id).FirstOrDefault();
+
+            var upcomingAppointments = context.Appointments.Include(a => a.Category).Include(a => a.PartnerUser).Where(a => a.ClientId == client.Id && a.Status == "Approved").ToList()
+                .Select(x => new UpcomingEvent
+                {
+                    Time = x.AppointmentTime,
+                    Title = x.Category.Name,
+                    Description = "There is an appointment between the partner, " + x.PartnerUser.FullName + ", and you.",
+                });
+            var upcomingEvents = context.Events.Include(a => a.PartnerUser).Where(a => a.ClientId == client.Id && a.IsCompleted == false).ToList()
+                .Select(x => new UpcomingEvent
+                {
+                    Time = x.EventTime,
+                    Title = x.Name,
+                    Description = "There is an event you need to attend with the partner, " + x.PartnerUser.FullName + ".",
+                });
+
+            var upcomingEventsAll = new List<UpcomingEvent>();
+            upcomingEventsAll.AddRange(upcomingAppointments);
+            upcomingEventsAll.AddRange(upcomingEvents);
+
+            return Ok(upcomingEventsAll.OrderBy(a => a.Time).ToList());
+        }
+
         public class AnnouncementDto
         {
             public string Title { get; set; } = null!;
             public string Description { get; set; } = null!;
+        }
+
+        public class UpcomingEvent
+        {
+            public string? Title { get; set; }
+            public string? Description { get; set; }
+            public DateTime Time { get; set; }
         }
     }
 }

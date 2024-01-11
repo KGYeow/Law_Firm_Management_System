@@ -145,12 +145,12 @@
   </el-affix>
 
   <!-- Add New Document Modal -->
-  <SharedUiModal v-model="addDocumentModal" title="Add New Document">
+  <SharedUiModal v-model="addDocumentModal" title="Add New Document" width="500">
     <DocumentCreateForm @close-modal="(e) => addDocumentModal = e"/>
   </SharedUiModal>
 
   <!-- Rename Document Modal -->
-  <SharedUiModal v-model="renameDocumentModal" title="Rename Document">
+  <SharedUiModal v-model="renameDocumentModal" title="Rename Document" width="500">
     <DocumentRenameForm
       :docId="renameDocumentDetails.docId"
       :docName="renameDocumentDetails.name"

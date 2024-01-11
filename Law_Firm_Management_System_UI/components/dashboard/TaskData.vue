@@ -6,10 +6,10 @@
           <div>
             <v-card-title class="fs-6 text-black-50">Today's Tasks</v-card-title>
             <v-card-text class="p-0 pt-2">
-              <a href="/tasks" class="text-black">
+              <RouterLink to="/tasks" class="text-primary">
                 <i class="mdi mdi-arrow-right"></i>
                 Check your daily tasks
-              </a>
+              </RouterLink>
             </v-card-text>
           </div>
         </v-col>
