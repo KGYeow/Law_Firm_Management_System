@@ -68,8 +68,8 @@
                 <td>{{ item.name }}</td>
                 <td>{{ item.caseName }}</td>
                 <td>{{ item.paralegalName }}</td>
-                <td>{{ dayjs(item.CreatedTime).format("DD MMM YYYY, hh:mm A") }}</td>
-                <td>{{ dayjs(item.EventTime).format("DD MMM YYYY, hh:mm A") }}</td>
+                <td>{{ dayjs(item.createdTime).format("DD MMM YYYY, hh:mm A") }}</td>
+                <td>{{ dayjs(item.eventTime).format("DD MMM YYYY, hh:mm A") }}</td>
                 <td>
                   <el-tag type="success" v-if="item.isCompleted">Completed</el-tag>
                   <el-tag type="danger" v-else>Incompleted</el-tag>
@@ -122,8 +122,8 @@
                 <td>{{ item.name }}</td>
                 <td>{{ item.caseName }}</td>
                 <td>{{ item.partnerName }}</td>
-                <td>{{ dayjs(item.CreatedTime).format("DD MMM YYYY, hh:mm A") }}</td>
-                <td>{{ dayjs(item.EventTime).format("DD MMM YYYY, hh:mm A") }}</td>
+                <td>{{ dayjs(item.createdTime).format("DD MMM YYYY, hh:mm A") }}</td>
+                <td>{{ dayjs(item.eventTime).format("DD MMM YYYY, hh:mm A") }}</td>
                 <td>
                   <el-tag type="success" v-if="item.isCompleted">Completed</el-tag>
                   <el-tag type="danger" v-else>Incompleted</el-tag>
