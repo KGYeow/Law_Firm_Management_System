@@ -68,8 +68,8 @@
                 <td>{{ item.name }}</td>
                 <td>{{ item.caseName }}</td>
                 <td>{{ item.paralegalName }}</td>
-                <td>{{ dayjs(item.CreatedTime).format("DD MMM YYYY, hh:mm A") }}</td>
-                <td>{{ dayjs(item.EventTime).format("DD MMM YYYY, hh:mm A") }}</td>
+                <td>{{ dayjs(item.createdTime).format("DD MMM YYYY, hh:mm A") }}</td>
+                <td>{{ dayjs(item.eventTime).format("DD MMM YYYY, hh:mm A") }}</td>
                 <td>
                   <el-tag type="success" v-if="item.isCompleted">Completed</el-tag>
                   <el-tag type="danger" v-else>Incompleted</el-tag>
@@ -79,7 +79,7 @@
                     <li>
                       <v-tooltip text="Update Status" activator="parent" location="top" offset="2"/>
                       <el-popconfirm
-                        title="Are you sure to complete this event?"
+                        title="Are you sure to update status of this event?"
                         icon-color="orange"
                         width="190"
                         @confirm="updateEvent(item.id)"
@@ -122,8 +122,8 @@
                 <td>{{ item.name }}</td>
                 <td>{{ item.caseName }}</td>
                 <td>{{ item.partnerName }}</td>
-                <td>{{ dayjs(item.CreatedTime).format("DD MMM YYYY, hh:mm A") }}</td>
-                <td>{{ dayjs(item.EventTime).format("DD MMM YYYY, hh:mm A") }}</td>
+                <td>{{ dayjs(item.createdTime).format("DD MMM YYYY, hh:mm A") }}</td>
+                <td>{{ dayjs(item.eventTime).format("DD MMM YYYY, hh:mm A") }}</td>
                 <td>
                   <el-tag type="success" v-if="item.isCompleted">Completed</el-tag>
                   <el-tag type="danger" v-else>Incompleted</el-tag>

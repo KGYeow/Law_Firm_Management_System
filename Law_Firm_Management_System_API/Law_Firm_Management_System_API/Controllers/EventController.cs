@@ -120,8 +120,8 @@ namespace Law_Firm_Management_System_API.Controllers
 
             var l = context.Events
                 .Include(a => a.Case)
-                .OrderBy(a => a.Name)
-                .Where(a => a.Client.UserId == user.Id)  // Filter cases by assigned partner
+                .OrderByDescending(a => a.CreatedTime)
+                .Where(a => a.Client.UserId == user.Id)// Filter cases by assigned partner
                 .Select(x => new {
                     id = x.Id,
                     name = x.Name,
@@ -194,7 +194,7 @@ namespace Law_Firm_Management_System_API.Controllers
         // Update the current event.
         [HttpPut]
         [Route("Update/{eventId}")]
-        public IActionResult Archive(int eventId)
+        public IActionResult Update(int eventId)
         {
             var user = userService.GetUser(User);
             var existingDoc = context.Events.Where(a => a.Id == eventId).FirstOrDefault();
