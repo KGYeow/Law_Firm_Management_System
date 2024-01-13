@@ -270,7 +270,7 @@ CREATE TABLE [dbo].[Paralegal](
 	[UserID] [int] NOT NULL,
 	[PhoneNumber] [nvarchar](256) NULL,
 	[Address] [nvarchar](max) NULL,
-	[IsActive] [bit] NULL,
+	[IsActive] [bit] NOT NULL,
  CONSTRAINT [PK_Paralegal] PRIMARY KEY CLUSTERED
 (
 	[UserID] ASC

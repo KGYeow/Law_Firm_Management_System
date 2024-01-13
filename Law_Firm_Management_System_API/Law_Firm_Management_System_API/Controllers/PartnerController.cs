@@ -1,4 +1,5 @@
-﻿using Law_Firm_Management_System_API.Models;
+﻿using Law_Firm_Management_System_API.Authentication;
+using Law_Firm_Management_System_API.Models;
 using Law_Firm_Management_System_API.Service;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -33,6 +34,59 @@ namespace Law_Firm_Management_System_API.Controllers
                 .Select(x => new { userId = x.ParalegalUserId, fullName = x.ParalegalUser.User.FullName, email = x.ParalegalUser.User.Email, phoneNumber = x.ParalegalUser.PhoneNumber })
                 .FirstOrDefault();
             return Ok(assignedParalegal);
+        }
+
+        // Assign a paralegal to the partner.
+        [HttpPut]
+        [Route("AssignedParalegal/Add/{ParalegalUserId}")]
+        public IActionResult AddAssignedParalegal(int paralegalUserId)
+        {
+            var assignedByOtherPartner = context.Partners.Where(a => a.ParalegalUserId == paralegalUserId).FirstOrDefault();
+            if (assignedByOtherPartner != null)
+                throw new Exception("This paralegal has been assigned to another partner");
+
+            var user = userService.GetUser(User);
+            var partner = context.Partners.Where(a => a.UserId == user.Id).FirstOrDefault();
+
+            partner.ParalegalUserId = paralegalUserId;
+            context.Partners.Update(partner);
+            context.SaveChanges();
+
+            return Ok(new Response { Status = "Success", Message = "Your assigned paralegal has been added successfully" });
+        }
+
+        // Change the assigned paralegal.
+        [HttpPut]
+        [Route("AssignedParalegal/Change/{ParalegalUserId}")]
+        public IActionResult ChangeAssignedParalegal(int paralegalUserId)
+        {
+            var assignedByOtherPartner = context.Partners.Where(a => a.ParalegalUserId == paralegalUserId).FirstOrDefault();
+            if (assignedByOtherPartner != null)
+                throw new Exception("This paralegal has been assigned to another partner");
+
+            var user = userService.GetUser(User);
+            var partner = context.Partners.Where(a => a.UserId == user.Id).FirstOrDefault();
+
+            partner.ParalegalUserId = paralegalUserId;
+            context.Partners.Update(partner);
+            context.SaveChanges();
+
+            return Ok(new Response { Status = "Success", Message = "Your assigned paralegal has been changed successfully" });
+        }
+
+        // Delete the assigned paralegal.
+        [HttpPut]
+        [Route("AssignedParalegal/Delete")]
+        public IActionResult DeleteAssignedParalegal()
+        {
+            var user = userService.GetUser(User);
+            var partner = context.Partners.Where(a => a.UserId == user.Id).FirstOrDefault();
+
+            partner.ParalegalUserId = null;
+            context.Partners.Update(partner);
+            context.SaveChanges();
+
+            return Ok(new Response { Status = "Success", Message = "Your assigned paralegal has been deleted successfully" });
         }
     }
 }
