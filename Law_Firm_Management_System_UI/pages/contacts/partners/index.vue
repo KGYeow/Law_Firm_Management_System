@@ -81,7 +81,7 @@ const headers = ref([
 ])
 const { data: partnerList } = await fetchData.$get("/Partner")
 const { data: userRole } = await fetchData.$get("/UserRole/RoleName")
-const { data: assignedPartner } = await fetchData.$get("/Partner/AssignedPartner")
+const { data: assignedPartner } = await fetchData.$get("/Paralegal/AssignedPartner")
 
 // Head
 useHead({

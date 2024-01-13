@@ -2,4 +2,26 @@
   th, td {
     padding: 0 10px !important;
   }
+
+  tbody {
+    tr {
+      transition: all 0.1s ease-in-out;
+
+      .row-link {
+        color: #000000de;
+        text-decoration: none;
+      }
+
+      &:hover {
+        .row-link {
+          color: rgb(var(--v-theme-secondary)) !important;
+          text-decoration: underline;
+        }
+      }
+
+      &.rowSelected {
+        background-color: rgb(var(--v-theme-grey200));
+      }
+    }
+  }
 }

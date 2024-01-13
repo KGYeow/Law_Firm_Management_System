@@ -24,6 +24,7 @@ namespace Law_Firm_Management_System_API.Models
         public virtual Client? Client { get; set; }
         public virtual User? PartnerUser { get; set; }
         public virtual CaseStatus? Status { get; set; }
+        public virtual Partner? Partner { get; set; }   
         public virtual ICollection<Document> Documents { get; set; }
         public virtual ICollection<Event> Events { get; set; }
         public virtual ICollection<Task> Tasks { get; set; }

@@ -141,6 +141,7 @@
     :offset="30"
     style="right: 30px; bottom: 100px;"
   >
+    <v-tooltip text="Upload Document" activator="parent" location="left" offset="2"/>
     <v-btn icon="mdi-file-document-plus-outline" color="primary" size="large" @click="addDocumentModal = true"/>
   </el-affix>
 
