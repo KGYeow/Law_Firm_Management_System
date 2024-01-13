@@ -52,7 +52,7 @@
           <v-divider/>
     <!-- Event Item List -->
     <v-data-table
-      class="eventList bg-transparent"
+      class="clientEventList bg-transparent"
       v-model:page="currentPage"
       :items="eventList"
       :items-per-page="itemsPerPage"
