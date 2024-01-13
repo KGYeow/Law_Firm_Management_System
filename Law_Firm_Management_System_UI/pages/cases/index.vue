@@ -53,6 +53,7 @@
             :headers="headers"
             :items="caseList"
             :items-per-page="itemsPerPage"
+            hover
           >
             <template v-slot:item="{ item }">
               <tr @click="loadCaseDetails(item)">
@@ -89,41 +90,6 @@
               </div>
             </template>
           </v-data-table>
-          <v-dialog v-model="isDialogOpen" max-width="600">
-            <v-card class="withbg rounded-3 overflow-visible">
-              <v-card-title class="px-4 py-4 d-sm-flex align-center justify-space-between bg-background rounded-top-3">
-                <h5 class="text-h5 mb-0 d-flex align-center">
-                  Case Name : {{ selectedCaseDetails.name }} 
-                </h5>
-                <v-btn density="compact" variant="plain" icon="mdi-close" @click="isDialogOpen = false"/>
-              </v-card-title>
-              <v-card-text>
-                <!-- Display case details here -->
-                <div v-if="selectedCaseDetails">
-                  <!-- Display case details as needed -->
-                  <div class="d-flex flex-column text-subtitle-1">
-                    <span class="mb-1"><strong>Client Name: </strong>{{ selectedCaseDetails.clientName }}</span>
-                  </div>
-                  <!-- ... other case details ... -->
-                </div>
-              </v-card-text>
-            </v-card>
-          </v-dialog>
-          <!--Case Details Dialog-->
-            <!--<v-dialog v-model="dialogVisible" max-width="600">
-              <v-card>
-                <v-card-title>{{ selectedCase ? selectedCase.name : '' }}</v-card-title>
-                <v-card-text>
-                  <div class="d-flex flex-column text-subtitle-1">
-                    <span class="mb-1"><strong>Client Name: </strong>{{ selectedCase ? selectedCase.clientName : '' }}</span>
-                  </div>-->
-                  <!-- Add more details as needed -->
-                <!-- </v-card-text>
-                <v-card-actions>
-                  <v-btn @click="dialogVisible = false">Close</v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-dialog>-->
         </div>
       </UiParentCard>
     </v-col>
@@ -169,7 +135,149 @@
       </form>
     </v-card>
   </v-dialog>
+  
+  <!--Case Details Dialog-->
+  <v-dialog v-model="isDialogOpen" max-width="600" class="mx-auto my-12">
+    <v-card class="withbg rounded-3 overflow-visible">
+      <v-card-title class="px-10 py-5 d-sm-flex align-center justify-space-between bg-background rounded-top-3">
+          <h5 class="text-h5 mb-0 d-flex align-center">
+            Case Name : {{ selectedCaseDetails.name }} 
+            <v-icon class="mr-2">mdi-information</v-icon>
+          </h5>
+        <v-btn density="compact" variant="plain" icon="mdi-close" @click="isDialogOpen = false"/>
+      </v-card-title>
+    <v-card-text>
+      <!-- Display case details here -->
+        <div v-if="selectedCaseDetails">
+          <!-- Display case details as needed -->
+            <div class=" d-flex flex-column case-details-container pa-md-4">
+              <div class="case-detail-item">
+                <strong>Client Name:</strong>
+                {{ selectedCaseDetails.clientName }}
+              </div>
+            </div>
+          <!-- Status Bar -->
+          <div class="status-container">
+            <div class="pa-md-4"><strong>Current Case Status</strong></div>
+            <div class="status-bar">
+            <div v-for="(status, index) in statusList" :key="index" class="status-item" :class="{ 'current-status': index === selectedCaseDetails.statusId - 1 }">
+              <div class="status-part">
+                <div class="circle">{{ status.id }}</div>
+                <span class="status-name" :class="{ 'bold': index === selectedCaseDetails.statusId - 1 }">{{ status.name }}</span>
+              </div>
+            </div>
+          </div>
+          <!--Current Status Description-->
+          <div class="status-description">
+              <strong>{{ selectedCaseDetails.statusDescription }}</strong>
+          </div>
+        </div>
+        <!--Client Information-->
+        <v-card elevation="10" class="withbg bg-primary">
+        <v-card-item>
+          <v-row>
+            <v-col cols="9" class="hstack">
+              <v-avatar class="me-2" color="rgb(243, 244, 248)" size="small">
+                <UserIcon color="gray" size="18"/>
+              </v-avatar>
+              <v-card-title class="text-h6">Client Contact</v-card-title>
+              <v-divider
+                vertical
+                class="mx-5 my-0"
+                style="border-color: white !important; opacity: 0.5;"
+              />
+              <div class="d-flex flex-column text-subtitle-1">
+                <span class="mb-1"><strong>Client Name:</strong> {{ selectedCaseDetails.clientName }}</span>
+                <span><strong>Phone Number: </strong>{{ selectedCaseDetails.clientPhone ?? '-' }}</span>
+                <span><strong>Email: </strong>{{ selectedCaseDetails.clientEmail }}</span>
+              </div>
+            </v-col>
+          </v-row>
+        </v-card-item>
+        </v-card>
+        </div>
+      </v-card-text>
+    </v-card>
+  </v-dialog>
 </template>
+
+<style>
+.status-bar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 30px 20px 60px 20px;
+}
+
+.status-item {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #ddd; /* default circle color */
+  margin-right: 40px;
+  font-size: 12px; /* Adjust font size as needed */
+}
+
+.circle::after {
+    content: "";
+    position: absolute;
+    width: 40%;
+    height: 2px;
+    background-color: #ddd;
+    transform: translateY(-50%);
+    transform: translateX(40px);
+}
+
+.status-item:last-child .circle::after {
+  display: none;
+}
+
+.line {
+  flex: 1;
+  height: 2px;
+  background-color: #ddd; /* default line color */
+}
+
+.current-status .circle {
+  background-color: #2b4c65; /* blue background for active circle */
+  color: white;
+}
+
+.status-description {
+  text-align: center;
+  padding-bottom: 20px;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.status-name {
+  position: absolute;
+  font-size: 16px;
+  color: #333;
+  margin-left: -10px;
+}
+
+.status-item:nth-child(odd) .status-name {
+  top: -30px;
+  left: 0%;
+}
+
+.status-item:nth-child(even) .status-name {
+  left: 10%;
+}
+
+</style>
 
 <script setup>
 import { ref, shallowRef } from 'vue';
@@ -181,6 +289,7 @@ const filter = ref({
   clientId: null,
   status:null,
 })
+
 // Data
 const currentPage = ref(1)
 const itemsPerPage = ref(10)
@@ -228,19 +337,6 @@ const openDialog = (caseDetails) => {
   isDialogOpen.value = true;
 };
 
-/*const loadCaseDetails = async (caseItem) => {
-  dialogVisible.value = true;
-
-  
-  try {
-    const { data } = await fetchData.$get(`/Case/DisplayCaseDetails/${caseItem}`);
-    selectedCase.value = data;
-    dialogVisible.value = true;
-  } catch (error) {
-    console.error('Error fetching case details:', error);
-  }
-}*/
-
 // Define reactive variable for adding case modal
 const addCaseModal = ref(false);
 
@@ -268,4 +364,14 @@ const addCase = async () => {
   }
 };
 
+// Assuming you have a statusList and currentStatusIndex in your component data
+const statusList = ref([
+  { id: 1, name: 'Active' },
+  { id: 2, name: 'Under Review' },
+  { id: 3, name: 'Negotiation' },
+  { id: 4, name: 'Court Proceedings' },
+  { id: 5, name: 'In Hold' },
+  { id: 6, name: 'Settled' },
+  // ... other statuses ...
+]);
 </script>

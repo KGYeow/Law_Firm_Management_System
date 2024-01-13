@@ -47,6 +47,7 @@
               :headers="headers"
               :items="caseList"
               :items-per-page="itemsPerPage"
+              hover
             >
               <template v-slot:item="{ item }">
                 <tr @click="loadCaseDetails(item)">
