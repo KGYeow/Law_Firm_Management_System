@@ -1,7 +1,7 @@
 <template>
   <v-row>
     <v-col cols="12" md="12">
-      <UiParentCard title="Clients"> 
+      <UiParentCard title="Clients">
         <div class="pa-7 pt-1 text-body-1">
           <v-data-table
             density="comfortable"
@@ -11,16 +11,26 @@
             :items-per-page="itemsPerPage"
             hover
           >
-            <template v-slot:item="{ item }">
+            <template #item="{ item }">
               <tr>
                 <td>{{ clientList.indexOf(item) + 1 }}</td>
-                <td>{{ item.fullName }}</td>
+                <td>
+                  <a :href="`/contacts/clients/${item.id}`" class="row-link">{{ item.fullName }}</a>
+                </td>
                 <td>{{ item.email }}</td>
                 <td>{{ item.phoneNumber ?? '-' }}</td>
                 <td>{{ item.address ?? '-' }}</td>
+                <td>
+                  <ul class="m-0 list-inline hstack">
+                    <li>
+                      <v-tooltip text="View Details" activator="parent" location="top" offset="2"/>
+                      <v-btn icon="mdi-open-in-new" size="small" variant="text" :href="`/contacts/clients/${item.id}`"/>
+                    </li>
+                  </ul>
+                </td>
               </tr>
             </template>
-            <template v-slot:bottom>
+            <template #bottom>
               <div class="d-flex justify-content-end pt-2">
                 <el-pagination
                   layout="total, prev, pager, next"
@@ -39,7 +49,7 @@
 
 <script setup>
 import { AddressBookIcon } from "vue-tabler-icons"
-import UiParentCard from "@/components/shared/UiParentCard.vue";
+import UiParentCard from "@/components/shared/UiParentCard.vue"
 
 // Data
 const currentPage = ref(1)
@@ -50,6 +60,7 @@ const headers = ref([
   { key: "email" , title: "Email" },
   { key: "phoneNumber" , title: "Phone No." },
   { key: "address" , title: "Address" },
+  { key: "actions", sortable: false, width: 0 },
 ])
 const { data: clientList } = await fetchData.$get("/Client")
 

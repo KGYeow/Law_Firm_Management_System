@@ -23,16 +23,16 @@ namespace Law_Firm_Management_System_API.Controllers
             return Ok(l);
         }
 
-        // Get the assigned partner of a specific paralegal.
+        // Get the assigned paralegal of a specific partner.
         [HttpGet]
-        [Route("AssignedPartner")]
-        public IActionResult GetAssignedPartner()
+        [Route("AssignedParalegal")]
+        public IActionResult GetAssignedParalegal()
         {
             var user = userService.GetUser(User);
-            var assignedPartner = context.Partners.Where(a => a.ParalegalUserId == user.Id)
-                .Select(x => new { fullName = x.User.FullName, email = x.User.Email, phoneNumber = x.PhoneNumber })
+            var assignedParalegal = context.Partners.Where(a => a.UserId == user.Id)
+                .Select(x => new { userId = x.ParalegalUserId, fullName = x.ParalegalUser.User.FullName, email = x.ParalegalUser.User.Email, phoneNumber = x.ParalegalUser.PhoneNumber })
                 .FirstOrDefault();
-            return Ok(assignedPartner);
+            return Ok(assignedParalegal);
         }
     }
 }

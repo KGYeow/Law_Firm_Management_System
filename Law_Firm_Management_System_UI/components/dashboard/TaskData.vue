@@ -6,7 +6,7 @@
           <div>
             <v-card-title class="fs-6 text-black-50">Today's Tasks</v-card-title>
             <v-card-text class="p-0 pt-2">
-              <RouterLink to="/tasks" class="text-primary">
+              <RouterLink to="/tasks" class="text-secondary">
                 <i class="mdi mdi-arrow-right"></i>
                 Check your daily tasks
               </RouterLink>

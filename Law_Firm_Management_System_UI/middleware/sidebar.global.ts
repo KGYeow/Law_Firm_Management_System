@@ -3,7 +3,7 @@ import sidebarItems from '@/data/sidebarItem'
 export default defineNuxtRouteMiddleware(async(to, from) => {
   const baseURL = useRuntimeConfig().public.baseURL
   const { data: user, status } = useAuth()
-  
+
   // If user is authenticated user
   if (status.value == "authenticated") {
     // Restricted and unrestricted access page list (Not from sidebar)
@@ -16,13 +16,17 @@ export default defineNuxtRouteMiddleware(async(to, from) => {
 
     // Check if the user is authorized to access the requested page
     const isAuthorized = checkAuthorization(filteredSidebarMenu, to.path)
-
+    
     // Redirect to the dashboard if not authorized
     if (!isAuthorized) {
-      if (user.value?.userRoleId == 3)
+      if (user.value?.userRoleId == 3) {
         return navigateTo('/dashboard-client')
-      else
+      }
+      else {
+        if (to.path.match("/contacts/clients")) return
+        if (user.value?.userRoleId == 1 && to.path.match("/configuration/user-settings")) return 
         return navigateTo('/dashboard')
+      }
     }
   }
 })

@@ -11,11 +11,26 @@
             :items-per-page="itemsPerPage"
             hover
           >
-            <!-- <template v-slot:item.phoneNumber="{ item }">
-              <span v-if="item.phoneNumber">{{ item.phoneNumber }}</span>
-              <span v-else>-</span>
-            </template> -->
-            <template v-slot:bottom>
+            <template #item="{ item }">
+              <tr>
+                <td>{{ item.id }}</td>
+                <td>
+                  <a :href="`/configuration/user-settings/${item.id}`" class="row-link">{{ item.username }}</a>
+                </td>
+                <td>{{ item.fullName }}</td>
+                <td>{{ item.email }}</td>
+                <td>{{ item.role }}</td>
+                <td>
+                  <ul class="m-0 list-inline hstack">
+                    <li>
+                      <v-tooltip text="View Details" activator="parent" location="top" offset="2"/>
+                      <v-btn icon="mdi-open-in-new" size="small" variant="text" :href="`/configuration/user-settings/${item.id}`"/>
+                    </li>
+                  </ul>
+                </td>
+              </tr>
+            </template>
+            <template #bottom>
               <div class="d-flex justify-content-end pt-2">
                 <el-pagination
                   layout="total, prev, pager, next"
@@ -34,7 +49,7 @@
 
 <script setup>
 import { SettingsIcon } from "vue-tabler-icons"
-import UiParentCard from "@/components/shared/UiParentCard.vue";
+import UiParentCard from "@/components/shared/UiParentCard.vue"
 
 // Data
 const currentPage = ref(1)
@@ -44,7 +59,8 @@ const headers = ref([
   { key: "username", title: "Username" },
   { key: "fullName", title: "Full Name" },
   { key: "email" , title: "Email" },
-  { key: "role", title: "User Type" },
+  { key: "role", title: "User Role" },
+  { key: "actions", sortable: false, width: 0 },
 ])
 const { data: userList } = await fetchData.$get("/User")
 

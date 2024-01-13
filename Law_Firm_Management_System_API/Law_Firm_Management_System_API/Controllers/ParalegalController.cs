@@ -31,16 +31,27 @@ namespace Law_Firm_Management_System_API.Controllers
             return Ok(l);
         }
 
-        // Get the assigned paralegal of a specific partner.
+        // Get the specific paralegal's information.
         [HttpGet]
-        [Route("AssignedParalegal")]
-        public IActionResult GetAssignedParalegal()
+        [Route("Info/{ParalegalUserId}")]
+        public IActionResult GetClientInfo(int paralegalUserId)
+        {
+            var paralegalInfo = context.Paralegals.Include(a => a.User).Where(a => a.UserId == paralegalUserId)
+                .Select(x => new { userId = x.UserId, fullName = x.User.FullName, email = x.User.Email, phoneNumber = x.PhoneNumber, address = x.Address, isActive = x.IsActive, profilePhoto = x.User.ProfilePhoto })
+                .FirstOrDefault();
+            return Ok(paralegalInfo);
+        }
+
+        // Get the assigned partner of a specific paralegal.
+        [HttpGet]
+        [Route("AssignedPartner")]
+        public IActionResult GetAssignedPartner()
         {
             var user = userService.GetUser(User);
-            var assignedParalegal = context.Partners.Where(a => a.UserId == user.Id)
-                .Select(x => new { userId = x.ParalegalUserId, fullName = x.ParalegalUser.User.FullName, email = x.ParalegalUser.User.Email, phoneNumber = x.ParalegalUser.PhoneNumber })
+            var assignedPartner = context.Partners.Where(a => a.ParalegalUserId == user.Id)
+                .Select(x => new { fullName = x.User.FullName, email = x.User.Email, phoneNumber = x.PhoneNumber })
                 .FirstOrDefault();
-            return Ok(assignedParalegal);
+            return Ok(assignedPartner);
         }
     }
 }
