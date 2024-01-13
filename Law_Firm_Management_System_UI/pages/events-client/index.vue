@@ -92,13 +92,13 @@
               </v-card-subtitle>
               <v-divider class="my-3"/>
               <el-scrollbar class="text-body-1" height="60px">
-                <div class="d-flex pt-sm-2 align-center">
+                <div class="d-flex pt-sm-2 align-center ">
                   <v-avatar
-                    class="mb-3"
+                    class="mb-0"
                     image="/images/users/avatar.jpg"
                     size="30"
                   />
-                  <strong class="ms-5">{{ item.partnerName }}</strong>
+                  <strong class="ms-5">{{ item.caseName }}</strong>
                 </div>
               </el-scrollbar>
             </v-card-item>
