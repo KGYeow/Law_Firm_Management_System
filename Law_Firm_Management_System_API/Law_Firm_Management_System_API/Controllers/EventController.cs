@@ -4,6 +4,7 @@ using Law_Firm_Management_System_API.Service;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using static Law_Firm_Management_System_API.Controllers.CaseController;
+using static Law_Firm_Management_System_API.Controllers.DocumentController;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Law_Firm_Management_System_API.Controllers
@@ -111,16 +112,50 @@ namespace Law_Firm_Management_System_API.Controllers
             return Ok(l);
         }
 
-        // Get the list of events from client's perspective.
+        // Get the list of upcoming events from client's perspective.
         [HttpGet]
-        [Route("ClientPerspectiveEventList")]
-        public IActionResult GetEventClientPerspective([FromQuery] EventFilterDto dto)
+        [Route("ClientPerspectiveUpcomingEventList")]
+        public IActionResult GetUpcomingEventClientPerspective([FromQuery] EventFilterDto dto)
         {
             var user = userService.GetUser(User);
 
             var l = context.Events
                 .Include(a => a.Case)
                 .OrderByDescending(a => a.CreatedTime)
+                .Where(a => a.IsCompleted == false)
+                .Where(a => a.Client.UserId == user.Id)// Filter cases by assigned partner
+                .Select(x => new {
+                    id = x.Id,
+                    name = x.Name,
+                    caseID = x.Case.Id,
+                    caseName = x.Case.Name,
+                    partnerName = x.PartnerUser.FullName,
+                    clientId = x.ClientId,
+                    createdTime = x.CreatedTime,
+                    eventTime = x.EventTime,
+                    isCompleted = x.IsCompleted
+                });
+            if (dto.CaseId != null)
+                l = l.Where(a => a.caseID == dto.CaseId);
+            if (dto.IsCompleted != null)
+                l = l.Where(a => a.isCompleted == dto.IsCompleted);
+
+            l.ToList();
+
+            return Ok(l);
+        }
+
+        // Get the list of past events from client's perspective.
+        [HttpGet]
+        [Route("ClientPerspectivePastEventList")]
+        public IActionResult GetPastEventClientPerspective([FromQuery] EventFilterDto dto)
+        {
+            var user = userService.GetUser(User);
+
+            var l = context.Events
+                .Include(a => a.Case)
+                .OrderByDescending(a => a.CreatedTime)
+                .Where(a => a.IsCompleted == true)
                 .Where(a => a.Client.UserId == user.Id)// Filter cases by assigned partner
                 .Select(x => new {
                     id = x.Id,
@@ -156,7 +191,6 @@ namespace Law_Firm_Management_System_API.Controllers
             if (selectedCase == null)
             {
                 // Handle the case where the specified CaseId is not valid
-                //return BadRequest(new Response { Status = "Error", Message = "Invalid CaseId" });
                 throw new Exception("Invalid CaseId");
             }
 
@@ -205,6 +239,21 @@ namespace Law_Firm_Management_System_API.Controllers
 
             return Ok(new Response { Status = "Success", Message = "Event status updated successfully" });
         }
+
+        // Rename the existing event.
+        [HttpPut]
+        [Route("Rename")]
+        public IActionResult Rename([FromBody] EventRenameDto dto)
+        {
+            var user = userService.GetUser(User);
+            var existingDoc = context.Events.Where(a => a.Id == dto.EventId).FirstOrDefault();
+
+            existingDoc.Name = dto.Name;
+            context.Events.Update(existingDoc);
+            context.SaveChanges();
+
+            return Ok(new Response { Status = "Success", Message = "Event renamed successfully" });
+        }
         public class EventFilterDto
         {
             public int? CaseId { get; set; }
@@ -218,6 +267,11 @@ namespace Law_Firm_Management_System_API.Controllers
             public int? CaseId { get; set; }
             public DateTime EventTime { get; set; }
 
+        }
+        public class EventRenameDto
+        {
+            public int EventId { get; set; }
+            public string Name { get; set; } = null!;
         }
     }
 }
