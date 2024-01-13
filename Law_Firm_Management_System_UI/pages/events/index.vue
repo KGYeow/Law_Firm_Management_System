@@ -89,6 +89,10 @@
                         </template>
                       </el-popconfirm>
                     </li>
+                    <li>
+                      <v-tooltip text="Rename" activator="parent" location="top" offset="2"/>
+                      <v-btn icon="mdi-rename-outline" size="small" variant="text" @click="renameEventGet(item.id, item.name)"/>
+                    </li>
                   </ul>
                 </td>
               </tr>
@@ -211,6 +215,15 @@
       </form>
     </v-card>
   </v-dialog>
+
+  <!-- Rename Event Modal -->
+  <SharedUiModal v-model="renameEventModal" title="Rename Event" width="500">
+    <EventRenameForm
+      :eventId="renameEventDetails.eventId"
+      :eventName="renameEventDetails.name"
+      @close-modal="(e) => renameEventModal = e"
+    />
+  </SharedUiModal>
 </template>
 
 <script setup>
@@ -240,8 +253,6 @@ const headers = ref([
   { key: "isCompleted", title: "Status"},
 ])
 
-
-// Data
 const { handleSubmit } = useForm({
   validationSchema: {
     name(value) {
@@ -256,6 +267,11 @@ const { handleSubmit } = useForm({
   }
 })
 
+const renameEventDetails = ref({
+  eventId: null,
+  name: null,
+})
+const renameEventModal = ref(false)
 
 // Define reactive variables for dialog
 const { data: eventList } = await fetchData.$get("/Event/PartnerPerspectiveEventList", filter.value)
@@ -311,6 +327,13 @@ const addEvent = handleSubmit(async(values) => {
     }
   } catch { ElNotification.error({ message: "There is a problem with the server. Please try again later." }) }
 })
+
+//Rename Event Methods
+const renameEventGet = (eventId, eventName) => {
+  renameEventDetails.value.eventId = eventId
+  renameEventDetails.value.name = eventName
+  renameEventModal.value = true
+}
 
 //Complete event status
 const updateEvent = async(eventId) => {
