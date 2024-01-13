@@ -2,7 +2,7 @@
   <v-row>
       <v-col cols="12">
         <h5 class="text-h5 mb-6 pl-7 pt-7 ps-0 d-flex align-center">
-          Upcoming Events
+          Events Related
         </h5>
           <v-row>
             <!-- Filters -->
@@ -65,18 +65,19 @@
               </div>
             </template>
             <template v-slot:item="{ item }">
-              <v-col class="pb-8" cols="4">
+              <v-col class="pb-8" cols="3">
                 <v-card elevation="10" class="withbg">
                   <el-tag
-                    :type="item.status ? 'success' : 'danger'"
+                    :type="item.isCompleted ? 'success' : 'danger'"
                     class="position-absolute"
                     effect="dark"
                     style="bottom: -10px; right: -15px; border-radius: 10px;"
                   >
-                    <i class="mdi mdi-check" v-if="item.status"></i>
+                    <i class="mdi mdi-check" v-if="item.isCompleted"></i>
                     <i class="mdi mdi-close" v-else></i>
-                    {{ item.status ? 'Completed' : 'Incompleted' }}
+                    {{ item.isCompleted ? 'Completed' : 'Incompleted' }}
                   </el-tag>
+
 
                   <v-card-actions
                     class="p-0 text-subtitle-2 fw-bold justify-content-center text-white"
@@ -121,22 +122,7 @@
         </v-data-table>
       </v-col>
     </v-row>
-    <!-- Rightbar -->
-  <v-navigation-drawer
-    elevation="0"
-    location="right"
-    width="350"
-    absolute
-    permanent
-  >
-    <el-scrollbar>
-      <div class="d-flex flex-column">
-        <!-- Calendar -->
-        <DashboardCalendar/>
-        
-      </div>
-    </el-scrollbar>
-  </v-navigation-drawer>
+   
 </template>
 
 <script setup>

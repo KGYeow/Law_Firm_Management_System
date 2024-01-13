@@ -79,7 +79,7 @@
                     <li>
                       <v-tooltip text="Update Status" activator="parent" location="top" offset="2"/>
                       <el-popconfirm
-                        title="Are you sure to complete this event?"
+                        title="Are you sure to update status of this event?"
                         icon-color="orange"
                         width="190"
                         @confirm="updateEvent(item.id)"
