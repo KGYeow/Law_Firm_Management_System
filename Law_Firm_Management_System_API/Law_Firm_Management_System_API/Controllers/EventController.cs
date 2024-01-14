@@ -215,7 +215,7 @@ namespace Law_Firm_Management_System_API.Controllers
                 {
                     UserId = (int)client.UserId,
                     Title = "New Created Event",
-                    Description = "There is a new event created by the partner, " + user.FullName + ", for you.",
+                    Description = "There is a event '"+ dto.Name +"' created by the partner, " + user.FullName + ", for you.",
                     IsRead = false,
                 };
                 context.Notifications.Add(notification);
@@ -225,16 +225,16 @@ namespace Law_Firm_Management_System_API.Controllers
             return Ok(new Response { Status = "Success", Message = "New event created successfully" });
         }
 
-        // Update the current event.
+        // Update the status of current event.
         [HttpPut]
         [Route("Update/{eventId}")]
         public IActionResult Update(int eventId)
         {
             var user = userService.GetUser(User);
-            var existingDoc = context.Events.Where(a => a.Id == eventId).FirstOrDefault();
+            var existingEvt = context.Events.Where(a => a.Id == eventId).FirstOrDefault();
 
-            existingDoc.IsCompleted = !existingDoc.IsCompleted; ;
-            context.Events.Update(existingDoc);
+            existingEvt.IsCompleted = !existingEvt.IsCompleted; ;
+            context.Events.Update(existingEvt);
             context.SaveChanges();
 
             return Ok(new Response { Status = "Success", Message = "Event status updated successfully" });
@@ -246,14 +246,28 @@ namespace Law_Firm_Management_System_API.Controllers
         public IActionResult Rename([FromBody] EventRenameDto dto)
         {
             var user = userService.GetUser(User);
-            var existingDoc = context.Events.Where(a => a.Id == dto.EventId).FirstOrDefault();
+            var existingEvt = context.Events.Where(a => a.Id == dto.EventId).FirstOrDefault();
 
-            existingDoc.Name = dto.Name;
-            context.Events.Update(existingDoc);
+            existingEvt.Name = dto.Name;
+            context.Events.Update(existingEvt);
             context.SaveChanges();
 
             return Ok(new Response { Status = "Success", Message = "Event renamed successfully" });
         }
+
+        // Delete the event permanently.
+        [HttpDelete]
+        [Route("{EventId}")]
+        public IActionResult Delete(int eventId)
+        {
+            var user = userService.GetUser(User);
+            var existingEvt = context.Events.Where(a => a.Id == eventId).FirstOrDefault();
+            context.Events.Remove(existingEvt);
+            context.SaveChanges();
+
+            return Ok(new Response { Status = "Success", Message = "Event deleted successfully" });
+        }
+
         public class EventFilterDto
         {
             public int? CaseId { get; set; }

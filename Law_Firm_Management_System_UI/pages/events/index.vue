@@ -93,6 +93,19 @@
                       <v-tooltip text="Rename" activator="parent" location="top" offset="2"/>
                       <v-btn icon="mdi-rename-outline" size="small" variant="text" @click="renameEventGet(item.id, item.name)"/>
                     </li>
+                    <li>
+                      <v-tooltip text="Delete Permanently" activator="parent" location="top" offset="2"/>
+                      <el-popconfirm
+                        title="Are you sure to delete this document permanently?"
+                        icon-color="red"
+                        width="190"
+                        @confirm="deleteEvent(item.id)"
+                      >
+                        <template #reference>
+                          <v-btn icon="mdi-delete-forever-outline" size="small" variant="text"/>
+                        </template>
+                      </el-popconfirm>
+                    </li>
                   </ul>
                 </td>
               </tr>
@@ -349,4 +362,17 @@ const updateEvent = async(eventId) => {
   } catch { ElNotification.error({ message: "There is a problem with the server. Please try again later." }) }
 }
 
+//Delete event
+const deleteEvent = async(eventId) => {
+  try {
+    const result = await fetchData.$delete(`/Event/${eventId}`)
+    if (!result.error) {
+      ElNotification.success({ message: result.message })
+      refreshNuxtData()
+    }
+    else {
+      ElNotification.error({ message: result.message })
+    }
+  } catch { ElNotification.error({ message: "There is a problem with the server. Please try again later." }) }
+}
 </script>
