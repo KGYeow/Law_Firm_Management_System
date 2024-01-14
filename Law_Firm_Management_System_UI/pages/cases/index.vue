@@ -1,3 +1,4 @@
+//Case.vue
 <template>
   <v-row>
     <v-col>
@@ -70,12 +71,25 @@
                   <el-tag  v-else-if="item.status === 'Court Proceedings'">Court Proceedings</el-tag>
                   <el-tag type="danger" v-else-if="item.status === 'On Hold'">On Hold</el-tag>
                   <el-tag type="success" v-else>Settled</el-tag>
-                </td>
-                <td class="list-inline hstack">
-                  <li>
-                    <v-tooltip text="Case Detail" activator="parent" location="top" offset="2"/>
-                    <v-icon @click.stop="openDialog(item)">mdi-open-in-new</v-icon>
-                  </li>
+                  </td>
+                  <td class="list-inline hstack">
+                    <li>
+                      <v-tooltip text="Case Details" activator="parent" location="top" offset="2"/>
+                      <v-icon @click.stop="openDialog(item)">mdi-open-in-new</v-icon>
+                    </li>
+                    <li>
+                      <v-tooltip text="Delete Permanently" activator="parent" location="top" offset="2"/>
+                      <el-popconfirm
+                        title="Are you sure to delete this document permanently?"
+                        icon-color="red"
+                        width="190"
+                        @confirm="deleteCase(item.id)"
+                      >
+                        <template #reference>
+                          <v-btn icon="mdi-delete" size="small" variant="text"/>
+                        </template>
+                      </el-popconfirm>
+                    </li>
                 </td>
               </tr>
             </template>
@@ -137,14 +151,24 @@
   </v-dialog>
   
   <!--Case Details Dialog-->
-  <v-dialog v-model="isDialogOpen" max-width="600" class="mx-auto my-12">
+  <v-dialog v-model="isDialogOpen" max-width="700" class="mx-auto my-12">
     <v-card class="withbg rounded-3 overflow-visible">
       <v-card-title class="px-10 py-5 d-sm-flex align-center justify-space-between bg-background rounded-top-3">
           <h5 class="text-h5 mb-0 d-flex align-center">
             Case Name : {{ selectedCaseDetails.name }} 
-            <v-icon class="mr-2">mdi-information</v-icon>
+            <ul class="m-0 list-inline hstack">
+              <li>
+                <v-tooltip text="Rename" activator="parent" location="top" offset="2"/>
+                <v-btn icon="mdi-rename-outline" size="small" variant="text" @click="renameCaseGet(selectedCaseDetails.id, selectedCaseDetails.name)"/>
+              </li>
+            </ul>
           </h5>
-        <v-btn density="compact" variant="plain" icon="mdi-close" @click="isDialogOpen = false"/>
+          <ul class="m-0 list-inline hstack">
+            <li>
+              <v-tooltip text="Close" activator="parent" location="top" offset="2"/>
+              <v-btn density="compact" variant="plain" icon="mdi-close" @click="isDialogOpen = false"/>
+            </li>
+          </ul>
       </v-card-title>
     <v-card-text>
       <!-- Display case details here -->
@@ -153,20 +177,36 @@
             <div class=" d-flex flex-column case-details-container pa-md-4">
               <div class="case-detail-item">
                 <strong>Client Name:</strong>
-                {{ selectedCaseDetails.clientName }}
+                  <span class="client-name">{{ selectedCaseDetails.clientName }}</span>
+                  <v-btn icon size="small" variant="text" @click="editClientGet(selectedCaseDetails.id, selectedCaseDetails.clientId)">
+                    <v-tooltip text="Edit Client" location="top" offset="2"/>
+                    <v-icon>mdi-rename-outline</v-icon>
+                  </v-btn>
               </div>
             </div>
           <!-- Status Bar -->
-          <div class="status-container">
-            <div class="pa-md-4"><strong>Current Case Status</strong></div>
-            <div class="status-bar">
-            <div v-for="(status, index) in statusList" :key="index" class="status-item" :class="{ 'current-status': index === selectedCaseDetails.statusId - 1 }">
-              <div class="status-part">
-                <div class="circle">{{ status.id }}</div>
-                <span class="status-name" :class="{ 'bold': index === selectedCaseDetails.statusId - 1 }">{{ status.name }}</span>
+            <div class="status-container">
+              <div class="pa-md-4"><strong>Current Case Status</strong></div>
+              <div class="status-bar">
+                <div
+                  v-for="(status, index) in statusList"
+                  :key="index"
+                  class="status-item"
+                  :class="{ 'current-status': index === selectedCaseDetails.statusId - 1 }"
+                >
+                  <div class="status-part">
+                    <div
+                      class="circle"
+                      @click="changeCaseStatus(selectedCaseDetails.id, status.name)"
+                    >
+                      {{ status.id }}
+                    </div>
+                    <span class="status-name" :class="{ 'bold': index === selectedCaseDetails.statusId - 1 }">
+                      {{ status.name }}
+                    </span>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
           <!--Current Status Description-->
           <div class="status-description">
               <strong>{{ selectedCaseDetails.statusDescription }}</strong>
@@ -195,95 +235,50 @@
           </v-row>
         </v-card-item>
         </v-card>
+        <!-- Display the related document information if available -->
+        <div v-if="selectedCaseDetails.documentName" class=" d-flex flex-column case-details-container pa-md-4">
+          <v-divider vertical class="mx-5 my-0" style="border-color: white !important; opacity: 0.5;"></v-divider>
+          <div>
+            <div class="case-detail-item"><strong>Related Document:</strong> {{ selectedCaseDetails.documentName }}</div>
+          </div>
         </div>
+        <!-- Display a message if no related document -->
+        <div v-else class=" d-flex flex-column case-details-container pa-md-4">
+          <v-divider vertical class="mx-5 my-0" style="border-color: white !important; opacity: 0.5;"></v-divider>
+          <div>
+            <div class="case-detail-item"><strong>No Related Document</strong></div>
+          </div>
+        </div>
+      </div>
       </v-card-text>
     </v-card>
   </v-dialog>
+
+  <!--Rename Case-->
+  <SharedUiModal v-model="renameCaseModal" title="Rename Case" width="500">
+    <CaseRenameForm
+      :caseId="renameCaseDetails.caseId"
+      :caseName="renameCaseDetails.name"
+      @close-modal="(e) => renameCaseModal = e"
+    />
+  </SharedUiModal>
+
+  <!--Edit Client-->
+  <SharedUiModal v-model="editClientModal" title="Edit Client" width="500">
+  <CaseEditClientForm
+    :caseId="editClientDetails.caseId"
+    :clientId="editClientDetails.clientId"
+    @close-modal="(e) => editClientModal = e"
+  />
+</SharedUiModal>
 </template>
-
-<style>
-.status-bar {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 30px 20px 60px 20px;
-}
-
-.status-item {
-  display: flex;
-  align-items: center;
-  position: relative;
-}
-
-.circle {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background-color: #ddd; /* default circle color */
-  margin-right: 40px;
-  font-size: 12px; /* Adjust font size as needed */
-}
-
-.circle::after {
-    content: "";
-    position: absolute;
-    width: 40%;
-    height: 2px;
-    background-color: #ddd;
-    transform: translateY(-50%);
-    transform: translateX(40px);
-}
-
-.status-item:last-child .circle::after {
-  display: none;
-}
-
-.line {
-  flex: 1;
-  height: 2px;
-  background-color: #ddd; /* default line color */
-}
-
-.current-status .circle {
-  background-color: #2b4c65; /* blue background for active circle */
-  color: white;
-}
-
-.status-description {
-  text-align: center;
-  padding-bottom: 20px;
-}
-
-.bold {
-  font-weight: bold;
-}
-
-.status-name {
-  position: absolute;
-  font-size: 16px;
-  color: #333;
-  margin-left: -10px;
-}
-
-.status-item:nth-child(odd) .status-name {
-  top: -30px;
-  left: 0%;
-}
-
-.status-item:nth-child(even) .status-name {
-  left: 10%;
-}
-
-</style>
 
 <script setup>
 import { ref, shallowRef } from 'vue';
 import dayjs from 'dayjs';
 import { BriefcaseIcon } from "vue-tabler-icons"
 import UiParentCard from "@/components/shared/UiParentCard.vue";
+import { defineEmits } from 'vue';
 
 const filter = ref({
   clientId: null,
@@ -308,6 +303,18 @@ const headers = ref([
 const { data: caseList } = await fetchData.$get("/Case/PartnerPerspectiveCaseList", filter.value)
 const { data: clientList } = await fetchData.$get("/Client")
 
+const renameCaseDetails = ref({
+  caseId: null,
+  name: null,
+})
+const renameCaseModal = ref(false)
+
+const editClientDetails = ref({
+  caseId: null,
+  clientId: null,
+});
+const editClientModal = ref(false);
+
 // Head
 useHead({
   title: "Cases | CaseCraft",
@@ -329,7 +336,7 @@ const pageCount = () => {
   return Math.ceil(caseList.value.length / itemsPerPage.value)
 }
 
-//Open Dialogs
+//Open Case Details Dialogs
 const isDialogOpen = ref(false);
 const selectedCaseDetails = ref(null);
 const openDialog = (caseDetails) => {
@@ -364,6 +371,19 @@ const addCase = async () => {
   }
 };
 
+const deleteCase = async(caseId) => {
+  try {
+    const result = await fetchData.$delete(`/Case/${caseId}`)
+    if (!result.error) {
+      ElNotification.success({ message: result.message })
+      refreshNuxtData()
+    }
+    else {
+      ElNotification.error({ message: result.message })
+    }
+  } catch { ElNotification.error({ message: "There is a problem with the server. Please try again later." }) }
+}
+
 // Assuming you have a statusList and currentStatusIndex in your component data
 const statusList = ref([
   { id: 1, name: 'Active' },
@@ -374,4 +394,54 @@ const statusList = ref([
   { id: 6, name: 'Settled' },
   // ... other statuses ...
 ]);
+
+//Rename Event Methods
+const renameCaseGet = (caseId, caseName) => {
+  renameCaseDetails.value.caseId = caseId
+  renameCaseDetails.value.name = caseName
+  renameCaseModal.value = true
+}
+
+const props = defineProps({
+  caseId: Number,
+});
+
+// Edit Client Event Methods
+const editClientGet = (caseId, clientId) => {
+  editClientDetails.value.caseId = caseId;
+  editClientDetails.value.clientId = clientId;
+  editClientModal.value = true;
+};
+
+//Change Case Status
+const changeCaseStatus = async (caseId, newStatus) => {
+  try {
+    console.log('Changing status for caseId:', caseId, 'to', newStatus);
+
+    const response = await fetchData.$put(`/Case/ChangeStatus/${caseId}`, {
+      NewStatus: newStatus,
+    });
+
+    console.log('Response from server:', response);
+
+    if (response && response.data) {
+      // Update the ClosedTime if the new status is "Settled"
+      if (newStatus === 'Settled') {
+        // Make a new request to update the ClosedTime
+        const closedTimeResponse = await fetchData.$put(`/Case/UpdateClosedTime/${caseId}`);
+        console.log('ClosedTime updated:', closedTimeResponse);
+      }
+
+      // Optionally, you can refresh the case details or perform other actions
+      // based on the successful status change.
+      ElNotification.success({ message: response.data.message });
+      refreshNuxtData(); // Refresh the case list or perform any necessary actions
+    } else {
+      ElNotification.error({ message: "Failed to change case status" });
+    }
+  } catch (error) {
+    console.error('Error while changing case status:', error);
+    ElNotification.error({ message: "There is a problem with the server. Please try again later." });
+  }
+};
 </script>

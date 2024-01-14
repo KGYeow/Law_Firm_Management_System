@@ -157,6 +157,144 @@ namespace Law_Firm_Management_System_API.Controllers
             return Ok(new Response { Status = "Success", Message = "New case created successfully" });
         }
 
+        // Delete the event permanently.
+        [HttpDelete]
+        [Route("{CaseId}")]
+        public IActionResult Delete(int caseId)
+        {
+            var user = userService.GetUser(User);
+            var existingCase = context.Cases.Where(a => a.Id == caseId).FirstOrDefault();
+            context.Cases.Remove(existingCase);
+            context.SaveChanges();
+
+            return Ok(new Response { Status = "Success", Message = "Event deleted successfully" });
+        }
+
+        // Rename the existing Case.
+        [HttpPut]
+        [Route("Rename")]
+        public IActionResult Rename([FromBody] CaseRenameDto dto)
+        {
+            var user = userService.GetUser(User);
+
+            var existingDoc = context.Cases
+                .FirstOrDefault(c => c.Id == dto.CaseId);
+
+            existingDoc.Name = dto.CaseName;
+            existingDoc.UpdatedTime = DateTime.Now; // Update the updatedTime property
+            context.Cases.Update(existingDoc);
+            context.SaveChanges();
+
+            return Ok(new Response { Status = "Success", Message = "Case renamed successfully" });
+        }
+
+        //Edit Client of Case
+        [HttpPut]
+        [Route("EditClient")]
+        public IActionResult EditClient([FromBody] EditClientDto dto)
+        {
+            var user = userService.GetUser(User);
+            var existingCase = context.Cases
+                .Include(c => c.Client)  // Make sure to include the Client navigation property
+                .FirstOrDefault(c => c.Id == dto.CaseId);
+
+            if (existingCase == null)
+            {
+                return NotFound(new Response { Status = "Error", Message = "Case not found" });
+            }
+
+            // Check if the client ID has changed
+            if (existingCase.ClientId != dto.ClientId)
+            {
+                // Fetch the new client
+                var newClient = context.Clients.FirstOrDefault(client => client.Id == dto.ClientId);
+
+                if (newClient == null)
+                {
+                    return NotFound(new Response { Status = "Error", Message = "Client not found" });
+                }
+
+                // Update the case with the new client
+                existingCase.Client = newClient;  // Set the Client navigation property
+                existingCase.ClientId = newClient.Id;
+                existingCase.UpdatedTime = DateTime.Now; // Update the updatedTime property
+            }
+
+            context.Cases.Update(existingCase);
+            context.SaveChanges();
+
+            return Ok(new Response { Status = "Success", Message = "Client updated successfully" });
+        }
+
+        [HttpPut]
+        [Route("UpdateClosedTime/{caseId}")]
+        public IActionResult UpdateClosedTime(int caseId)
+        {
+            var user = userService.GetUser(User);
+
+            var existingCase = context.Cases
+                .Include(c => c.Status)  // Include the Status navigation property
+                .FirstOrDefault(c => c.Id == caseId && c.PartnerUserId == user.Id);
+
+            if (existingCase == null)
+            {
+                return NotFound(new Response { Status = "Error", Message = "Case not found" });
+            }
+
+            // Check if the case status is already Settled
+            if (existingCase.Status.StatusName != "Settled")
+            {
+                return BadRequest(new Response { Status = "Error", Message = "Invalid operation. Case status must be Settled." });
+            }
+
+            // Update the ClosedTime
+            existingCase.ClosedTime = DateTime.Now;
+            context.Cases.Update(existingCase);
+            context.SaveChanges();
+
+            return Ok(new Response { Status = "Success", Message = "ClosedTime updated successfully" });
+        }
+
+        // Change the case status
+        [HttpPut]
+        [Route("ChangeStatus/{caseId}")]
+        public IActionResult ChangeCaseStatus(int caseId, [FromBody] ChangeStatusDto dto)
+        {
+            var user = userService.GetUser(User);
+
+            var existingCase = context.Cases
+                .Include(c => c.Status)  // Include the Status navigation property
+                .FirstOrDefault(c => c.Id == caseId && c.PartnerUserId == user.Id);
+
+            if (existingCase == null)
+            {
+                return NotFound(new Response { Status = "Error", Message = "Case not found" });
+            }
+
+            // Check if the new status is valid
+            var newStatus = context.CaseStatuses.FirstOrDefault(s => s.StatusName == dto.NewStatus);
+
+            if (newStatus == null)
+            {
+                return BadRequest(new Response { Status = "Error", Message = "Invalid status" });
+            }
+
+            // Update the case with the new status
+            existingCase.Status = newStatus;  // Set the Status navigation property
+            existingCase.StatusId = newStatus.Id;
+            existingCase.UpdatedTime = DateTime.Now; // Update the updatedTime property
+            context.Cases.Update(existingCase);
+            context.SaveChanges();
+
+            if (dto.NewStatus == "Settled")
+            {
+                var updateClosedTimeResponse = UpdateClosedTime(caseId);
+                // You can handle the response as needed
+            }
+
+            return Ok(new Response { Status = "Success", Message = "Case status updated successfully" });
+        }
+
         public class CaseFilterDto
         {
             public int? ClientId { get; set; }
@@ -168,6 +306,23 @@ namespace Law_Firm_Management_System_API.Controllers
         {
             public string? Name { get; set; }
             public int? ClientId { get; set; }
+        }
+
+        public class CaseRenameDto
+        {
+            public int CaseId { get; set; }
+            public string CaseName { get; set; } = null!;
+        }
+
+        public class EditClientDto
+        {
+            public int CaseId { get; set; }
+            public int ClientId { get; set; }
+        }
+
+        public class ChangeStatusDto
+        {
+            public string NewStatus { get; set; } = null!;
         }
     }
 }
