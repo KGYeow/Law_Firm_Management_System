@@ -11,6 +11,11 @@
                 Past Events
         </h5>
       </v-tab>
+      <v-tab value="three">
+        <h5 class="text-h5 mb-3 pl-7 pt-3 ps-0 d-flex align-center">
+                Calendar
+        </h5>
+      </v-tab>
     </v-tabs>
 
     <v-card-text>
@@ -69,7 +74,7 @@
                     class="p-0 text-subtitle-2 fw-bold justify-content-center text-white"
                     style="background-color: rgb(43, 76, 101); min-height: 35px; border-top-right-radius: 10px; border-top-left-radius: 10px;"
                   >
-                    {{ item.name }}
+                    {{ item.caseName }}
                   </v-card-actions>
                   <v-card-item class="pt-3">
                     <v-card-title class="text-subtitle-2 fw-bold">
@@ -80,14 +85,10 @@
                       {{ dayjs(item.eventTime).format("DD MMM YYYY, hh:mm A") }}
                     </v-card-subtitle>
                     <v-divider class="my-3"/>
-                    <el-scrollbar class="text-body-1" height="60px">
+                    <el-scrollbar class="text-body-1" >
                       <div class="d-flex pt-sm-2 align-center ">
-                        <v-avatar
-                          class="mb-0"
-                          image="/images/users/avatar.jpg"
-                          size="30"
-                        />
-                        <strong class="ms-5">{{ item.caseName }}</strong>
+                        <ChecklistIcon/>
+                        <strong class="ms-5">{{ item.name }}</strong>
                       </div>
                     </el-scrollbar>
                   </v-card-item>
@@ -164,7 +165,7 @@
                     class="p-0 text-subtitle-2 fw-bold justify-content-center text-white"
                     style="background-color: rgb(43, 76, 101); min-height: 35px; border-top-right-radius: 10px; border-top-left-radius: 10px;"
                   >
-                    {{ item.name }}
+                    {{ item.caseName }}
                   </v-card-actions>
                   <v-card-item class="pt-3">
                     <v-card-title class="text-subtitle-2 fw-bold">
@@ -175,14 +176,10 @@
                       {{ dayjs(item.eventTime).format("DD MMM YYYY, hh:mm A") }}
                     </v-card-subtitle>
                     <v-divider class="my-3"/>
-                    <el-scrollbar class="text-body-1" height="60px">
+                    <el-scrollbar class="text-body-1" >
                       <div class="d-flex pt-sm-2 align-center ">
-                        <v-avatar
-                          class="mb-0"
-                          image="/images/users/avatar.jpg"
-                          size="30"
-                        />
-                        <strong class="ms-5">{{ item.caseName }}</strong>
+                        <ChecklistIcon/>
+                        <strong class="ms-5">{{ item.name }}</strong>
                       </div>
                     </el-scrollbar>
                   </v-card-item>
@@ -203,13 +200,22 @@
             </v-data-table>
             </v-col>
             </v-row> </v-window-item>
-  </v-window>
+
+      <!--Calendar-->
+      <v-window-item value="three">  
+
+        <!--EventCalendar :list="upcomingEventList"/-->
+        </v-window-item>
+
+      </v-window>
 </v-card-text>
 </v-card>
+
 </template>
   
   <script setup>
   import { CalendarIcon } from "vue-tabler-icons"
+  import { ChecklistIcon } from "vue-tabler-icons"
   import dayjs from 'dayjs'
   import { ref } from 'vue';
   const tab = ref(null)
@@ -256,9 +262,10 @@ const { data: caseList } = await fetchData.$get("/Case")
     ],
   })
   
-  // Methods
+// Methods
 const pageCount = () => {
-    return Math.ceil(upcomingEventList.value.length / itemsPerPage.value)
-    return Math.ceil(pastEventList.value.length / itemsPerPage.value)
-}
+const totalEvents = upcomingEventList.value.length + pastEventList.value.length;
+  return Math.ceil(totalEvents / itemsPerPage.value);
+};
+
   </script>
