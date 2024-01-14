@@ -74,38 +74,40 @@
   </SharedUiModal>
 
   <!-- Add Announcement Modal -->
-  <SharedUiModal v-model="addAnnouncementModal" title="Add New Announcement" width="500">
-    <form @submit.prevent="addAnnouncement">
-      <v-card-item class="px-8 py-4 text-body-1">
-        <v-row>
-          <v-col>
-            <v-label class="text-caption">Title</v-label>
-            <v-text-field
-              variant="outlined"
-              density="compact"
-              :error-messages="addAnnouncementDetails.title.errorMessage"
-              v-model="addAnnouncementDetails.title.value"
-              hide-details="auto"
-            />
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col>
-            <v-label class="text-caption">Description</v-label>
-            <v-text-field
-              variant="outlined"
-              density="compact"
-              :error-messages="addAnnouncementDetails.description.errorMessage"
-              v-model="addAnnouncementDetails.description.value"
-              hide-details="auto"
-            />
-          </v-col>
-        </v-row>
-      </v-card-item>
-      <v-card-actions class="p-3 justify-content-end">
-        <v-btn color="primary" type="submit">Submit</v-btn>
-      </v-card-actions>
-    </form>
+  <SharedUiModal v-model="addAnnouncementModal" title="Add New Announcement" width="600">
+    <el-scrollbar max-height="400px">
+      <form @submit.prevent="addAnnouncement">
+        <v-card-item class="px-8 py-4 text-body-1">
+          <v-row>
+            <v-col>
+              <v-label class="text-caption">Title</v-label>
+              <v-text-field
+                variant="outlined"
+                density="compact"
+                :error-messages="addAnnouncementDetails.title.errorMessage"
+                v-model="addAnnouncementDetails.title.value"
+                hide-details="auto"
+              />
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col>
+              <v-label class="text-caption">Description</v-label>
+              <v-textarea
+                variant="outlined"
+                density="compact"
+                :error-messages="addAnnouncementDetails.description.errorMessage"
+                v-model="addAnnouncementDetails.description.value"
+                hide-details="auto"
+              />
+            </v-col>
+          </v-row>
+        </v-card-item>
+        <v-card-actions class="p-3 justify-content-end">
+          <v-btn color="primary" type="submit">Submit</v-btn>
+        </v-card-actions>
+      </form>
+    </el-scrollbar>
   </SharedUiModal>
 </template>
 

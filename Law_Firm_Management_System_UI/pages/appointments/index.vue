@@ -138,11 +138,11 @@
   </v-row>
 
   <!-- Add New Appointment Modal -->
-  <SharedUiModal v-model="addAppointmentModal" title="Add New Appointment" width="500">
+  <SharedUiModal v-model="addAppointmentModal" title="Add New Appointment" width="550">
     <form @submit.prevent="addAppointment">
       <v-card-item class="px-8 py-4 text-body-1">
         <v-row>
-          <v-col class="pb-0">
+          <v-col>
             <v-label class="text-caption">Client</v-label>
             <v-select
               :items="clientList"
