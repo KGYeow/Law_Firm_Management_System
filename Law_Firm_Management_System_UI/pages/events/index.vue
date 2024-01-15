@@ -106,6 +106,10 @@
                         </template>
                       </el-popconfirm>
                     </li>
+                    <li>
+                      <v-tooltip text="View Details" activator="parent" location="top" offset="2"/>
+                      <v-btn icon="mdi-open-in-new" size="small" variant="text" :href="`/events/${item.id}`"/>
+                    </li>
                   </ul>
                 </td>
               </tr>
@@ -176,12 +180,15 @@
       <form @submit.prevent="addEvent">
         <v-card-item class="px-8 py-4 text-body-1">
           <v-row>
-            <v-col>
+              <v-col>
               <v-label class="text-caption">Event Name</v-label>
-              <v-text-field   
-                v-model="addEventDetails.name.value" 
+              <v-text-field
+                density="compact"
                 :error-messages="addEventDetails.name.errorMessage"
-                outlined dense/>
+                v-model="addEventDetails.name.value"
+                hide-details="auto"
+                outlined dense
+              />
             </v-col>
           </v-row>
           <v-row>
@@ -218,6 +225,18 @@
                 color="#fa896b"
                 :transition="false"
                 style="padding: 3px 16px 3px; opacity: unset;"
+              />
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col>
+              <v-label class="text-caption">Description</v-label>
+              <v-textarea
+                variant="outlined"
+                density="compact"
+                :error-messages="addEventDetails.description.errorMessage"
+                v-model="addEventDetails.description.value"
+                hide-details="auto"
               />
             </v-col>
           </v-row>
@@ -271,6 +290,9 @@ const { handleSubmit } = useForm({
     name(value) {
       return value ? true : 'Event name is required'
     },
+    description(value) {
+      return value ? true : 'Description is required'
+    },
     caseID(value) {
       return value ? true : 'Case is required'
     },
@@ -298,6 +320,7 @@ const { data: userRole } = await fetchData.$get("/UserRole/RoleName")
 const addEventModal = ref(false);
 const addEventDetails = ref({
   name: useField('name'),
+  description: useField('description'),
   caseID: useField('caseID'),
   eventTime: useField('eventTime'),
 })
@@ -327,9 +350,11 @@ const pageCount = () => {
 const addEvent = handleSubmit(async(values) => {
   try {
     const result = await fetchData.$post(`/Event/EventCreate`, values)
+
     if (!result.error) {
       addEventModal.value = false
       addEventDetails.value.name.resetField()
+      addEventDetails.value.description.resetField()
       addEventDetails.value.caseID.resetField()
       addEventDetails.value.eventTime.resetField()
       ElNotification.success({ message: result.message })
@@ -348,7 +373,7 @@ const renameEventGet = (eventId, eventName) => {
   renameEventModal.value = true
 }
 
-//Complete event status
+//Update event status
 const updateEvent = async(eventId) => {
   try {
     const result = await fetchData.$put(`/Event/Update/${eventId}`)

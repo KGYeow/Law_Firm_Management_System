@@ -4,6 +4,7 @@ using Law_Firm_Management_System_API.Service;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using static Law_Firm_Management_System_API.Controllers.CaseController;
+using static Law_Firm_Management_System_API.Controllers.DashboardController;
 using static Law_Firm_Management_System_API.Controllers.DocumentController;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
@@ -133,6 +134,7 @@ namespace Law_Firm_Management_System_API.Controllers
                     clientId = x.ClientId,
                     createdTime = x.CreatedTime,
                     eventTime = x.EventTime,
+                    description = x.Description,
                     isCompleted = x.IsCompleted
                 });
             if (dto.CaseId != null)
@@ -166,6 +168,7 @@ namespace Law_Firm_Management_System_API.Controllers
                     clientId = x.ClientId,
                     createdTime = x.CreatedTime,
                     eventTime = x.EventTime,
+                    description = x.Description,
                     isCompleted = x.IsCompleted
                 });
             if (dto.CaseId != null)
@@ -176,6 +179,25 @@ namespace Law_Firm_Management_System_API.Controllers
             l.ToList();
 
             return Ok(l);
+        }
+
+        // Get the upcoming events from client's perspective for calendar.
+        [HttpGet]
+        [Route("UpcomingEvents/Client")]
+        public IActionResult GetClientUpcomingEvents()
+        {
+            var user = userService.GetUser(User);
+            var client = context.Clients.Where(a => a.UserId == user.Id).FirstOrDefault();
+
+            var upcomingEvents = context.Events.Include(a => a.PartnerUser).Where(a => a.ClientId == client.Id && a.IsCompleted == false).ToList()
+                .Select(x => new UpcomingEvent
+                {
+                    Time = x.EventTime,
+                    Title = x.Name,
+                    Description = "There is an event you need to attend with the partner, " + x.PartnerUser.FullName + ". Remarks: "+x.Description,
+                });
+
+            return Ok(upcomingEvents.OrderBy(a => a.Time).ToList());
         }
 
         //Add event from partner perspective
@@ -202,6 +224,7 @@ namespace Law_Firm_Management_System_API.Controllers
                 Name = dto.Name,
                 CreatedTime = DateTime.Now,
                 EventTime = dto.EventTime,
+                Description = dto.Description,
                 IsCompleted = false,
             };
 
@@ -268,6 +291,34 @@ namespace Law_Firm_Management_System_API.Controllers
             return Ok(new Response { Status = "Success", Message = "Event deleted successfully" });
         }
 
+        // Get the specific event's information.
+        [HttpGet]
+        [Route("Info/{EventId}")]
+        public IActionResult GetEventInfo(int eventId)
+        {
+            var user = userService.GetUser(User);
+
+            var eventInfo = context.Events
+                .Where(a => a.Id == eventId)  // Filter cases by assigned partner
+                .Select(x => new {
+                    id = x.Id,
+                    name = x.Name,
+                    caseID = x.Case.Id,
+                    caseName = x.Case.Name,
+                    partnerName = x.PartnerUser.FullName,
+                    clientId = x.ClientId,
+                    clientName = x.Client.FullName,
+                    clientPhone = x.Client.PhoneNumber,
+                    clientEmail = x.Client.Email,
+                    createdTime = x.CreatedTime,
+                    eventTime = x.EventTime,
+                    description = x.Description,
+                    isCompleted = x.IsCompleted
+                })
+                .FirstOrDefault();
+            return Ok(eventInfo);
+        }
+
         public class EventFilterDto
         {
             public int? CaseId { get; set; }
@@ -279,6 +330,7 @@ namespace Law_Firm_Management_System_API.Controllers
         {
             public string? Name { get; set; }
             public int? CaseId { get; set; }
+            public string Description { get; set; } = null!;
             public DateTime EventTime { get; set; }
 
         }

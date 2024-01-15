@@ -201,6 +201,7 @@ CREATE TABLE [dbo].[Event](
 	[Name] [varchar](max) NOT NULL,
 	[CreatedTime] [datetime] NOT NULL,
 	[EventTime] [datetime] NOT NULL,
+	[Description] [varchar](max) NOT NULL,
 	[IsCompleted] [bit] NOT NULL,
  CONSTRAINT [PK_Event] PRIMARY KEY CLUSTERED
 (
@@ -499,8 +500,8 @@ SET IDENTITY_INSERT [dbo].[Task] OFF
 GO
 
 SET IDENTITY_INSERT [dbo].[Event] ON
-INSERT [dbo].[Event] ([ID], [CaseID], [PartnerUserID], [ClientID],[Name], [CreatedTime], [EventTime], [IsCompleted]) VALUES (1, 1, 1, 1, N'Court Hearings', CAST(N'2023-11-15T10:54:11.157'AS DateTime), CAST(N'2023-12-10T10:54:11.157' AS DateTime), 0)
-INSERT [dbo].[Event] ([ID], [CaseID], [PartnerUserID], [ClientID], [Name], [CreatedTime], [EventTime], [IsCompleted]) VALUES (2, 2, 18,2, N'Trial Preparation', CAST(N'2023-12-10T10:54:11.157' AS DateTime), CAST(N'2023-12-10T10:54:11.157' AS DateTime), 1)
+INSERT [dbo].[Event] ([ID], [CaseID], [PartnerUserID], [ClientID],[Name], [CreatedTime], [EventTime], [Description], [IsCompleted]) VALUES (1, 1, 1, 1, N'Court Hearings', CAST(N'2023-11-15T10:54:11.157'AS DateTime), CAST(N'2023-12-10T10:54:11.157' AS DateTime), N'Please attend court hearing', 0)
+INSERT [dbo].[Event] ([ID], [CaseID], [PartnerUserID], [ClientID], [Name], [CreatedTime], [EventTime], [Description], [IsCompleted]) VALUES (2, 2, 18, 2, N'Discussions', CAST(N'2023-12-10T10:54:11.157' AS DateTime), CAST(N'2023-12-10T10:54:11.157' AS DateTime), N'Please attend the discussion session ', 1)
 SET IDENTITY_INSERT [dbo].[Event] OFF
 GO
 

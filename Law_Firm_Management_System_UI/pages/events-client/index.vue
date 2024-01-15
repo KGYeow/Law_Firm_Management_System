@@ -91,6 +91,9 @@
                         <strong class="ms-5">{{ item.name }}</strong>
                       </div>
                     </el-scrollbar>
+                    <v-card-text class="px-0 py-2 ext-body-1">
+                      {{ item.description }}
+                    </v-card-text>
                   </v-card-item>
                 </v-card>
               </v-col>
@@ -182,6 +185,9 @@
                         <strong class="ms-5">{{ item.name }}</strong>
                       </div>
                     </el-scrollbar>
+                    <v-card-text class="px-0 py-2 ext-body-1">
+                      {{ item.description }}
+                    </v-card-text>
                   </v-card-item>
                 </v-card>
               </v-col>
@@ -204,7 +210,7 @@
       <!--Calendar-->
       <v-window-item value="three">  
 
-        <!--EventCalendar :list="upcomingEventList"/-->
+        <EventCalendar :list="upcomingEventCalendar"/>
         </v-window-item>
 
       </v-window>
@@ -245,6 +251,7 @@ const headers = ref([
 const { data: upcomingEventList } = await fetchData.$get("/Event/ClientPerspectiveUpcomingEventList", filter.value)
 const { data: pastEventList } = await fetchData.$get("/Event/ClientPerspectivePastEventList", filter.value)
 const { data: caseList } = await fetchData.$get("/Case")
+const { data: upcomingEventCalendar } = await fetchData.$get("/Event/UpcomingEvents/Client")
  
   // Head
   useHead({

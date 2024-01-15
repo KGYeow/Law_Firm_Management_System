@@ -17,6 +17,7 @@ namespace Law_Firm_Management_System_API.Models
         public string Name { get; set; } = null!;
         public DateTime CreatedTime { get; set; }
         public DateTime EventTime { get; set; }
+        public string Description { get; set; } = null!;
         public bool IsCompleted { get; set; }
 
         public virtual Case? Case { get; set; }
