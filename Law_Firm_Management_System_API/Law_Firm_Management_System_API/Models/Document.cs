@@ -8,7 +8,6 @@ namespace Law_Firm_Management_System_API.Models
         public Document()
         {
             Tasks = new HashSet<Task>();
-            Cases = new HashSet<Case>();
         }
 
         public int Id { get; set; }
@@ -25,6 +24,5 @@ namespace Law_Firm_Management_System_API.Models
         public virtual DocumentCategory Category { get; set; } = null!;
         public virtual User PartnerUser { get; set; } = null!;
         public virtual ICollection<Task> Tasks { get; set; }
-        public virtual ICollection<Case> Cases { get; set; }
     }
 }

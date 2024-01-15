@@ -93,31 +93,36 @@
                   </div>
                 </div>
               </div>
-          <div class="status-description">
-              <strong>{{ selectedCaseDetails.statusDescription }}</strong>
-          </div>
-        </div>-->
-              <!--Related Document-->
-                <v-row class="pb-2">
-                <v-col>
-                  <div class="d-flex align-center">
-                    <v-label class="text-h6 pb-3">Related Documents</v-label>
-                  </div>
-                  <div v-if="caseInfo.documentName" class=" d-flex flex-column case-details-container pa-md-4">
-                    <v-divider vertical class="mx-5 my-0" style="border-color: white !important; opacity: 0.5;"></v-divider>
-                    <div>
-                      <div class="case-detail-item"><v-card-subtitle>{{ caseInfo.documentName }}</v-card-subtitle></div>
+            <div class="status-description">
+                <strong>{{ selectedCaseDetails.statusDescription }}</strong>
+            </div>
+          </div>-->
+
+            <!--Related Document-->
+            <v-row class="pb-2">
+              <v-col>
+                <div class="d-flex align-center">
+                  <v-label class="text-h6 pb-3">Related Documents</v-label>
+                </div>
+                <div v-if="caseDocumentList && caseDocumentList.length > 0" class="d-flex flex-column case-details-container pa-md-4">
+                  <v-divider vertical class="mx-5 my-0" style="border-color: white !important; opacity: 0.5;"></v-divider>
+                  <div v-for="document in caseDocumentList" :key="document.id">
+                    <div class="case-detail-item">
+                      <a :href="`/api/Document/GetDocument/${document.id}`" target="_blank">
+                        <v-card-subtitle>{{ document.documentName }}</v-card-subtitle>
+                      </a>
                     </div>
                   </div>
-                  <!-- Display a message if no related document -->
-                  <div v-else class=" d-flex flex-column case-details-container pa-md-4">
-                    <v-divider vertical class="mx-5 my-0" style="border-color: white !important; opacity: 0.5;"></v-divider>
-                    <div>
-                      <div class="case-detail-item"><v-card-subtitle>No Related Document</v-card-subtitle></div>
-                    </div>
+                </div>
+                <!-- Display a message if no related document -->
+                <div v-else class="d-flex flex-column case-details-container pa-md-4">
+                  <v-divider vertical class="mx-5 my-0" style="border-color: white !important; opacity: 0.5;"></v-divider>
+                  <div>
+                    <div class="case-detail-item"><v-card-subtitle>No Related Document</v-card-subtitle></div>
                   </div>
-                </v-col>
-              </v-row>
+                </div>
+              </v-col>
+            </v-row>
               <!--Upload Documents-->
               <v-file-input
                 v-model="selectedFile"
@@ -180,6 +185,7 @@ const filter = ref({
 const routeParameter = ref(useRoute().params)
 const { data: caseInfo } = await fetchData.$get(`/Case/Info/${routeParameter.value.caseID}`)
 const { data: caseList } = await fetchData.$get("/Case/PartnerPerspectiveCaseList", filter.value)
+const { data: caseDocumentList } = await fetchData.$get(`/Document/GetDocumentNamesByCase/${routeParameter.value.caseID}`);
 const { data: clientList } = await fetchData.$get("/Client")
 
 const renameCaseDetails = ref({
@@ -279,10 +285,6 @@ const handleFileUpload = () => {
 
     // Perform any logic you need with the selected file
     console.log('Selected file:', file);
-
-    // Add your logic for uploading the file to the server
-    // For example, you might want to use an API endpoint to handle the upload
-    // You can use tools like Axios or the Fetch API for this purpose
   }
 };
 

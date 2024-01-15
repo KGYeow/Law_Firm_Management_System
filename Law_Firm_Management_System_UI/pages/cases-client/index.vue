@@ -87,6 +87,26 @@
                       <i class="mdi mdi-calendar-blank-outline me-1"></i>
                       {{ dayjs(item.createdTime).format("DD MMM YYYY, hh:mm A") }}
                     </v-card-subtitle>
+                    <!--Upload Button-->
+                    <ul class="m-0 list-inline hstack">
+                      <li>
+                        <v-tooltip text="Upload Document" activator="parent" location="top" offset="2"/>
+                      <v-btn
+                        icon
+                        color="primary"
+                        @click="createDocument"
+                      >
+                        <v-icon>mdi-upload</v-icon>
+                      </v-btn>
+                      </li>
+                    </ul>
+                    <input
+                      ref="fileInput"
+                      type="file"
+                      accept=".pdf, .doc, .docx"
+                      style="display:none"
+                      @change="handleFileUpload"
+                    />
                     <v-divider class="my-3"/>
                     <el-scrollbar class="text-body-1" height="60px">
                       <div class="d-flex pt-sm-2 align-center">
@@ -175,27 +195,18 @@
     isDialogOpen.value = true;
   };
   
-  /*const loadCaseDetails = async (caseItem) => {
-    dialogVisible.value = true;
-  
-    
-    try {
-      const { data } = await fetchData.$get(`/Case/DisplayCaseDetails/${caseItem}`);
-      selectedCase.value = data;
-      dialogVisible.value = true;
-    } catch (error) {
-      console.error('Error fetching case details:', error);
-    }
-  }*/
-  
-  // Define reactive variable for adding case modal
-  const addCaseModal = ref(false);
-  
-  // Define reactive variable for new case details
-  const newCaseDetails = reactive({
-    name: '',
-    clientId: null,
-    status: null,
-  });
+// Data for handling file upload
+const selectedFile = ref(null);
 
+// Method for handling file upload
+const handleFileUpload = () => {
+  // Check if a file is selected
+  if (selectedFile.value) {
+    // You can access the selected file using selectedFile.value
+    const file = selectedFile.value;
+
+    // Perform any logic you need with the selected file
+    console.log('Selected file:', file);
+  }
+};
   </script>

@@ -155,6 +155,19 @@ namespace Law_Firm_Management_System_API.Controllers
             return Ok(new Response { Status = "Success", Message = "Document archived successfully" });
         }
 
+        // Get the list of document names related to a specific case.
+        [HttpGet]
+        [Route("GetDocumentNamesByCase/{CaseId}")]
+        public IActionResult GetDocumentNamesByCase(int caseId)
+        {
+            var documentNames = context.Documents
+                .Where(d => d.CaseId == caseId && d.IsArchived == false)
+                .Select(x => new { id = x.Id, documentName = x.Name })
+                .ToList();
+
+            return Ok(documentNames);
+        }
+
         public class DocFilterDto
         {
             public int? DocId { get; set; }

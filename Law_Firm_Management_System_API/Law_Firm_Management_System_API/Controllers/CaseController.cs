@@ -51,7 +51,8 @@ namespace Law_Firm_Management_System_API.Controllers
                     closedTime = x.ClosedTime, 
                     statusId = x.StatusId, 
                     status = x.Status.StatusName,
-                    statusDescription = x.Status.StatusDescription});
+                    statusDescription = x.Status.StatusDescription,
+                    });
 
             if (dto.ClientId != null)
                 l = l.Where(a => a.clientId == dto.ClientId);
