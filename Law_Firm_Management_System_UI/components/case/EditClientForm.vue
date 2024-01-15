@@ -71,7 +71,8 @@ const editClient = handleSubmit(async (values) => {
             // Log the updated case details to the console
             console.log("Updated Case Details:", result.updatedCase);
 
-            refreshNuxtData();
+            nuxtRefreshData();
+            //refreshNuxtData();
         } else {
             ElNotification.error({ message: result.message });
         }

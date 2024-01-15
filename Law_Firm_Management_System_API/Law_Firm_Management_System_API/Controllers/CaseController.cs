@@ -133,6 +133,34 @@ namespace Law_Firm_Management_System_API.Controllers
             return Ok(l);
         }
 
+        // Get the specific case's information.
+        [HttpGet]
+        [Route("Info/{CaseId}")]
+        public IActionResult GetCaseInfo(int caseId)
+        {
+            var user = userService.GetUser(User);
+
+            var caseInfo = context.Cases
+                .Include(a => a.Status)
+                .Where(a => a.Id == caseId)  // Filter cases by assigned partner
+                .Select(x => new {
+                    id = x.Id,
+                    name = x.Name,
+                    clientId = x.ClientId,
+                    clientName = x.Client.FullName,
+                    clientPhone = x.Client.PhoneNumber,
+                    clientEmail = x.Client.Email,
+                    createdTime = x.CreatedTime,
+                    updatedTime = x.UpdatedTime,
+                    closedTime = x.ClosedTime,
+                    statusId = x.StatusId,
+                    status = x.Status.StatusName,
+                    statusDescription = x.Status.StatusDescription
+                })
+                .FirstOrDefault();
+            return Ok(caseInfo);
+        }
+
         [HttpPost]
         [Route("CaseCreate")]
         public IActionResult CreateCasePartnerPerspective([FromBody] CasePartnerCreateDto dto)
@@ -167,7 +195,7 @@ namespace Law_Firm_Management_System_API.Controllers
             context.Cases.Remove(existingCase);
             context.SaveChanges();
 
-            return Ok(new Response { Status = "Success", Message = "Event deleted successfully" });
+            return Ok(new Response { Status = "Success", Message = "Case deleted successfully" });
         }
 
         // Rename the existing Case.

@@ -24,6 +24,7 @@ export default defineNuxtRouteMiddleware(async(to, from) => {
       }
       else {
         if (to.path.match("/contacts/clients")) return
+        if (user.value?.userRoleId == 1 && to.path.match("/cases")) return
         if (user.value?.userRoleId == 1 && to.path.match("/configuration/user-settings")) return 
         return navigateTo('/dashboard')
       }

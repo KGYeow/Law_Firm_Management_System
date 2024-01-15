@@ -66,11 +66,11 @@
                     style="bottom: -10px; right: -15px; border-radius: 10px;"
                   >
                     <i class="mdi mdi-check" v-if="item.status == 'Active'"></i>
-                    <i class="mdi mdi-timer-sand-complete" v-else-if="item.status == 'Under Review'"></i>
+                    <i class="mdi mdi-file-find" v-else-if="item.status == 'Under Review'"></i>
                     <i class="mdi mdi-timer-sand-complete" v-else-if="item.status == 'Negotiation'"></i>
-                    <i class="mdi mdi-timer-sand-complete" v-else-if="item.status == 'Court Proceeding'"></i>
-                    <i class="mdi mdi-close" v-else-if="item.status == 'On Hold'"></i>
-                    <i class="mdi mdi-cancel" v-else-if="item.status == 'Settled'"></i>
+                    <i class="mdi mdi-gavel" v-else-if="item.status == 'Court Proceeding'"></i>
+                    <i class="mdi mdi-timer-sand-paused" v-else-if="item.status == 'On Hold'"></i>
+                    <i class="mdi mdi-check-circle-outline" v-else-if="item.status == 'Settled'"></i>
                     {{ item.status }}
                   </el-tag>
                   <v-card-actions
@@ -91,9 +91,9 @@
                     <el-scrollbar class="text-body-1" height="60px">
                       <div class="d-flex pt-sm-2 align-center">
                         <v-avatar
-                          class="mb-3"
+                          class="mb-0"
                           image="/images/users/avatar.jpg"
-                          size="40"
+                          size="35"
                         />
                         <strong class="ms-5">{{ item.partnerName }}</strong>
                       </div>

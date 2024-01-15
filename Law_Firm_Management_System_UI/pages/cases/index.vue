@@ -90,6 +90,10 @@
                         </template>
                       </el-popconfirm>
                     </li>
+                    <li>
+                      <v-tooltip text="View Details" activator="parent" location="top" offset="2"/>
+                      <v-btn icon="mdi-open-in-new" size="small" variant="text" :href="`/cases/${item.id}`"/>
+                    </li>
                 </td>
               </tr>
             </template>
