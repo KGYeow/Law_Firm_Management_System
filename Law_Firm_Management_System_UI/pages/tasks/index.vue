@@ -148,12 +148,7 @@
     <v-tooltip text="Create Task" activator="parent" location="left" offset="2"/>
     <v-btn icon="mdi-clipboard-plus-outline" color="primary" size="large" @click="addTaskModal = true"/>
   </el-affix>
-
-  <!-- Back to Top Button -->
-  <el-backtop :bottom="100">
-    <v-btn icon="mdi-arrow-left" color="primary" size="large"/>
-  </el-backtop>
-
+  
   <!-- Add New Task Modal -->
   <SharedUiModal v-model="addTaskModal" title="Add New Task" width="700">
     <el-scrollbar max-height="400px">
@@ -161,7 +156,7 @@
         :case-input-list="caseList"
         :event-input-list="eventList"
         :doc-input-list="docList"
-        :close-modal="(e) => addTaskModal = e"
+        @close-modal="(e) => { addTaskModal = e }"
       />
     </el-scrollbar>
   </SharedUiModal>
@@ -174,7 +169,7 @@
         :case-input-list="caseList"
         :event-input-list="eventList"
         :doc-input-list="docList"
-        :close-modal="(e) => editTaskModal = e"
+        @close-modal="(e) => { editTaskModal = e }"
       />
     </el-scrollbar>
   </SharedUiModal>
@@ -187,11 +182,21 @@
           {{ selectedTask.title }}
         </v-card-title>
         <v-card-subtitle class="text-subtitle-2">
-          <div v-if="selectedTask.paralegalUserId">Task Assignment: Your paralegal, {{ selectedTask.paralegalFullName }}</div>
-          <div v-else>Task Assignment: Yourself</div>
-          <div>
-            Due Time: {{ dayjs(selectedTask.dueTime).format("DD MMM YYYY, h:mm A") }}
-          </div>
+          <v-row v-if="userRole == 'Partner'">
+            <v-col cols="3" class="pb-0">Task Assignment:</v-col>
+            <v-col class="pb-0">
+              <div v-if="selectedTask.paralegalUserId">Your paralegal, {{ selectedTask.paralegalFullName }}</div>
+              <div v-else>Yourself</div>
+            </v-col>
+          </v-row>
+          <v-row :class="{ 'pt-3': userRole == 'Paralegal' }">
+            <v-col cols="3" class="py-0">Assigned Time:</v-col>
+            <v-col class="py-0">{{ dayjs(selectedTask.assignedTime).format("DD MMM YYYY, h:mm A") }}</v-col>
+          </v-row>
+          <v-row>
+            <v-col cols="3" class="pt-0">Due Time:</v-col>
+            <v-col class="pt-0">{{ dayjs(selectedTask.dueTime).format("DD MMM YYYY, h:mm A") }}</v-col>
+          </v-row>
         </v-card-subtitle>
         <v-divider class="mt-3 mb-0"/>
       </v-card-item>
@@ -230,17 +235,32 @@
           </v-list-item>
         </v-list>
       </v-card-text>
-      <v-card-actions class="p-3 justify-content-end">
+      <v-card-actions
+        class="p-3 pt-1 justify-content-end"
+        v-if="userRole != 'Paralegal' || (selectedTask.status != 'Backlog' && selectedTask.status != 'Complete')"
+      >
         <el-popconfirm
           title="Are you sure to accept this task?"
           icon-color="green"
           width="190"
           :teleported="false"
-          @confirm="acceptTask(selectedTask.id)"
-          v-if="selectedTask.status == 'ToDo'"
+          @confirm="updateTask(selectedTask.id, 'StartProgress')"
+          v-if="selectedTask.status == 'ToDo' && ((userRole == 'Partner' && !selectedTask.isAssignedParalegal) || (userRole == 'Paralegal' && selectedTask.isAssignedParalegal))"
         >
           <template #reference>
             <v-btn color="primary">Accept</v-btn>
+          </template>
+        </el-popconfirm>
+        <el-popconfirm
+          title="Are you sure to complete this task?"
+          icon-color="green"
+          width="190"
+          :teleported="false"
+          @confirm="updateTask(selectedTask.id, 'CompleteTask')"
+          v-if="selectedTask.status == 'InProgress'"
+        >
+          <template #reference>
+            <v-btn color="primary">Complete</v-btn>
           </template>
         </el-popconfirm>
         <el-popconfirm
@@ -260,7 +280,7 @@
           icon-color="red"
           width="190"
           :teleported="false"
-          @confirm="deleteTask(selectedTask.id)"
+          @confirm="updateTask(selectedTask.id, 'Delete')"
           v-if="userRole == 'Partner'"
         >
           <template #reference>
@@ -314,28 +334,22 @@ const getSelectedTask = async(taskId, status) => {
   selectedTask.value.status = status
   selectedTask.value.isAssignedParalegal = data.value.paralegalUserId ? true : false
   viewTaskModal.value = true
-  console.log(selectedTask.value)
 }
 const editTask = () => {
   viewTaskModal.value = false
   editTaskModal.value = true
 }
-const acceptTask = async(taskId) => {
+const updateTask = async(taskId, action) => {
   try {
-    const result = await fetchData.$put(`/Task/StartProgress/${taskId}`)
-    if (!result.error) {
-      viewTaskModal.value = false
-      ElNotification.success({ message: result.message })
-      refreshNuxtData()
-    }
-    else {
-      ElNotification.error({ message: result.message })
-    }
-  } catch { ElNotification.error({ message: "There is a problem with the server. Please try again later." }) }
-}
-const deleteTask = async(taskId) => {
-  try {
-    const result = await fetchData.$delete(`/Task/Delete/${taskId}`)
+    var result = null
+
+    if (action == "StartProgress")
+      result = await fetchData.$put(`/Task/${action}/${taskId}`)
+    else if (action == "Delete")
+      result = await fetchData.$delete(`/Task/${action}/${taskId}`)
+    else if (action == "CompleteTask")
+      result = await fetchData.$put(`/Task/${action}/${taskId}`)
+
     if (!result.error) {
       viewTaskModal.value = false
       ElNotification.success({ message: result.message })

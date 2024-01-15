@@ -72,7 +72,7 @@
         </v-col>
         <v-col>
           <v-label class="text-caption">Related Document</v-label>
-          <v-select
+          <v-autocomplete
             :items="docInputList"
             item-title="name"
             item-value="id"
@@ -85,7 +85,7 @@
             <template #prepend-item>
               <v-list-item title="None" @click="editTaskDetails.docId = null"/>
             </template>
-          </v-select>
+          </v-autocomplete>
         </v-col>
       </v-row>
       <v-row>
@@ -170,6 +170,7 @@ const editTaskDetails = ref({
 const editTask = handleSubmit(async(values) => {
   try {
     const result = await fetchData.$put("/Task", {
+      taskId: props.initialValues.id,
       title: values.title,
       description: values.description,
       dueTime: values.dueTime,
