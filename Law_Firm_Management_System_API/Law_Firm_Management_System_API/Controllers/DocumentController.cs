@@ -55,10 +55,19 @@ namespace Law_Firm_Management_System_API.Controllers
             return Ok(l);
         }
 
-        // Get the document.
+        // Get the document information.
+        [HttpGet]
+        [Route("Info/{DocId}")]
+        public IActionResult GetDocumentInfo(int docId)
+        {
+            var documentInfo = context.Documents.Where(d => d.Id == docId).FirstOrDefault();
+            return Ok(documentInfo);
+        }
+
+        // Get the document attachment.
         [HttpGet]
         [Route("GetDocument/{DocId}")]
-        public IActionResult GetDocument(int docId)
+        public IActionResult GetDocumentAttachment(int docId)
         {
             var document = context.Documents.Where(d => d.Id == docId).FirstOrDefault();
             if (document.Attachment == null)
@@ -80,7 +89,7 @@ namespace Law_Firm_Management_System_API.Controllers
 
             var document = new Document
             {
-               Name = dto.Name,
+                Name = dto.Name,
                 CategoryId = dto.CategoryId,
                 CaseId = dto.CaseId,
                 PartnerUserId = user.Id,

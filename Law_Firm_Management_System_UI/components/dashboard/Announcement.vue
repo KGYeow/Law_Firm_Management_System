@@ -34,7 +34,7 @@
             </div>
             <v-tooltip text="See More" location="top" offset="2">
               <template #activator="{ props }">
-                <v-btn class="m-2 position-absolute top-0 end-0" icon="mdi-open-in-new" size="small" variant="text" v-bind="props" @click="announcementDataGet(item)"/>
+                <v-btn class="m-2 position-absolute top-0 end-0" icon="mdi-open-in-new" size="small" variant="text" v-bind="props" @click="getSelectedAnnouncementDetails(item)"/>
               </template>
             </v-tooltip>
           </v-carousel-item>
@@ -48,23 +48,23 @@
     <v-card-item class="px-8 py-4 text-body-1">
       <v-sheet>
         <h6 class="m-0 fw-bold">
-          {{ announcementSeeMore.title }}
+          {{ selectedAnnouncementDetails.title }}
         </h6>
         <span class="text-subtitle-2">
-          by {{ announcementSeeMore.partnerFullName }} | {{ dayjs(announcementSeeMore.createdTime).format("D MMM YYYY, h:mm A") }}
+          by {{ selectedAnnouncementDetails.partnerFullName }} | {{ dayjs(selectedAnnouncementDetails.createdTime).format("D MMM YYYY, h:mm A") }}
         </span>
         <div ref="announcementRef" class="p-0 pt-2 text-justify">
-          {{ announcementSeeMore.description }}
+          {{ selectedAnnouncementDetails.description }}
         </div>
       </v-sheet>
     </v-card-item>
-    <v-card-actions class="p-3 justify-content-end" v-if="announcementSeeMore.partnerUserId == user.id">
+    <v-card-actions class="p-3 justify-content-end" v-if="selectedAnnouncementDetails.partnerUserId == user.id">
       <el-popconfirm
         title="Are you sure to delete this announcement?"
         icon-color="red"
         width="190"
         :teleported="false"
-        @confirm="deleteAnnouncement(announcementSeeMore.id)"
+        @confirm="deleteAnnouncement(selectedAnnouncementDetails.id)"
       >
         <template #reference>
           <v-btn color="danger">Delete</v-btn>
@@ -130,7 +130,7 @@ const { handleSubmit } = useForm({
 })
 const announcementModal = ref(false)
 const addAnnouncementModal = ref(false)
-const announcementSeeMore = ref({
+const selectedAnnouncementDetails = ref({
   id: null,
   title: null,
   partnerUserId: null,
@@ -146,13 +146,13 @@ const { data: announcement } = fetchData.$get("/Dashboard/Announcement")
 const { data: userRole } = await fetchData.$get("/UserRole/RoleName")
 
 // Methods
-const announcementDataGet = (data) => {
-  announcementSeeMore.value.id = data.id
-  announcementSeeMore.value.title = data.title
-  announcementSeeMore.value.partnerUserId = data.partnerUserId
-  announcementSeeMore.value.partnerFullName = data.partnerFullName
-  announcementSeeMore.value.createdTime = data.createdTime
-  announcementSeeMore.value.description = data.description
+const getSelectedAnnouncementDetails = (data) => {
+  selectedAnnouncementDetails.value.id = data.id
+  selectedAnnouncementDetails.value.title = data.titlef
+  selectedAnnouncementDetails.value.partnerUserId = data.partnerUserId
+  selectedAnnouncementDetails.value.partnerFullName = data.partnerFullName
+  selectedAnnouncementDetails.value.createdTime = data.createdTime
+  selectedAnnouncementDetails.value.description = data.description
   announcementModal.value = true
 }
 const addAnnouncement = handleSubmit(async(values) => {

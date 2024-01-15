@@ -181,7 +181,7 @@ namespace Law_Firm_Management_System_API.Controllers
                     Title = x.Name,
                     Description = "There is an event you need to attend with the client, " + x.Client.FullName + ".",
                 });
-            var upcomingTasks = context.Tasks.Where(a => a.PartnerUserId == user.Id && a.InProgress == true).ToList()
+            var upcomingTasks = context.Tasks.Where(a => a.PartnerUserId == user.Id && a.InProgress == true && a.DueTime > DateTime.Now).ToList()
                 .Select(x => new UpcomingEvent
                 {
                     Time = x.DueTime,
@@ -204,7 +204,7 @@ namespace Law_Firm_Management_System_API.Controllers
         {
             var user = userService.GetUser(User);
 
-            var upcomingTasks = context.Tasks.Where(a => a.ParalegalUserId == user.Id && a.InProgress == true).ToList()
+            var upcomingTasks = context.Tasks.Where(a => a.ParalegalUserId == user.Id && a.InProgress == true && a.DueTime > DateTime.Now).ToList()
                 .Select(x => new UpcomingEvent
                 {
                     Time = x.DueTime,

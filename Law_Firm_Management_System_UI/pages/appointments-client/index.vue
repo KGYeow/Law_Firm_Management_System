@@ -178,6 +178,7 @@
               date-format="DD MMM YYYY"
               time-format="HH:mm"
               :teleported="false"
+              :disabled-date="(time) => { return time.getTime() < new Date() }"
               v-model="addAppointmentDetails.appointmentTime.value"
               style="height: 40px;"
             />

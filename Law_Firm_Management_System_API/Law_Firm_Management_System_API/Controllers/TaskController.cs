@@ -1,9 +1,10 @@
-using System.Threading.Tasks;
 using Law_Firm_Management_System_API.Authentication;
 using Law_Firm_Management_System_API.Models;
 using Law_Firm_Management_System_API.Service;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Reflection.Metadata;
 
 namespace Law_Firm_Management_System_API.Controllers
 {
@@ -22,7 +23,7 @@ namespace Law_Firm_Management_System_API.Controllers
         {
             var user = userService.GetUser(User);
             var role = context.UserRoles.Where(a => a.Id == user.UserRoleId).FirstOrDefault();
-            var backlogTasks = context.Tasks.Where(t => t.DueTime < DateTime.Now);
+            var backlogTasks = context.Tasks.Where(t => t.DueTime < DateTime.Now && t.CompletedTime == null);
 
             if (role.Name == "Partner")
                 backlogTasks = backlogTasks.Where(t => t.PartnerUserId == user.Id);
@@ -39,7 +40,7 @@ namespace Law_Firm_Management_System_API.Controllers
         {
             var user = userService.GetUser(User);
             var role = context.UserRoles.Where(a => a.Id == user.UserRoleId).FirstOrDefault();
-            var toDoTasks = context.Tasks.Where(t => t.InProgress == false && t.CompletedTime == null);
+            var toDoTasks = context.Tasks.Where(t => t.InProgress == false && t.CompletedTime == null && t.DueTime > DateTime.Now);
 
             if (role.Name == "Partner")
                 toDoTasks = toDoTasks.Where(t => t.PartnerUserId == user.Id);
@@ -56,7 +57,7 @@ namespace Law_Firm_Management_System_API.Controllers
         {
             var user = userService.GetUser(User);
             var role = context.UserRoles.Where(a => a.Id == user.UserRoleId).FirstOrDefault();
-            var inProgressTasks = context.Tasks.Where(t => t.InProgress == true);
+            var inProgressTasks = context.Tasks.Where(t => t.InProgress == true && t.DueTime > DateTime.Now);
 
             if (role.Name == "Partner")
                 inProgressTasks = inProgressTasks.Where(t => t.PartnerUserId == user.Id);
@@ -83,52 +84,16 @@ namespace Law_Firm_Management_System_API.Controllers
             return Ok(completeTasks.ToList());
         }
 
-        // Get the related case for the specific task        
+        // Get the specific task's information.
         [HttpGet]
-        [Route("RelatedCase")]
-        public IActionResult RelatedCase(int caseId)
+        [Route("Info/{TaskId}")]
+        public IActionResult GetTaskInformation(int taskId)
         {
-            // Find the case by its ID
-            var relatedCase = context.Cases.Where(c => c.Id == caseId).FirstOrDefault();
-            // Check if the case exists
-            if (relatedCase == null)
-            {
-                throw new Exception("Related case not found");
-            }
-            // Return the related case
-            return Ok(relatedCase);
-        }
+            var task = context.Tasks.Include(a => a.ParalegalUser).Include(a => a.Document).Include(a => a.Case).Include(a => a.Event).Include(a => a.Document).Where(a => a.Id == taskId)
+                .Select(x => new { id = x.Id, paralegalUserId = x.ParalegalUserId, paralegalFullName = x.ParalegalUser.FullName, caseId = x.CaseId, caseName = x.Case.Name, eventId = x.EventId, eventName = x.Event.Name, docId = x.DocumentId, docName = x.Document.Name, title = x.Title, description = x.Description, assignedTime = x.AssignedTime, completedTime = x.CompletedTime, dueTime = x.DueTime, inProgress = x.InProgress })
+                .FirstOrDefault();
 
-        // Get the related event for the specific task
-        [HttpGet]
-        [Route("RelatedEvent")]
-        public IActionResult RelatedEvent(int eventId)
-        {
-            // Find the event by its ID
-            var relatedEvent = context.Events.Where(c => c.Id == eventId).FirstOrDefault();
-            // Check if the event exists
-            if (relatedEvent == null)
-            {
-                throw new Exception("Related event not found");
-            }
-            // Return the related event
-            return Ok(relatedEvent);
-        }
-
-        // Get the related document for the specific task
-        [HttpGet]
-        [Route("RelatedDocument")]
-        public IActionResult RelatedDocument(int documentId)
-        {
-            // Find the document by its ID
-            var relatedDocument = context.Documents.Where(c => c.Id == documentId).ToList();
-            // Check if the event exists
-            if (relatedDocument == null)
-            {
-                throw new Exception("Related document not found");
-            }
-            // Return the related event
-            return Ok(relatedDocument);
+            return Ok(task);
         }
 
         // Create task by partner
@@ -159,16 +124,22 @@ namespace Law_Firm_Management_System_API.Controllers
             return Ok(new Response { Message = "New task created successfully" });
         }
 
-        // Update task by partner
+        // Update the task by partner.
         [HttpPut]
         [Route("")]
         public IActionResult UpdateTask([FromBody] TaskUpdateDto dto)
         {
             var user = userService.GetUser(User);
+            var partner = context.Partners.Where(c => c.UserId == user.Id).FirstOrDefault();
             var existingTask = context.Tasks.Where(t => t.Id == dto.TaskId).FirstOrDefault();
 
+            existingTask.ParalegalUserId = dto.IsAssignedParalegal ? partner.ParalegalUserId : null;
             existingTask.Title = dto.Title;
             existingTask.Description = dto.Description;
+            existingTask.CaseId = dto.CaseId;
+            existingTask.EventId = dto.EventId;
+            existingTask.DocumentId = dto.DocumentId;
+            existingTask.DueTime = dto.DueTime;
 
             context.Tasks.Update(existingTask);
             context.SaveChanges();
@@ -176,33 +147,27 @@ namespace Law_Firm_Management_System_API.Controllers
             return Ok(new Response { Message = "Task updated successfully" });
         }
 
-        // Update task completed time to now and task progress in progress - complete
+        // Update the task completed time.
         [HttpPut]
-        [Route("Complete")]
+        [Route("TaskComplete/{TaskId}")]
         public IActionResult UpdateCompletedTime(int taskId)
         {
-            var user = userService.GetUser(User);
             var existingTask = context.Tasks.Where(t => t.Id == taskId).FirstOrDefault();
-
             existingTask.CompletedTime = DateTime.Now;
             existingTask.InProgress = false;
-
             context.Tasks.Update(existingTask);
             context.SaveChanges();
 
             return Ok(new Response { Message = "Task updated successfully" });
         }
 
-        // Update task start InProgress   to do - in progress
+        // Accept and update the task to start the progress.
         [HttpPut]
-        [Route("Start")]
-        public IActionResult UpdateStartedProgress(int taskId)
+        [Route("StartProgress/{TaskId}")]
+        public IActionResult UpdateToInProgress(int taskId)
         {
-            var user = userService.GetUser(User);
             var existingTask = context.Tasks.Where(t => t.Id == taskId).FirstOrDefault();
-
             existingTask.InProgress = true;
-
             context.Tasks.Update(existingTask);
             context.SaveChanges();
 
@@ -211,15 +176,15 @@ namespace Law_Firm_Management_System_API.Controllers
 
         // Delete task by partner
         [HttpDelete]
-        [Route("{TaskId}")]
+        [Route("Delete/{TaskId}")]
         public IActionResult DeleteTask(int taskId)
         {
             var user = userService.GetUser(User);
-            var deleteTask = context.Tasks.Where(t => t.Id == taskId).FirstOrDefault();
-            context.Tasks.Remove(deleteTask);
+            var task = context.Tasks.Where(t => t.Id == taskId).FirstOrDefault();
+            context.Tasks.Remove(task);
             context.SaveChanges();
 
-            return Ok(new Response { Message = "Document deleted successfully" });
+            return Ok(new Response { Message = "Task deleted successfully" });
         }
 
         public class TaskCreateDto
@@ -227,9 +192,9 @@ namespace Law_Firm_Management_System_API.Controllers
             public string Title { get; set; } = null!;
             public string Description { get; set; } = null!;
             public DateTime DueTime { get; set; }
-            public int CaseId { get; set; }
-            public int EventId { get; set; }
-            public int DocumentId { get; set; }
+            public int? CaseId { get; set; }
+            public int? EventId { get; set; }
+            public int? DocumentId { get; set; }
             public bool IsAssignedParalegal { get; set; }
         }
 
@@ -238,6 +203,11 @@ namespace Law_Firm_Management_System_API.Controllers
             public int TaskId { get; set; }
             public string Title { get; set; } = null!;
             public string Description { get; set; } = null!;
+            public DateTime DueTime { get; set; }
+            public int? CaseId { get; set; }
+            public int? EventId { get; set; }
+            public int? DocumentId { get; set; }
+            public bool IsAssignedParalegal { get; set; }
         }
 
         public class CompletedTimeDto

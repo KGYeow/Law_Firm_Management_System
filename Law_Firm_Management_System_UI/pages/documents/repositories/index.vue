@@ -15,7 +15,7 @@
               v-model="filter.docId"
               hide-details
             >     
-              <template v-slot:prepend-item>
+              <template #prepend-item>
                 <v-list-item title="All Documents" @click="filter.docId = null"/>
               </template>
             </v-select>
@@ -31,7 +31,7 @@
               v-model="filter.categoryId"
               hide-details
             >     
-              <template v-slot:prepend-item>
+              <template #prepend-item>
                 <v-list-item title="All Categories" @click="filter.categoryId = null"/>
               </template>
             </v-select>
@@ -47,7 +47,7 @@
               v-model="filter.caseId"
               hide-details
             >     
-              <template v-slot:prepend-item>
+              <template #prepend-item>
                 <v-list-item title="All Cases" @click="filter.caseId = null"/>
               </template>
             </v-select>
@@ -63,7 +63,7 @@
               v-model="filter.userId"
               hide-details
             >     
-              <template v-slot:prepend-item>
+              <template #prepend-item>
                 <v-list-item title="All Partners" @click="filter.userId = null"/>
               </template>
             </v-select>
