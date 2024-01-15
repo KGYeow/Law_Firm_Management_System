@@ -149,7 +149,7 @@ namespace Law_Firm_Management_System_API.Controllers
 
         // Update the task completed time.
         [HttpPut]
-        [Route("TaskComplete/{TaskId}")]
+        [Route("CompleteTask/{TaskId}")]
         public IActionResult UpdateCompletedTime(int taskId)
         {
             var existingTask = context.Tasks.Where(t => t.Id == taskId).FirstOrDefault();

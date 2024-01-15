@@ -1,3 +1,10 @@
-.v-autocomplete .v-autocomplete__selection-text {
-  font-size: 0.875rem;
+.v-autocomplete
+{
+  .v-autocomplete__selection-text {
+    font-size: 0.875rem;
+  }
+
+  .v-field__input {
+    flex-wrap: nowrap;
+  }
 }
