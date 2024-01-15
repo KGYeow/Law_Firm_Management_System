@@ -156,13 +156,6 @@ const sidebarItem: menu[] = [
       },
     ]
   },
-  {
-    title: "Legal Information",
-    icon: tablerIcon.HelpIcon,
-    to: "/legal-information",
-    auth: true,
-    accessName: "LegalInformation",
-  },
 ];
 
 export default sidebarItem;

@@ -142,7 +142,7 @@ const addAnnouncementDetails = ref({
   title: useField('title'),
   description: useField('description'),
 })
-const { data: announcement } = fetchData.$get("/Dashboard/Announcement")
+const { data: announcement } = await fetchData.$get("/Dashboard/Announcement")
 const { data: userRole } = await fetchData.$get("/UserRole/RoleName")
 
 // Methods

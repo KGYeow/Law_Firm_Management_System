@@ -60,13 +60,15 @@ namespace Law_Firm_Management_System_API.Controllers
         [Route("Info/{DocId}")]
         public IActionResult GetDocumentInfo(int docId)
         {
-            var documentInfo = context.Documents.Where(d => d.Id == docId).FirstOrDefault();
+            var documentInfo = context.Documents.Include(a => a.Category).Include(a => a.Case).Include(a => a.PartnerUser).Where(d => d.Id == docId)
+                .Select(x => new { id = x.Id, categoryId = x.CategoryId, categoryName = x.Category.Name, caseId = x.CaseId, caseName = x.Case.Name, name = x.Name, modifiedDate = x.ModifiedDate, userId = x.PartnerUserId, modifiedBy = x.PartnerUser.FullName, type = x.Type, isArchived = x.IsArchived })
+                .FirstOrDefault();
             return Ok(documentInfo);
         }
 
         // Get the document attachment.
         [HttpGet]
-        [Route("GetDocument/{DocId}")]
+        [Route("GetAttachment/{DocId}")]
         public IActionResult GetDocumentAttachment(int docId)
         {
             var document = context.Documents.Where(d => d.Id == docId).FirstOrDefault();

@@ -1,4 +1,7 @@
-.authentication{
+.authentication {
+  background-image: url('/images/background/login-cover.jpg');
+  background-size: cover;
+  background-position: center;
   // margin: auto 0;
   
   &::before{

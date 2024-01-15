@@ -207,7 +207,7 @@
             class="mb-2 rounded-3 bg-background list-link"
             density="compact"
             prepend-icon="mdi-briefcase-variant-outline"
-            :to="``"
+            :href="`/cases/${selectedTask.caseId}`"
             link
             v-if="selectedTask.caseId"
           >
@@ -217,7 +217,7 @@
             class="mb-2 rounded-3 bg-background list-link"
             density="compact"
             prepend-icon="mdi-calendar-outline"
-            :to="``"
+            :href="``"
             link
             v-if="selectedTask.eventId"
           >
@@ -361,18 +361,19 @@ const updateTask = async(taskId, action) => {
   } catch { ElNotification.error({ message: "There is a problem with the server. Please try again later." }) }
 }
 const downloadDocument = async(docId) => {
-  const { data: doc } = await fetchData.$get(`/Document/Info/${docId}`)
+  const { data: docInfo } = await fetchData.$get(`/Document/Info/${docId}`)
+  const { data: attachment } = await fetchData.$get(`/Document/GetAttachment/${docId}`)
   const mimeType = {
     "PDF": "application/pdf",
     "Word": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
     "Excel": "application/vnd.ms-excel",
   }
-  const arrayBuffer = atob(doc.value.attachment)
-  const blob = new Blob([arrayBuffer], { type: mimeType[doc.value.type] })
+  const arrayBuffer = atob(attachment.value)
+  const blob = new Blob([arrayBuffer], { type: mimeType[docInfo.value.type] })
   const url = URL.createObjectURL(blob)
   const link = document.createElement('a')
   link.href = url
-  link.download = doc.value.name
+  link.download = docInfo.value.name
   link.click()
   document.body.removeChild(link)
 }

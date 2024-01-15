@@ -91,7 +91,7 @@
                   <ul class="m-0 list-inline hstack">
                     <li>
                       <v-tooltip text="Download" activator="parent" location="top" offset="2"/>
-                      <v-btn icon="mdi-download" size="small" variant="text" @click="downloadDocument(item.name, item.attachment, item.type)"/>
+                      <v-btn icon="mdi-download" size="small" variant="text" @click="downloadDocument(item.id, item.name, item.type)"/>
                     </li>
                     <li>
                       <v-tooltip text="Rename" activator="parent" location="top" offset="2"/>
@@ -157,7 +157,7 @@
       :docName="renameDocumentDetails.name"
       @close-modal="(e) => renameDocumentModal = e"
     />
-  </SharedUiModal>
+  </SharedUiModal>-
 </template>
 
 <script setup>
@@ -223,13 +223,14 @@ const renameDocumentGet = (docId, docName) => {
   renameDocumentDetails.value.name = docName
   renameDocumentModal.value = true
 }
-const downloadDocument = (docName, attachment, type) => {
+const downloadDocument = async(docId, docName, type) => {
+  const { data: attachment } = await fetchData.$get(`/Document/GetAttachment/${docId}`)
   const mimeType = {
     "PDF": "application/pdf",
     "Word": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
     "Excel": "application/vnd.ms-excel",
   }
-  const arrayBuffer = atob(attachment)
+  const arrayBuffer = atob(attachment.value)
   const blob = new Blob([arrayBuffer], { type: mimeType[type] })
   const url = URL.createObjectURL(blob)
   const link = document.createElement('a')
