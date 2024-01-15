@@ -264,6 +264,7 @@ namespace Law_Firm_Management_System_API.Controllers
                 .Include(c => c.Status)  // Include the Status navigation property
                 .FirstOrDefault(c => c.Id == caseId && c.PartnerUserId == user.Id);
 
+            /*
             if (existingCase == null)
             {
                 return NotFound(new Response { Status = "Error", Message = "Case not found" });
@@ -273,6 +274,11 @@ namespace Law_Firm_Management_System_API.Controllers
             if (existingCase.Status.StatusName != "Settled")
             {
                 return BadRequest(new Response { Status = "Error", Message = "Invalid operation. Case status must be Settled." });
+            }*/
+
+            if (existingCase == null)
+            {
+                throw new Exception("The Case is not found in the system.");
             }
 
             // Update the ClosedTime

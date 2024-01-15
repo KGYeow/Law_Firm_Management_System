@@ -12,7 +12,7 @@
               placeholder="Select client"
               variant="outlined"
               density="compact"
-              v-model="editedClientDetails.clientId.modelValue"
+              v-model="editedClientDetails.clientId.value"
               hide-details="auto"
             />
           </v-col>

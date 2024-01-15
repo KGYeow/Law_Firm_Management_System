@@ -74,10 +74,6 @@
                   </td>
                   <td class="list-inline hstack">
                     <li>
-                      <v-tooltip text="Case Details" activator="parent" location="top" offset="2"/>
-                      <v-icon @click.stop="openDialog(item)">mdi-open-in-new</v-icon>
-                    </li>
-                    <li>
                       <v-tooltip text="Delete Permanently" activator="parent" location="top" offset="2"/>
                       <el-popconfirm
                         title="Are you sure to delete this document permanently?"

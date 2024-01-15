@@ -45,43 +45,59 @@
                   <v-card-subtitle>{{ caseInfo.name }}</v-card-subtitle>
                 </v-col>
               </v-row>
-                <v-row class="pb-2">
-                  <v-col>
-                    <v-label class="text-h6 pb-3">Current Case Status</v-label>
-                    <div class="status-container">
-                      <div class="status-bar">
-                        <div
-                          v-for="(status, index) in statusList"
-                          :key="index"
-                          class="status-item"
-                          :class="{ 'current-status': index === caseInfo.statusId - 1 }"
-                        >
-                          <div class="status-part">
-                            <el-popconfirm
-                              title="Are you sure to change the status?"
-                              icon-color="red"
-                              width="190"
-                              @confirm="changeCaseStatus(caseInfo.id, status.name)"
-                            >
-                              <template #reference>
-                                <div class="circle">
-                                  {{ status.id }}
-                                </div>
-                              </template>
-                            </el-popconfirm>
-                            <span class="status-name" :class="{ 'bold': index === caseInfo.statusId - 1 }">
-                              {{ status.name }}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                      <!--Current Status Description-->
-                      <div class="status-description">
-                        <strong>{{ caseInfo.statusDescription }}</strong>
-                      </div>
+              <!--Status Bar-->
+              <v-row class="pb-2">
+                <v-col>
+                  <v-label class="text-h6 pb-3">Current Case Status</v-label>
+                  <!-- Make Vuetify timeline horizontal -->
+                  <v-timeline direction="horizontal">
+                    <v-timeline-item
+                      v-for="(status, index) in statusList"
+                      :key="index"
+                      dot-color="#ddd"
+                      :class="{ 'clickable-circle': true, 'current-status': index === caseInfo.statusId - 1 }"
+                      @click="showConfirmationDialog(caseInfo.id, status.name)"
+                    >
+                      <v-timeline-item-title>
+                        <span :class="{ 'current-status-name': index === caseInfo.statusId - 1 }">{{ status.name }}</span>
+                      </v-timeline-item-title>
+                    </v-timeline-item>
+                  </v-timeline>
+                  <div class="status-description">
+                    <strong>{{ caseInfo.statusDescription }}</strong>
+                  </div>
+                </v-col>
+              </v-row>
+              
+              
+              <!-- Status Bar
+            <div class="status-container">
+              <div class="pa-md-4"><strong>Current Case Status</strong></div>
+              <div class="status-bar">
+                <div
+                  v-for="(status, index) in statusList"
+                  :key="index"
+                  class="status-item"
+                  :class="{ 'current-status': index === selectedCaseDetails.statusId - 1 }"
+                >
+                  <div class="status-part">
+                    <div
+                      class="circle"
+                      @click="changeCaseStatus(selectedCaseDetails.id, status.name)"
+                    >
+                      {{ status.id }}
                     </div>
-                  </v-col>
-                </v-row>
+                    <span class="status-name" :class="{ 'bold': index === selectedCaseDetails.statusId - 1 }">
+                      {{ status.name }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+          <div class="status-description">
+              <strong>{{ selectedCaseDetails.statusDescription }}</strong>
+          </div>
+        </div>-->
+              <!--Related Document-->
                 <v-row class="pb-2">
                 <v-col>
                   <div class="d-flex align-center">
@@ -102,6 +118,14 @@
                   </div>
                 </v-col>
               </v-row>
+              <!--Upload Documents-->
+              <v-file-input
+                v-model="selectedFile"
+                accept=".pdf, .doc, .docx"
+                show-size
+                label="Upload Document"
+                @change="handleFileUpload"
+              ></v-file-input>
             </v-card-item>
           </div>
         </div>
@@ -127,6 +151,21 @@
   />
 </SharedUiModal>
 </template>
+
+<style scoped>
+.clickable-circle {
+  cursor:pointer;
+  background-color: #ddd !important;
+}
+.current-status-name {
+  color:#2b4c65;
+  font-weight: bold;
+}
+
+.current-status .v-timeline-item-dot {
+  background-color: #2b4c65 !important;
+}
+</style>
 
 <script setup>
 import { ref, shallowRef } from 'vue';
@@ -205,7 +244,7 @@ const statusList = ref([
   { id: 2, name: 'Under Review' },
   { id: 3, name: 'Negotiation' },
   { id: 4, name: 'Court Proceedings' },
-  { id: 5, name: 'In Hold' },
+  { id: 5, name: 'On Hold' },
   { id: 6, name: 'Settled' },
   // ... other statuses ...
 ]);
@@ -228,18 +267,61 @@ const editClientGet = (caseId, clientId) => {
   editClientModal.value = true;
 };
 
+// Data for handling file upload
+const selectedFile = ref(null);
+
+// Method for handling file upload
+const handleFileUpload = () => {
+  // Check if a file is selected
+  if (selectedFile.value) {
+    // You can access the selected file using selectedFile.value
+    const file = selectedFile.value;
+
+    // Perform any logic you need with the selected file
+    console.log('Selected file:', file);
+
+    // Add your logic for uploading the file to the server
+    // For example, you might want to use an API endpoint to handle the upload
+    // You can use tools like Axios or the Fetch API for this purpose
+  }
+};
+
+const showConfirmationDialog = async (caseId, newStatus) => {
+  try {
+    const confirmDialogOptions = {
+      title: 'Are you sure to change the status?',
+      icon: 'el-icon-warning-outline',
+      type: 'warning',
+      customClass: 'status-change-confirm-dialog', // Add a custom class for styling if needed
+      showCancelButton: true,
+      confirmButtonText: 'Yes',
+      cancelButtonText: 'No',
+    };
+
+    const confirmResult = await ElMessageBox.confirm('Are you sure to change the status?', 'Warning', {
+      confirmButtonText: 'Yes',
+      cancelButtonText: 'No',
+      type: 'warning',
+    });
+
+    if (confirmResult === 'confirm') {
+      // User clicked "Yes" in the confirmation dialog
+      await changeCaseStatus(caseId, newStatus);
+    }
+  } catch (error) {
+    console.error('Error showing confirmation dialog:', error);
+  }
+};
+
 //Change Case Status
 const changeCaseStatus = async (caseId, newStatus) => {
+  
   try {
-    console.log('Changing status for caseId:', caseId, 'to', newStatus);
-
     const response = await fetchData.$put(`/Case/ChangeStatus/${caseId}`, {
       NewStatus: newStatus,
     });
 
-    console.log('Response from server:', response);
-
-    if (response && response.data) {
+    if (!response.error) {
       // Update the ClosedTime if the new status is "Settled"
       if (newStatus === 'Settled') {
         // Make a new request to update the ClosedTime
@@ -247,8 +329,6 @@ const changeCaseStatus = async (caseId, newStatus) => {
         console.log('ClosedTime updated:', closedTimeResponse);
       }
 
-      // Optionally, you can refresh the case details or perform other actions
-      // based on the successful status change.
       ElNotification.success({ message: response.data.message });
       refreshNuxtData(); // Refresh the case list or perform any necessary actions
     } else {
