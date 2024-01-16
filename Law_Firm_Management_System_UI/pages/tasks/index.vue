@@ -217,7 +217,7 @@
             class="mb-2 rounded-3 bg-background list-link"
             density="compact"
             prepend-icon="mdi-calendar-outline"
-            :href="``"
+            :href="`/events/${selectedTask.eventId}`"
             link
             v-if="selectedTask.eventId"
           >
@@ -295,6 +295,7 @@
 
 <script setup>
 import { ClipboardTextIcon } from "vue-tabler-icons"
+import { Buffer } from 'buffer'
 import dayjs from 'dayjs'
 
 // Data
@@ -368,13 +369,18 @@ const downloadDocument = async(docId) => {
     "Word": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
     "Excel": "application/vnd.ms-excel",
   }
-  const arrayBuffer = atob(attachment.value)
+  const arrayBuffer = Buffer.from(attachment.value, 'base64');
   const blob = new Blob([arrayBuffer], { type: mimeType[docInfo.value.type] })
   const url = URL.createObjectURL(blob)
-  const link = document.createElement('a')
-  link.href = url
-  link.download = docInfo.value.name
-  link.click()
-  document.body.removeChild(link)
+
+  if (docInfo.value.type == 'PDF')
+    window.open(url, '_blank')
+  else {
+    const link = document.createElement('a')
+    link.href = url
+    link.download = docInfo.value.name
+    link.click()
+    document.body.removeChild(link)
+  }
 }
 </script>

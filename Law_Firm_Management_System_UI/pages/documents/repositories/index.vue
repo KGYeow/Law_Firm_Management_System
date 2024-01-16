@@ -162,9 +162,9 @@
 
 <script setup>
 import { FileDescriptionIcon } from "vue-tabler-icons"
+import { Buffer } from 'buffer'
 import dayjs from 'dayjs'
 import UiParentCard from '@/components/shared/UiParentCard.vue'
-import { Buffer } from 'buffer'
 
 // Data
 const filter = ref({
