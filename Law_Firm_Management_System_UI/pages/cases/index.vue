@@ -124,7 +124,7 @@
           <v-row>
             <v-col>
               <v-label class="text-caption">Case Name</v-label>
-              <v-text-field v-model="newCaseDetails.name" outlined dense/>
+              <v-text-field variant="outlined" v-model="newCaseDetails.name" outlined dense/>
             </v-col>
           </v-row>
           <v-row>
