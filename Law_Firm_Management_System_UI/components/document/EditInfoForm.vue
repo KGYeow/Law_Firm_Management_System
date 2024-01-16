@@ -7,8 +7,9 @@
           <v-text-field
             variant="outlined"
             density="compact"
-            :error-messages="editDocumentInfoDetails.name.errorMessage"
-            v-model="editDocumentInfoDetails.name.value"
+            :suffix="editDocumentInfoDetails.extension"
+            :error-messages="editDocumentInfoDetails.nameWithoutExt.errorMessage"
+            v-model="editDocumentInfoDetails.nameWithoutExt.value"
             hide-details="auto"
           />
         </v-col>
@@ -62,18 +63,19 @@ const emit = defineEmits(['close-modal'])
 // Data
 const { handleSubmit } = useForm({
   initialValues: {
-    name: props.editDocumentInfo.name,
+    nameWithoutExt: props.editDocumentInfo.name.slice(0, props.editDocumentInfo.name.lastIndexOf(".")),
   },
   validationSchema: {
-    name(value) {
+    nameWithoutExt(value) {
       return value ? true : 'Document name is required'
     }
   }
 })
 const editDocumentInfoDetails = ref({
-  name: useField('name'),
+  nameWithoutExt: useField('nameWithoutExt'),
   categoryId: props.editDocumentInfo.categoryId,
   caseId: props.editDocumentInfo.caseId,
+  extension: props.editDocumentInfo.name.slice(props.editDocumentInfo.name.lastIndexOf(".")) ,
 })
 
 // Methods
@@ -81,16 +83,17 @@ const editDocInfo = handleSubmit(async(values) => {
   try {
     const result = await fetchData.$put("/Document/Edit/Info", {
       docId: props.editDocumentInfo.docId,
-      name: values.name,
+      name: `${values.nameWithoutExt}${editDocumentInfoDetails.value.extension}`,
       categoryId: editDocumentInfoDetails.value.categoryId,
       caseId: editDocumentInfoDetails.value.caseId,
     })
     
     if (!result.error) {
       emit('close-modal', false)
-      editDocumentInfoDetails.value.name.resetField()
+      editDocumentInfoDetails.value.nameWithoutExt.resetField()
       editDocumentInfoDetails.value.categoryId = null
       editDocumentInfoDetails.value.caseId = null
+      editDocumentInfoDetails.value.extension = null
       ElNotification.success({ message: result.message })
       refreshNuxtData()
     }

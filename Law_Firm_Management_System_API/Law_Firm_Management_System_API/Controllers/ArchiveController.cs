@@ -30,8 +30,8 @@ namespace Law_Firm_Management_System_API.Controllers
         [Route("Filter")]
         public IActionResult GetArchiveFilteredList([FromQuery] DocFilterDto dto)
         {
-            var l = context.Documents.Include(a => a.Category).Include(a => a.Case).Include(a => a.PartnerUser).Where(a => a.IsArchived == true).ToList()
-                .Select(x => new { id = x.Id, categoryId = x.CategoryId, categoryName = x.Category.Name, caseId = x.CaseId, caseName = x.Case?.Name, name = x.Name, modifiedDate = x.ModifiedDate, userId = x.PartnerUserId, modifiedBy = x.PartnerUser.FullName, type = x.Type, isArchived = x.IsArchived });
+            var l = context.Documents.Include(a => a.Category).Include(a => a.Case).Include(a => a.User).Where(a => a.IsArchived == true).ToList()
+                .Select(x => new { id = x.Id, categoryId = x.CategoryId, categoryName = x.Category.Name, caseId = x.CaseId, caseName = x.Case?.Name, name = x.Name, modifiedTime = x.ModifiedTime, userId = x.UserId, modifiedBy = x.User.FullName, type = x.Type, isArchived = x.IsArchived });
 
             if (dto.DocId != null)
                 l = l.Where(a => a.id == dto.DocId);
@@ -39,8 +39,6 @@ namespace Law_Firm_Management_System_API.Controllers
                 l = l.Where(a => a.categoryId == dto.CategoryId);
             if (dto.CaseId != null)
                 l = l.Where(a => a.caseId == dto.CaseId);
-            if (dto.UserId != null)
-                l = l.Where(a => a.userId == dto.UserId);
             l.ToList();
 
             return Ok(l);

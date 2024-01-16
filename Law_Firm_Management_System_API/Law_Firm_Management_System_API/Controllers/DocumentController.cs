@@ -3,6 +3,7 @@ using Law_Firm_Management_System_API.Models;
 using Law_Firm_Management_System_API.Service;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Xml.Linq;
 using static Law_Firm_Management_System_API.Controllers.AppointmentController;
 
 namespace Law_Firm_Management_System_API.Controllers
@@ -39,8 +40,8 @@ namespace Law_Firm_Management_System_API.Controllers
         [Route("Filter")]
         public IActionResult GetDocumentFilteredList([FromQuery] DocFilterDto dto)
         {
-            var l = context.Documents.Include(a => a.Category).Include(a => a.Case).Include(a => a.PartnerUser).Where(a => a.IsArchived == false).ToList()
-                .Select(x => new { id = x.Id, categoryId = x.CategoryId, categoryName = x.Category.Name, caseId = x.CaseId, caseName = x.Case?.Name, name = x.Name, modifiedDate = x.ModifiedDate, userId = x.PartnerUserId, modifiedBy = x.PartnerUser.FullName, type = x.Type, isArchived = x.IsArchived });
+            var l = context.Documents.Include(a => a.Category).Include(a => a.Case).Include(a => a.User).Where(a => a.IsArchived == false).ToList()
+                .Select(x => new { id = x.Id, categoryId = x.CategoryId, categoryName = x.Category.Name, caseId = x.CaseId, caseName = x.Case?.Name, name = x.Name, modifiedTime = x.ModifiedTime, userId = x.UserId, modifiedBy = x.User.FullName, type = x.Type, isArchived = x.IsArchived });
 
             if (dto.DocId != null)
                 l = l.Where(a => a.id == dto.DocId);
@@ -48,8 +49,6 @@ namespace Law_Firm_Management_System_API.Controllers
                 l = l.Where(a => a.categoryId == dto.CategoryId);
             if (dto.CaseId != null)
                 l = l.Where(a => a.caseId == dto.CaseId);
-            if (dto.UserId != null)
-                l = l.Where(a => a.userId == dto.UserId);
             l.ToList();
 
             return Ok(l);
@@ -60,8 +59,8 @@ namespace Law_Firm_Management_System_API.Controllers
         [Route("Info/{DocId}")]
         public IActionResult GetDocumentInfo(int docId)
         {
-            var documentInfo = context.Documents.Include(a => a.Category).Include(a => a.Case).Include(a => a.PartnerUser).Where(d => d.Id == docId)
-                .Select(x => new { id = x.Id, categoryId = x.CategoryId, categoryName = x.Category.Name, caseId = x.CaseId, caseName = x.Case.Name, name = x.Name, modifiedDate = x.ModifiedDate, userId = x.PartnerUserId, modifiedBy = x.PartnerUser.FullName, type = x.Type, isArchived = x.IsArchived })
+            var documentInfo = context.Documents.Include(a => a.Category).Include(a => a.Case).Include(a => a.User).Where(d => d.Id == docId)
+                .Select(x => new { id = x.Id, categoryId = x.CategoryId, categoryName = x.Category.Name, caseId = x.CaseId, caseName = x.Case.Name, name = x.Name, createdTime = x.CreatedTime, modifiedTime = x.ModifiedTime, userId = x.UserId, modifiedBy = x.User.FullName, type = x.Type, isArchived = x.IsArchived })
                 .FirstOrDefault();
             return Ok(documentInfo);
         }
@@ -72,9 +71,6 @@ namespace Law_Firm_Management_System_API.Controllers
         public IActionResult GetDocumentAttachment(int docId)
         {
             var document = context.Documents.Where(d => d.Id == docId).FirstOrDefault();
-            if (document.Attachment == null)
-                throw new Exception("The document is not found in the system");
-
             return Ok(document.Attachment);
         }
 
@@ -94,8 +90,9 @@ namespace Law_Firm_Management_System_API.Controllers
                 Name = dto.Name,
                 CategoryId = dto.CategoryId,
                 CaseId = dto.CaseId,
-                PartnerUserId = user.Id,
-                ModifiedDate = DateTime.Now,
+                UserId = user.Id,
+                CreatedTime = DateTime.Now,
+                ModifiedTime = DateTime.Now,
                 Attachment = dto.Attachment,
                 Type = dto.Type,
                 IsArchived = false 
@@ -117,9 +114,8 @@ namespace Law_Firm_Management_System_API.Controllers
             existingDoc.Name = dto.Name;
             existingDoc.CategoryId = dto.CategoryId;
             existingDoc.CaseId = dto.CaseId;
-            existingDoc.PartnerUserId = user.Id;
-            existingDoc.ModifiedDate = DateTime.Now;
-
+            existingDoc.UserId = user.Id;
+            existingDoc.ModifiedTime = DateTime.Now;
             context.Documents.Update(existingDoc);
             context.SaveChanges();
 
@@ -134,11 +130,11 @@ namespace Law_Firm_Management_System_API.Controllers
             var user = userService.GetUser(User);
             var existingDoc = context.Documents.Where(a => a.Id == dto.DocId).FirstOrDefault();
 
+            existingDoc.Name = Path.ChangeExtension(existingDoc.Name, "." + dto.Extension);
             existingDoc.Attachment = dto.Attachment;
             existingDoc.Type = dto.Type;
-            existingDoc.PartnerUserId = user.Id;
-            existingDoc.ModifiedDate = DateTime.Now;
-
+            existingDoc.UserId = user.Id;
+            existingDoc.ModifiedTime = DateTime.Now;
             context.Documents.Update(existingDoc);
             context.SaveChanges();
 
@@ -181,7 +177,6 @@ namespace Law_Firm_Management_System_API.Controllers
             public int? DocId { get; set; }
             public int? CategoryId { get; set; }
             public int? CaseId { get; set; }
-            public int? UserId { get; set; }
         }
 
         public class DocDto
@@ -206,6 +201,7 @@ namespace Law_Firm_Management_System_API.Controllers
             public int DocId { get; set; }
             public byte[] Attachment { get; set; } = null!;
             public string Type { get; set; } = null!;
+            public string Extension { get; set; } = null!;
         }
     }
 }

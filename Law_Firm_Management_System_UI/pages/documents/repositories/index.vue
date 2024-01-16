@@ -16,6 +16,18 @@
               hide-details
             />     
           </v-col>
+          <v-col class="pe-0" cols="3">
+            <v-autocomplete
+              :items="caseList"
+              item-title="name"
+              item-value="id"
+              placeholder="Cases"
+              density="compact"
+              variant="outlined"
+              v-model="filter.caseId"
+              hide-details
+            />
+          </v-col>
           <v-col class="pe-0" cols="2">
             <v-select
               :items="categoryList"
@@ -31,30 +43,6 @@
                 <v-list-item title="All Categories" @click="filter.categoryId = null"/>
               </template>
             </v-select>
-          </v-col>
-          <v-col class="pe-0" cols="3">
-            <v-autocomplete
-              :items="caseList"
-              item-title="name"
-              item-value="id"
-              placeholder="Cases"
-              density="compact"
-              variant="outlined"
-              v-model="filter.caseId"
-              hide-details
-            />
-          </v-col>
-          <v-col class="pe-0" cols="2">
-            <v-autocomplete
-              :items="partnerList"
-              item-title="fullName"
-              item-value="userId"
-              placeholder="Modified By"
-              density="compact"
-              variant="outlined"
-              v-model="filter.userId"
-              hide-details
-            />
           </v-col>
         </v-row>
 
@@ -76,7 +64,7 @@
                 <td>{{ item.categoryName }}</td>
                 <td>{{ item.caseName ?? '-' }}</td>
                 <td>{{ item.modifiedBy }}</td>
-                <td>{{ dayjs(item.modifiedDate).format("DD MMM YYYY") }}</td>
+                <td>{{ dayjs(item.modifiedTime).format("DD MMM YYYY") }}</td>
                 <td>
                   <ul class="m-0 list-inline hstack">
                     <li>
@@ -84,12 +72,12 @@
                       <v-btn icon="mdi-download-outline" size="small" variant="text" @click="downloadDocument(item.id, item.name, item.type)"/>
                     </li>
                     <li>
-                      <v-tooltip text="Edit Info" activator="parent" location="top" offset="2"/>
-                      <v-btn icon="mdi-file-edit-outline" size="small" variant="text" @click="getEditDocumentInfo(item.id, item.name, item.categoryId, item.caseId)"/>
+                      <v-tooltip text="Update" activator="parent" location="top" offset="2"/>
+                      <v-btn icon="mdi-upload-outline" size="small" variant="text" @click="getEditAttachmentInfo(item.id)"/>
                     </li>
                     <li>
-                      <v-tooltip text="Update" activator="parent" location="top" offset="2"/>
-                      <v-btn icon="mdi-update" size="small" variant="text" @click="getEditAttachmentInfo(item.id)"/>
+                      <v-tooltip text="Edit Info" activator="parent" location="top" offset="2"/>
+                      <v-btn icon="mdi-file-edit-outline" size="small" variant="text" @click="getEditDocumentInfo(item.id, item.name, item.categoryId, item.caseId)"/>
                     </li>
                     <li>
                       <v-tooltip text="Archive" activator="parent" location="top" offset="2"/>
@@ -177,14 +165,13 @@ const headers = ref([
   { key: "category", title: "Category" },
   { key: "case", title: "Case" },
   { key: "modifiedBy", title: "Modified By" },
-  { key: "modifiedDate", title: "Modified Date" },
+  { key: "modifiedTime", title: "Modified Time" },
   { key: "actions", sortable: false, width: 0 },
 ])
 const filter = ref({
   docId: null,
   categoryId: null,
   caseId: null,
-  userId: null,
 })
 const editDocumentInfoDetails = ref({
   docId: null,
@@ -198,7 +185,6 @@ const editDocumentInfoModal = ref(false)
 const editAttachmentModal = ref(false)
 const { data: caseList } = await fetchData.$get("/Case")
 const { data: categoryList } = await fetchData.$get("/Document/Category")
-const { data: partnerList } = await fetchData.$get("/Partner")
 const { data: documentList } = await fetchData.$get("/Document")
 const { data: documentFilterList } = await fetchData.$get("/Document/Filter", filter.value)
 

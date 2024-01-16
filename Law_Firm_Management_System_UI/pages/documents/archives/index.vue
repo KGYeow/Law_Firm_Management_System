@@ -5,7 +5,7 @@
         <v-row class="px-7">
           <!-- Filters -->
           <v-col class="pe-0" cols="3">
-            <v-select
+            <v-autocomplete
               :items="archiveList"
               item-title="name"
               item-value="id"
@@ -14,11 +14,19 @@
               variant="outlined"
               v-model="filter.docId"
               hide-details
-            >     
-              <template #prepend-item>
-                <v-list-item title="All Documents" @click="filter.docId = null"/>
-              </template>
-            </v-select>
+            />     
+          </v-col>
+          <v-col class="pe-0" cols="3">
+            <v-autocomplete
+              :items="caseList"
+              item-title="name"
+              item-value="id"
+              placeholder="Cases"
+              density="compact"
+              variant="outlined"
+              v-model="filter.caseId"
+              hide-details
+            />
           </v-col>
           <v-col class="pe-0" cols="2">
             <v-select
@@ -33,38 +41,6 @@
             >     
               <template #prepend-item>
                 <v-list-item title="All Categories" @click="filter.categoryId = null"/>
-              </template>
-            </v-select>
-          </v-col>
-          <v-col class="pe-0" cols="3">
-            <v-select
-              :items="caseList"
-              item-title="name"
-              item-value="id"
-              placeholder="Cases"
-              density="compact"
-              variant="outlined"
-              v-model="filter.caseId"
-              hide-details
-            >     
-              <template #prepend-item>
-                <v-list-item title="All Cases" @click="filter.caseId = null"/>
-              </template>
-            </v-select>
-          </v-col>
-          <v-col class="pe-0" cols="2">
-            <v-select
-              :items="partnerList"
-              item-title="fullName"
-              item-value="userId"
-              placeholder="Modified By"
-              density="compact"
-              variant="outlined"
-              v-model="filter.userId"
-              hide-details
-            >     
-              <template #prepend-item>
-                <v-list-item title="All Partners" @click="filter.userId = null"/>
               </template>
             </v-select>
           </v-col>
@@ -86,7 +62,7 @@
                 <td>{{ item.categoryName }}</td>
                 <td>{{ item.caseName ?? '-' }}</td>
                 <td>{{ item.modifiedBy }}</td>
-                <td>{{ dayjs(item.modifiedDate).format("DD MMM YYYY") }}</td>
+                <td>{{ dayjs(item.modifiedTime).format("DD MMM YYYY") }}</td>
                 <td>
                   <ul class="m-0 list-inline hstack">
                     <li>
@@ -146,7 +122,6 @@ const filter = ref({
   docId: null,
   categoryId: null,
   caseId: null,
-  type: null,
 })
 const currentPage = ref(1)
 const itemsPerPage = ref(10)
@@ -155,12 +130,11 @@ const headers = ref([
   { key: "category", title: "Category" },
   { key: "case", title: "Case" },
   { key: "modifiedBy", title: "Modified By" },
-  { key: "modifiedDate", title: "Modified Date" },
+  { key: "modifiedTime", title: "Modified Time" },
   { key: "actions", sortable: false, width: 0 },
 ])
 const { data: caseList } = await fetchData.$get("/Case")
 const { data: categoryList } = await fetchData.$get("/Document/Category")
-const { data: partnerList } = await fetchData.$get("/Partner")
 const { data: archiveList } = await fetchData.$get("/Archive")
 const { data: archiveFilterList } = await fetchData.$get("/Archive/Filter", filter.value)
 

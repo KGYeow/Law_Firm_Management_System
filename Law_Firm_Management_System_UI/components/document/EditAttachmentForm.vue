@@ -55,6 +55,7 @@ const editAttachmentDetails = ref({
   attachmentInfo: null,
   attachment: useField('attachment'),
   type: null,
+  extension: null,
 })
 const acceptedDocInput = ref(
   `application/pdf,
@@ -75,6 +76,7 @@ const getFileType = (docName) => {
   }
   const extensionIndex = docName.lastIndexOf(".")
   const ext = docName.slice(extensionIndex + 1) // Get the extension
+  editAttachmentDetails.value.extension = ext
   return extensions[ext] || null // Check for extension in map, return null if not found
 }
 const uploadFile = async() => {
@@ -95,6 +97,7 @@ const uploadFile = async() => {
   else
   {
     editAttachmentDetails.value.type = null
+    editAttachmentDetails.value.extension = null
     editAttachmentDetails.value.attachment.value = null
   }
 }
@@ -104,12 +107,14 @@ const editAttachmentInfo = handleSubmit(async(values) => {
       docId: props.documentId,
       attachment: values.attachment,
       type: editAttachmentDetails.value.type,
+      extension: editAttachmentDetails.value.extension
     })
     
     if (!result.error) {
       emit('close-modal', false)
       editAttachmentDetails.value.attachment.resetField()
       editAttachmentDetails.value.type = null
+      editAttachmentDetails.value.extension = null
       editAttachmentDetails.value.attachmentInfo = null
       ElNotification.success({ message: result.message })
       refreshNuxtData()

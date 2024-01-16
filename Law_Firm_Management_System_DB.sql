@@ -219,8 +219,9 @@ CREATE TABLE [dbo].[Document](
 	[Name] [varchar](max) NOT NULL,
 	[CategoryID] [int] NOT NULL,
 	[CaseID] [int] NULL,
-	[PartnerUserID] [int] NOT NULL,
-	[ModifiedDate] [datetime] NOT NULL,
+	[UserID] [int] NOT NULL,
+	[CreatedTime] [datetime] NOT NULL,
+	[ModifiedTime] [datetime] NOT NULL,
 	[Type] [varchar](10) NOT NULL,
 	[IsArchived] [bit] NOT NULL,
 	[Attachment] [varbinary](max) NOT NULL,
@@ -625,10 +626,10 @@ GO
 ALTER TABLE [dbo].[Document] CHECK CONSTRAINT [FK_Document_Case]
 GO
 
-ALTER TABLE [dbo].[Document] WITH CHECK ADD CONSTRAINT [FK_Document_Partner] FOREIGN KEY([PartnerUserID])
+ALTER TABLE [dbo].[Document] WITH CHECK ADD CONSTRAINT [FK_Document_User] FOREIGN KEY([UserID])
 REFERENCES [dbo].[User] ([ID])
 GO
-ALTER TABLE [dbo].[Document] CHECK CONSTRAINT [FK_Document_Partner]
+ALTER TABLE [dbo].[Document] CHECK CONSTRAINT [FK_Document_User]
 GO
 
 ALTER TABLE [dbo].[Client] WITH CHECK ADD CONSTRAINT [FK_Client_User] FOREIGN KEY([UserID])

@@ -99,7 +99,7 @@
                 </div>
                 <div v-else>
                   <v-btn color="primary" variant="outlined" @click="editUserCancel">Cancel</v-btn>
-                  <v-btn color="primary" variant="tonal" class="ms-2" flat type="submit">Save Details</v-btn>
+                  <v-btn color="primary" variant="tonal" class="ms-2" flat type="submit">Save</v-btn>
                 </div>
               </v-card-actions>
             </form>
@@ -180,15 +180,12 @@ const editUserCancel = () => {
   editUserDetails.value.email.resetField()
   editUserDetails.value.role.resetField()
 }
-const editUser = handleSubmit(async(values) => {
+const editUser = handleSubmit(async(values, { resetForm }) => {
   try {
     const result = await fetchData.$put(`/User/Info/${userInfo.value.id}/Edit`, values)
     if (!result.error) {
       isEdit.value = false
-      editUserDetails.value.fullName.setValue(values.fullName)
-      editUserDetails.value.username.setValue(values.username)
-      editUserDetails.value.email.setValue(values.email)
-      editUserDetails.value.role.setValue(values.role)
+      resetForm({ values: values })
       ElNotification.success({ message: result.message })
       refreshNuxtData()
     }

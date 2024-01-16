@@ -7,18 +7,27 @@
             <v-card-title class="text-h6 text-body-tertiary">
               Document Information
             </v-card-title>
-            <form @submit.prevent="editDocument">
+            <form @submit.prevent="editDocInfo">
               <v-card-item>
                 <v-row class="pb-2">
                   <v-col>
                     <v-label class="text-h6 pb-3">Name</v-label>
-                    <v-card-subtitle>{{ docInfo.name }}</v-card-subtitle>
+                    <v-card-subtitle class="text-wrap" v-if="!isEdit">{{ docInfo.name }}</v-card-subtitle>
+                    <v-text-field
+                      variant="outlined"
+                      density="compact"
+                      :suffix="editDocumentInfoDetails.extension"
+                      :error-messages="editDocumentInfoDetails.nameWithoutExt.errorMessage"
+                      v-model="editDocumentInfoDetails.nameWithoutExt.value"
+                      hide-details="auto"
+                      v-else
+                    />
                   </v-col>
                 </v-row>
                 <v-row class="pb-2">
-                  <v-col>
+                  <v-col cols="4">
                     <v-label class="text-h6 pb-3">Category</v-label>
-                    <v-card-subtitle v-if="!isEdit">{{ docInfo.categoryName }}</v-card-subtitle>
+                    <v-card-subtitle class="text-wrap" v-if="!isEdit">{{ docInfo.categoryName }}</v-card-subtitle>
                     <v-select
                       :items="categoryList"
                       item-title="name"
@@ -26,15 +35,14 @@
                       placeholder="Select category"
                       variant="outlined"
                       density="compact"
-                      :error-messages="editDocumentDetails.categoryId.errorMessage"
-                      v-model="editDocumentDetails.categoryId.value"
+                      v-model="editDocumentInfoDetails.categoryId"
                       hide-details="auto"
                       v-else
                     />
                   </v-col>
-                  <v-col>
+                  <v-col cols="4">
                     <v-label class="text-h6 pb-3">Related Case</v-label>
-                    <v-card-subtitle v-if="!isEdit">{{ docInfo.caseName }}</v-card-subtitle>
+                    <v-card-subtitle class="text-wrap" v-if="!isEdit">{{ docInfo.caseName ?? '-' }}</v-card-subtitle>
                     <v-select
                       :items="caseList"
                       item-title="name"
@@ -42,108 +50,87 @@
                       placeholder="Select case"
                       variant="outlined"
                       density="compact"
-                      :error-messages="editDocumentDetails.caseId.errorMessage"
-                      v-model="editDocumentDetails.caseId.value"
+                      v-model="editDocumentInfoDetails.caseId"
                       hide-details="auto"
-                      v-else
-                    />
-                  </v-col>
-                  <v-col>
-                    <v-label class="text-h6 pb-3">Attachment</v-label>
-                    <v-card-subtitle v-if="!isEdit">{{ docInfo.attachment }}</v-card-subtitle>
-                    <v-file-input
-                      variant="outlined"
-                      density="compact"
-                      prepend-icon=""
-                      clear-icon="mdi-close-circle-outline fs-5"
-                      :accept="acceptedDocInput"
-                      :error-messages="editDocumentDetails.attachment.errorMessage"
-                      v-model:model-value="editDocumentDetails.attachmentInfo"
-                      @update:model-value="uploadFile"
-                      messages="Accepted document types: PDF, Word and Excel"
-                      hide-details="auto"
-                      show-size
                       v-else
                     />
                   </v-col>
                 </v-row>
                 <v-row>
-                  <v-col>
-                    <v-label class="text-h6 pb-3">Attachment</v-label>
-                    <v-card-subtitle v-if="!isEdit">{{ docInfo.attachment ?? '-' }}</v-card-subtitle>
-                    <v-text-field
-                      variant="outlined"
-                      density="compact"
-                      :error-messages="editDocumentDetails.attachment.errorMessage"
-                      v-model="editDocumentDetails.attachment.value"
-                      hide-details="auto"
-                      v-else
-                    />
+                  <v-col cols="4">
+                    <v-label class="text-h6 pb-3">Created Time</v-label>
+                    <v-card-subtitle class="text-wrap">{{ dayjs(docInfo.createdTime).format("DD MMM YYYY, h:mm A") }}</v-card-subtitle>
+                  </v-col>
+                  <v-col cols="4">
+                    <v-label class="text-h6 pb-3">Latest Modified Time</v-label>
+                    <v-card-subtitle class="text-wrap">{{ dayjs(docInfo.modifiedTime).format("DD MMM YYYY, h:mm A") }}</v-card-subtitle>
+                  </v-col>
+                  <v-col cols="4">
+                    <v-label class="text-h6 pb-3">Modified By</v-label>
+                    <v-card-subtitle class="text-wrap">{{ docInfo.modifiedBy }}</v-card-subtitle>
                   </v-col>
                 </v-row>
               </v-card-item>
               <v-card-actions class="justify-content-end p-3">
                 <div v-if="!isEdit">
+                  <v-btn color="primary" variant="tonal" flat @click="downloadDocument">Download</v-btn>
+                  <v-btn color="primary" variant="tonal" flat @click="editAttachmentModal = true">Update</v-btn>
                   <v-btn color="primary" variant="tonal" flat @click="isEdit = true">Edit</v-btn>
                 </div>
                 <div v-else>
                   <v-btn color="primary" variant="outlined" @click="editDocumentCancel">Cancel</v-btn>
-                  <v-btn color="primary" variant="tonal" class="ms-2" flat type="submit">Save Details</v-btn>
+                  <v-btn color="primary" variant="tonal" class="ms-2" flat type="submit">Save</v-btn>
                 </div>
               </v-card-actions>
             </form>
           </div>
-        </div> 
+        </div>
       </v-card>
     </v-col>
   </v-row>
+
+  <!-- Edit Document Attachment Modal -->
+  <SharedUiModal v-model="editAttachmentModal" title="Update Document File" width="500">
+    <DocumentEditAttachmentForm
+      :document-id="docInfo.id"
+      @close-modal="(e) => editAttachmentModal = e"
+    />
+  </SharedUiModal>
 </template>
 
 <script setup>
 import { FileDescriptionIcon } from "vue-tabler-icons"
 import { useField, useForm } from 'vee-validate'
+import { Buffer } from 'buffer'
+import dayjs from 'dayjs'
 
 // Data
 const isEdit = ref(false)
+const editAttachmentModal = ref(false)
 const routeParameter = ref(useRoute().params)
 const { data: docInfo } = await fetchData.$get(`/Document/Info/${routeParameter.value.documentID}`)
-const { data: attachment } = await fetchData.$get(`/Document/GetAttachment/${routeParameter.value.documentID}`)
 const { data: caseList } = await fetchData.$get("/Case")
 const { data: categoryList } = await fetchData.$get("/Document/Category")
 const { handleSubmit } = useForm({
   initialValues: {
-    categoryId: docInfo.value.categoryId,
-    caseId: docInfo.value.caseId,
-    attachment: attachment.value
+    nameWithoutExt: docInfo.value.name.slice(0, docInfo.value.name.lastIndexOf(".")),
   },
   validationSchema: {
-    categoryId(value) {
-      return value ? true : 'Category is required'
-    },
-    caseId(value) {
-      return value ? true : 'Case is required'
-    },
-    attachment(value) {
-      if (!value)
-        return 'Document is required'
-      const fileType = getFileType(editDocumentDetails.value.name)
-      return fileType ? true : 'The document type must be in PDF, Word, or Excel'
-    },
+    nameWithoutExt(value) {
+      return value ? true : 'Document name is required'
+    }
   }
 })
-const editDocumentDetails = ref({
-  docId: null,
-  name: null,
-  categoryId: useField('categoryId'),
-  caseId: useField('caseId'),
-  attachment: useField('attachment'),
-  type: null,
-  attachmentInfo: null,
+const editDocumentInfoDetails = ref({
+  nameWithoutExt: useField('nameWithoutExt'),
+  categoryId: docInfo.value.categoryId,
+  caseId: docInfo.value.caseId,
+  extension: docInfo.value.name.slice(docInfo.value.name.lastIndexOf(".")),
 })
 
 // Head
 useHead({
-  title: 'Client Details | CaseCraft',
+  title: 'Document Details | CaseCraft',
 })
 
 // Page Meta
@@ -167,34 +154,24 @@ definePageMeta({
 })
 
 // Methods
-const getFileType = (docName) => {
-  const extensions = {
-    "pdf": "PDF",
-    "doc": "Word",
-    "docx": "Word",
-    "xls": "Excel",
-    "xlsx": "Excel",
-  }
-  const extensionIndex = docName.lastIndexOf(".")
-  const ext = docName.slice(extensionIndex + 1) // Get the extension
-  return extensions[ext] || null // Check for extension in map, return null if not found
-}
 const editDocumentCancel = () => {
   isEdit.value = false
-  editDocumentDetails.value.categoryId.resetField()
-  editDocumentDetails.value.caseId.resetField()
-  editDocumentDetails.value.attachment.resetField()
+  editDocumentInfoDetails.value.nameWithoutExt.resetField()
+  editDocumentInfoDetails.value.categoryId = docInfo.value.categoryId
+  editDocumentInfoDetails.value.caseId = docInfo.value.caseId
 }
-const editDocument = handleSubmit(async(values) => {
+const editDocInfo = handleSubmit(async(values, { resetForm }) => {
   try {
-    const result = await fetchData.$put("/Document", {
+    const result = await fetchData.$put("/Document/Edit/Info", {
+      docId: docInfo.value.id,
+      name: `${values.nameWithoutExt}${editDocumentInfoDetails.value.extension}`,
+      categoryId: editDocumentInfoDetails.value.categoryId,
+      caseId: editDocumentInfoDetails.value.caseId,
     })
-
+    
     if (!result.error) {
       isEdit.value = false
-      editDocumentDetails.value.categoryId.setValue(values.categoryId)
-      editDocumentDetails.value.caseId.setValue(values.caseId)
-      editDocumentDetails.value.attachment.setValue(values.attachment)
+      resetForm({ values: values })
       ElNotification.success({ message: result.message })
       refreshNuxtData()
     }
@@ -203,19 +180,8 @@ const editDocument = handleSubmit(async(values) => {
     }
   } catch { ElNotification.error({ message: "There is a problem with the server. Please try again later." }) }
 })
-const archiveDocument = async(docId) => {
-  try {
-    const result = await fetchData.$put(`/Document/Archive/${docId}`)
-    if (!result.error) {
-      ElNotification.success({ message: result.message })
-      refreshNuxtData()
-    }
-    else {
-      ElNotification.error({ message: result.message })
-    }
-  } catch { ElNotification.error({ message: "There is a problem with the server. Please try again later." }) }
-}
-const downloadDocument = () => {
+const downloadDocument = async() => {
+  const { data: attachment } = await fetchData.$get(`/Document/GetAttachment/${routeParameter.value.documentID}`)
   const mimeType = {
     "PDF": "application/pdf",
     "Word": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
@@ -233,29 +199,6 @@ const downloadDocument = () => {
     link.download = docInfo.value.name
     link.click()
     document.body.removeChild(link)
-  }
-}
-const uploadFile = async() => {
-  const file = editDocumentDetails.value.attachmentInfo[0]
-  if (file) {
-    // Read file as DataURL using a promise-based approach
-    const reader = new FileReader()
-    reader.readAsDataURL(file)
-    try {
-      const base64Data = await new Promise((resolve, reject) => {
-        reader.onload = () => resolve(reader.result)
-        reader.onerror = reject
-      })
-      editDocumentDetails.value.attachment.value = base64Data.replace(/^.+?;base64,/, '')
-      editDocumentDetails.value.name = file.name
-      editDocumentDetails.value.type = getFileType(file.name)
-    } catch(e) { ElNotification.error({ message: `Error reading file: ${e}` }) }
-  }
-  else
-  {
-    editDocumentDetails.value.name == null
-    editDocumentDetails.value.type == null
-    editDocumentDetails.value.attachment.value = null
   }
 }
 </script>
