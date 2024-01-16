@@ -106,10 +106,10 @@ namespace Law_Firm_Management_System_API.Controllers
             return Ok(new Response { Status = "Success", Message = "New document created successfully" });
         }
 
-        // Update the existing document.
+        // Update the existing document information.
         [HttpPut]
-        [Route("")]
-        public IActionResult Update([FromBody] DocEditDto dto)
+        [Route("Edit/Info")]
+        public IActionResult UpdateInfo([FromBody] DocEditInfoDto dto)
         {
             var user = userService.GetUser(User);
             var existingDoc = context.Documents.Where(a => a.Id == dto.DocId).FirstOrDefault();
@@ -119,27 +119,30 @@ namespace Law_Firm_Management_System_API.Controllers
             existingDoc.CaseId = dto.CaseId;
             existingDoc.PartnerUserId = user.Id;
             existingDoc.ModifiedDate = DateTime.Now;
-            existingDoc.Attachment = dto.Attachment;
-            existingDoc.Type = dto.Type;
+
             context.Documents.Update(existingDoc);
             context.SaveChanges();
 
-            return Ok(new Response { Status = "Success", Message = "Document updated successfully" });
+            return Ok(new Response { Status = "Success", Message = "Document information updated successfully" });
         }
 
-        // Rename the existing document.
+        // Update the existing document attachment.
         [HttpPut]
-        [Route("Rename")]
-        public IActionResult Rename([FromBody] DocRenameDto dto)
+        [Route("Edit/Attachment")]
+        public IActionResult UpdateAttachment([FromBody] DocEditAttachmentDto dto)
         {
             var user = userService.GetUser(User);
             var existingDoc = context.Documents.Where(a => a.Id == dto.DocId).FirstOrDefault();
 
-            existingDoc.Name = dto.Name;
+            existingDoc.Attachment = dto.Attachment;
+            existingDoc.Type = dto.Type;
+            existingDoc.PartnerUserId = user.Id;
+            existingDoc.ModifiedDate = DateTime.Now;
+
             context.Documents.Update(existingDoc);
             context.SaveChanges();
 
-            return Ok(new Response { Status = "Success", Message = "Document renamed successfully" });
+            return Ok(new Response { Status = "Success", Message = "Document file updated successfully" });
         }
 
         // Archive the existing document.
@@ -187,20 +190,19 @@ namespace Law_Firm_Management_System_API.Controllers
             public string Type { get; set; } = null!;
         }
 
-        public class DocEditDto
+        public class DocEditInfoDto
         {
             public int DocId { get; set; }
             public string Name { get; set; } = null!;
             public int CategoryId { get; set; }
             public int? CaseId { get; set; }
-            public byte[] Attachment { get; set; } = null!;
-            public string Type { get; set; } = null!;
         }
 
-        public class DocRenameDto
+        public class DocEditAttachmentDto
         {
             public int DocId { get; set; }
-            public string Name { get; set; } = null!;
+            public byte[] Attachment { get; set; } = null!;
+            public string Type { get; set; } = null!;
         }
     }
 }

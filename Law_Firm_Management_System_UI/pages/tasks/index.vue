@@ -208,6 +208,7 @@
             density="compact"
             prepend-icon="mdi-briefcase-variant-outline"
             :href="`/cases/${selectedTask.caseId}`"
+            target="_blank"
             link
             v-if="selectedTask.caseId"
           >
@@ -218,6 +219,7 @@
             density="compact"
             prepend-icon="mdi-calendar-outline"
             :href="`/events/${selectedTask.eventId}`"
+            target="_blank"
             link
             v-if="selectedTask.eventId"
           >

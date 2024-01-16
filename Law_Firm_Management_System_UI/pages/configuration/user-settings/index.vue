@@ -15,7 +15,7 @@
               <tr>
                 <td>{{ item.id }}</td>
                 <td>
-                  <a :href="`/configuration/user-settings/${item.id}`" class="row-link">{{ item.username }}</a>
+                  <a :href="`/configuration/user-settings/${item.id}`" target="_blank" class="row-link">{{ item.username }}</a>
                 </td>
                 <td>{{ item.fullName }}</td>
                 <td>{{ item.email }}</td>

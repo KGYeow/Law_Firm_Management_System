@@ -15,7 +15,7 @@
               <tr>
                 <td>{{ clientList.indexOf(item) + 1 }}</td>
                 <td>
-                  <a :href="`/contacts/clients/${item.id}`" class="row-link">{{ item.fullName }}</a>
+                  <a :href="`/contacts/clients/${item.id}`" target="_blank" class="row-link">{{ item.fullName }}</a>
                 </td>
                 <td>{{ item.email }}</td>
                 <td>{{ item.phoneNumber ?? '-' }}</td>

@@ -1,35 +1,6 @@
 <template>
-  <form @submit.prevent="addDocument">
+  <form @submit.prevent="editAttachmentInfo">
     <v-card-item class="px-8 py-4 text-body-1">
-      <v-row>
-        <v-col class="pb-0">
-          <v-label class="text-caption">Category</v-label>
-          <v-select
-            :items="categoryList"
-            item-title="name"
-            item-value="id"
-            placeholder="Select category"
-            variant="outlined"
-            density="compact"
-            :error-messages="addDocumentDetails.categoryId.errorMessage"
-            v-model="addDocumentDetails.categoryId.value"
-            hide-details="auto"
-          />
-        </v-col>
-        <v-col class="pb-0">
-          <v-label class="text-caption">Related Case</v-label>
-          <v-autocomplete
-            :items="caseList"
-            item-title="name"
-            item-value="id"
-            placeholder="Select case"
-            variant="outlined"
-            density="compact"
-            v-model="addDocumentDetails.caseId"
-            hide-details="auto"
-          />
-        </v-col>
-      </v-row>
       <v-row>
         <v-col>
           <v-label class="text-caption">Document</v-label>
@@ -39,8 +10,8 @@
             prepend-icon=""
             clear-icon="mdi-close-circle-outline fs-5"
             :accept="acceptedDocInput"
-            :error-messages="addDocumentDetails.attachment.errorMessage"
-            v-model:model-value="addDocumentDetails.attachmentInfo"
+            :error-messages="editAttachmentDetails.attachment.errorMessage"
+            v-model:model-value="editAttachmentDetails.attachmentInfo"
             @update:model-value="uploadFile"
             messages="PDF/word/excel files with a size less than 28MB"
             hide-details="auto"
@@ -58,15 +29,15 @@
 <script setup>
 import { useField, useForm } from 'vee-validate'
 
-// Emit
+// Properties, Emit & Model
+const props = defineProps({
+  documentId: Number,
+})
 const emit = defineEmits(['close-modal'])
 
 // Data
 const { handleSubmit } = useForm({
   validationSchema: {
-    categoryId(value) {
-      return value ? true : 'Category is required'
-    },
     attachment(value) {
       if (!value)
         return 'Document is required'
@@ -75,18 +46,15 @@ const { handleSubmit } = useForm({
       if (fileSize > 28000)
         return 'Document size cannot exceeds 28MB'
 
-      const fileType = getFileType(addDocumentDetails.value.name)
+      const fileType = getFileType(editAttachmentDetails.value.attachmentInfo[0].name)
       return fileType ? true : 'The document type must be in PDF, Word, or Excel'
     }
   }
 })
-const addDocumentDetails = ref({
-  name: null,
-  categoryId: useField('categoryId'),
-  caseId: null,
-  type: null,
-  attachment: useField('attachment'),
+const editAttachmentDetails = ref({
   attachmentInfo: null,
+  attachment: useField('attachment'),
+  type: null,
 })
 const acceptedDocInput = ref(
   `application/pdf,
@@ -95,8 +63,6 @@ const acceptedDocInput = ref(
   application/vnd.openxmlformats-officedocument.wordprocessingml.document,
   application/vnd.ms-excel
 `)
-const { data: caseList } = await fetchData.$get("/Case")
-const { data: categoryList } = await fetchData.$get("/Document/Category")
 
 // Methods
 const getFileType = (docName) => {
@@ -112,7 +78,7 @@ const getFileType = (docName) => {
   return extensions[ext] || null // Check for extension in map, return null if not found
 }
 const uploadFile = async() => {
-  const file = addDocumentDetails.value.attachmentInfo[0]
+  const file = editAttachmentDetails.value.attachmentInfo[0]
   if (file) {
     // Read file as DataURL using a promise-based approach
     const reader = new FileReader()
@@ -122,36 +88,29 @@ const uploadFile = async() => {
         reader.onload = () => resolve(reader.result)
         reader.onerror = reject
       })
-      addDocumentDetails.value.attachment.value = base64Data.replace(/^.+?;base64,/, '')
-      addDocumentDetails.value.name = file.name
-      addDocumentDetails.value.type = getFileType(file.name)
+      editAttachmentDetails.value.attachment.value = base64Data.replace(/^.+?;base64,/, '')
+      editAttachmentDetails.value.type = getFileType(file.name)
     } catch(e) { ElNotification.error({ message: `Error reading file: ${e}` }) }
   }
   else
   {
-    addDocumentDetails.value.name = null
-    addDocumentDetails.value.type = null
-    addDocumentDetails.value.attachment.value = null
+    editAttachmentDetails.value.type = null
+    editAttachmentDetails.value.attachment.value = null
   }
 }
-const addDocument = handleSubmit(async(values) => {
+const editAttachmentInfo = handleSubmit(async(values) => {
   try {
-    const result = await fetchData.$post("/Document", {
-      name: addDocumentDetails.value.name,
-      categoryId: values.categoryId,
-      caseId: addDocumentDetails.value.caseId,
+    const result = await fetchData.$put("/Document/Edit/Attachment", {
+      docId: props.documentId,
       attachment: values.attachment,
-      type: addDocumentDetails.value.type,
+      type: editAttachmentDetails.value.type,
     })
-
+    
     if (!result.error) {
       emit('close-modal', false)
-      addDocumentDetails.value.name = null
-      addDocumentDetails.value.categoryId.resetField()
-      addDocumentDetails.value.caseId = null
-      addDocumentDetails.value.type = null
-      addDocumentDetails.value.attachment.resetField()
-      addDocumentDetails.value.attachmentInfo = null
+      editAttachmentDetails.value.attachment.resetField()
+      editAttachmentDetails.value.type = null
+      editAttachmentDetails.value.attachmentInfo = null
       ElNotification.success({ message: result.message })
       refreshNuxtData()
     }

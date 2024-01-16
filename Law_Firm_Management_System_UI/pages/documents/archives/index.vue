@@ -4,7 +4,7 @@
       <UiParentCard title="Archives">
         <v-row class="px-7">
           <!-- Filters -->
-          <v-col class="pe-0" cols="2">
+          <v-col class="pe-0" cols="3">
             <v-select
               :items="archiveList"
               item-title="name"
@@ -36,7 +36,7 @@
               </template>
             </v-select>
           </v-col>
-          <v-col class="pe-0" cols="2">
+          <v-col class="pe-0" cols="3">
             <v-select
               :items="caseList"
               item-title="name"
@@ -82,36 +82,11 @@
           >
             <template #item="{ item }">
               <tr>
-                <td style="max-width: 300px;">
-                  <span class="truncate">
-                    <v-tooltip :text="item.name" activator="parent" location="top" offset="2"/>
-                    {{ item.name }}
-                  </span>
-                </td>
-                <td style="max-width: 150px;">
-                  <span class="truncate">
-                    <v-tooltip :text="item.categoryName" activator="parent" location="top" offset="2"/>
-                    {{ item.categoryName }}
-                  </span>
-                </td>
-                <td style="max-width: 150px;">
-                  <span class="truncate">
-                    <v-tooltip :text="item.caseName" activator="parent" location="top" offset="2" v-if="item.caseName"/>
-                    {{ item.caseName ?? '-' }}
-                  </span>
-                </td>
-                <td style="max-width: 150px;">
-                  <span class="truncate">
-                    <v-tooltip :text="`Modified by ${item.modifiedBy}`" activator="parent" location="top" offset="2"/>
-                    {{ item.modifiedBy }}
-                  </span>
-                </td>
-                <td style="max-width: 0;">
-                  <span class="truncate">
-                    <v-tooltip :text="`Last modified date: ${dayjs(item.modifiedDate).format('DD MMM YYYY')}`" activator="parent" location="top" offset="2"/>
-                    {{ dayjs(item.modifiedDate).format("DD MMM YYYY") }}
-                  </span>
-                </td>
+                <td>{{ item.name }}</td>
+                <td>{{ item.categoryName }}</td>
+                <td>{{ item.caseName ?? '-' }}</td>
+                <td>{{ item.modifiedBy }}</td>
+                <td>{{ dayjs(item.modifiedDate).format("DD MMM YYYY") }}</td>
                 <td>
                   <ul class="m-0 list-inline hstack">
                     <li>
@@ -136,7 +111,7 @@
                         @confirm="deleteDocument(item.id)"
                       >
                         <template #reference>
-                          <v-btn icon="mdi-delete-forever-outline" size="small" variant="text"/>
+                          <v-btn icon="mdi-trash-can-outline" size="small" variant="text"/>
                         </template>
                       </el-popconfirm>
                     </li>

@@ -4,8 +4,8 @@
       <UiParentCard title="Repositories">
         <v-row class="px-7">
           <!-- Filters -->
-          <v-col class="pe-0" cols="2">
-            <v-select
+          <v-col class="pe-0" cols="3">
+            <v-autocomplete
               :items="documentList"
               item-title="name"
               item-value="id"
@@ -14,11 +14,7 @@
               variant="outlined"
               v-model="filter.docId"
               hide-details
-            >     
-              <template #prepend-item>
-                <v-list-item title="All Documents" @click="filter.docId = null"/>
-              </template>
-            </v-select>
+            />     
           </v-col>
           <v-col class="pe-0" cols="2">
             <v-select
@@ -36,8 +32,8 @@
               </template>
             </v-select>
           </v-col>
-          <v-col class="pe-0" cols="2">
-            <v-select
+          <v-col class="pe-0" cols="3">
+            <v-autocomplete
               :items="caseList"
               item-title="name"
               item-value="id"
@@ -46,14 +42,10 @@
               variant="outlined"
               v-model="filter.caseId"
               hide-details
-            >     
-              <template #prepend-item>
-                <v-list-item title="All Cases" @click="filter.caseId = null"/>
-              </template>
-            </v-select>
+            />
           </v-col>
           <v-col class="pe-0" cols="2">
-            <v-select
+            <v-autocomplete
               :items="partnerList"
               item-title="fullName"
               item-value="userId"
@@ -62,11 +54,7 @@
               variant="outlined"
               v-model="filter.userId"
               hide-details
-            >     
-              <template #prepend-item>
-                <v-list-item title="All Partners" @click="filter.userId = null"/>
-              </template>
-            </v-select>
+            />
           </v-col>
         </v-row>
 
@@ -82,7 +70,9 @@
           >
             <template #item="{ item }">
               <tr>
-                <td>{{ item.name }}</td>
+                <td>
+                  <a :href="`/documents/repositories/${item.id}`" target="_blank" class="row-link">{{ item.name }}</a>
+                </td>
                 <td>{{ item.categoryName }}</td>
                 <td>{{ item.caseName ?? '-' }}</td>
                 <td>{{ item.modifiedBy }}</td>
@@ -91,15 +81,15 @@
                   <ul class="m-0 list-inline hstack">
                     <li>
                       <v-tooltip text="Download" activator="parent" location="top" offset="2"/>
-                      <v-btn icon="mdi-download" size="small" variant="text" @click="downloadDocument(item.id, item.name, item.type)"/>
+                      <v-btn icon="mdi-download-outline" size="small" variant="text" @click="downloadDocument(item.id, item.name, item.type)"/>
                     </li>
                     <li>
-                      <v-tooltip text="Rename" activator="parent" location="top" offset="2"/>
-                      <v-btn icon="mdi-rename-outline" size="small" variant="text" @click="renameDocumentGet(item.id, item.name)"/>
+                      <v-tooltip text="Edit Info" activator="parent" location="top" offset="2"/>
+                      <v-btn icon="mdi-file-edit-outline" size="small" variant="text" @click="getEditDocumentInfo(item.id, item.name, item.categoryId, item.caseId)"/>
                     </li>
                     <li>
                       <v-tooltip text="Update" activator="parent" location="top" offset="2"/>
-                      <v-btn icon="mdi-update" size="small" variant="text"/>
+                      <v-btn icon="mdi-update" size="small" variant="text" @click="getEditAttachmentInfo(item.id)"/>
                     </li>
                     <li>
                       <v-tooltip text="Archive" activator="parent" location="top" offset="2"/>
@@ -154,12 +144,21 @@
     <DocumentCreateForm @close-modal="(e) => addDocumentModal = e"/>
   </SharedUiModal>
 
-  <!-- Rename Document Modal -->
-  <SharedUiModal v-model="renameDocumentModal" title="Rename Document" width="500">
-    <DocumentRenameForm
-      :docId="renameDocumentDetails.docId"
-      :docName="renameDocumentDetails.name"
-      @close-modal="(e) => renameDocumentModal = e"
+  <!-- Edit Document Information Modal -->
+  <SharedUiModal v-model="editDocumentInfoModal" title="Edit Document Information" width="500">
+    <DocumentEditInfoForm
+      :edit-document-info="editDocumentInfoDetails"
+      :doc-category-list="categoryList"
+      :case-list="caseList"
+      @close-modal="(e) => editDocumentInfoModal = e"
+    />
+  </SharedUiModal>
+
+  <!-- Edit Document Attachment Modal -->
+  <SharedUiModal v-model="editAttachmentModal" title="Update Document File" width="500">
+    <DocumentEditAttachmentForm
+      :document-id="editAttachmentInfoId"
+      @close-modal="(e) => editAttachmentModal = e"
     />
   </SharedUiModal>
 </template>
@@ -171,16 +170,6 @@ import dayjs from 'dayjs'
 import UiParentCard from '@/components/shared/UiParentCard.vue'
 
 // Data
-const filter = ref({
-  docId: null,
-  categoryId: null,
-  caseId: null,
-  userId: null,
-})
-const renameDocumentDetails = ref({
-  docId: null,
-  name: null,
-})
 const currentPage = ref(1)
 const itemsPerPage = ref(10)
 const headers = ref([
@@ -191,8 +180,22 @@ const headers = ref([
   { key: "modifiedDate", title: "Modified Date" },
   { key: "actions", sortable: false, width: 0 },
 ])
+const filter = ref({
+  docId: null,
+  categoryId: null,
+  caseId: null,
+  userId: null,
+})
+const editDocumentInfoDetails = ref({
+  docId: null,
+  name: null,
+  categoryId: null,
+  caseId: null,
+})
+const editAttachmentInfoId = ref(null)
 const addDocumentModal = ref(false)
-const renameDocumentModal = ref(false)
+const editDocumentInfoModal = ref(false)
+const editAttachmentModal = ref(false)
 const { data: caseList } = await fetchData.$get("/Case")
 const { data: categoryList } = await fetchData.$get("/Document/Category")
 const { data: partnerList } = await fetchData.$get("/Partner")
@@ -223,10 +226,16 @@ definePageMeta({
 const pageCount = () => {
   return Math.ceil(documentFilterList.value.length / itemsPerPage.value)
 }
-const renameDocumentGet = (docId, docName) => {
-  renameDocumentDetails.value.docId = docId
-  renameDocumentDetails.value.name = docName
-  renameDocumentModal.value = true
+const getEditDocumentInfo = (docId, name, categoryId, caseId) => {
+  editDocumentInfoDetails.value.docId = docId
+  editDocumentInfoDetails.value.name = name
+  editDocumentInfoDetails.value.categoryId = categoryId
+  editDocumentInfoDetails.value.caseId = caseId
+  editDocumentInfoModal.value = true
+}
+const getEditAttachmentInfo = (docId) => {
+  editAttachmentInfoId.value = docId
+  editAttachmentModal.value = true
 }
 const downloadDocument = async(docId, docName, type) => {
   const { data: attachment } = await fetchData.$get(`/Document/GetAttachment/${docId}`)
