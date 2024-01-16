@@ -151,8 +151,11 @@ namespace Law_Firm_Management_System_API.Controllers
         public IActionResult Archive(int docId)
         {
             var user = userService.GetUser(User);
-            var existingDoc = context.Documents.Where(a => a.Id == docId).FirstOrDefault();
 
+            context.Tasks.Where(a => a.DocumentId == docId).ToList().ForEach(a => a.DocumentId = null);
+            context.SaveChanges();
+
+            var existingDoc = context.Documents.Where(a => a.Id == docId).FirstOrDefault();
             existingDoc.IsArchived = true;
             context.Documents.Update(existingDoc);
             context.SaveChanges();

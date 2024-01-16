@@ -66,9 +66,6 @@ namespace Law_Firm_Management_System_API.Controllers
         [Route("{DocId}")]
         public IActionResult Delete(int docId)
         {
-            context.Tasks.Where(a => a.DocumentId == docId).ForEachAsync(a => a.DocumentId = null);
-            context.SaveChangesAsync();
-
             var archivedDoc = context.Documents.Where(a => a.Id == docId).FirstOrDefault();
             context.Documents.Remove(archivedDoc);
             context.SaveChanges();
