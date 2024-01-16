@@ -87,26 +87,6 @@
                       <i class="mdi mdi-calendar-blank-outline me-1"></i>
                       {{ dayjs(item.createdTime).format("DD MMM YYYY, hh:mm A") }}
                     </v-card-subtitle>
-                    <!--Upload Button-->
-                    <ul class="m-0 list-inline hstack">
-                      <li>
-                        <v-tooltip text="Upload Document" activator="parent" location="top" offset="2"/>
-                      <v-btn
-                        icon
-                        color="primary"
-                        @click="createDocument"
-                      >
-                        <v-icon>mdi-upload</v-icon>
-                      </v-btn>
-                      </li>
-                    </ul>
-                    <input
-                      ref="fileInput"
-                      type="file"
-                      accept=".pdf, .doc, .docx"
-                      style="display:none"
-                      @change="handleFileUpload"
-                    />
                     <v-divider class="my-3"/>
                     <el-scrollbar class="text-body-1" height="60px">
                       <div class="d-flex pt-sm-2 align-center">
@@ -136,6 +116,21 @@
         </v-data-table>
       </v-col>
     </v-row>
+    <!--Upload Button-->
+    <el-affix
+      class="position-absolute"
+      position="bottom"
+      :offset="30"
+      style="right: 30px; bottom: 100px;"
+    >
+      <v-tooltip text="Upload Document" activator="parent" location="left" offset="2"/>
+      <v-btn icon="mdi-file-document-plus-outline" color="primary" size="large" @click="addDocumentModal = true"/>
+    </el-affix>
+    <!-- Add New Document Modal -->
+    <SharedUiModal v-model="addDocumentModal" title="Add New Document" width="500">
+      <DocumentCreateForm
+        @close-modal="(e) => addDocumentModal = e"/>
+    </SharedUiModal>
   </template>
   
   <script setup>
@@ -195,18 +190,12 @@
     isDialogOpen.value = true;
   };
   
-// Data for handling file upload
-const selectedFile = ref(null);
+const addDocumentModal = ref(false);
+const openUploadDialog = (caseId) => {
+  // You can perform any additional logic here if needed
+  console.log('Selected Case ID:', caseId);
 
-// Method for handling file upload
-const handleFileUpload = () => {
-  // Check if a file is selected
-  if (selectedFile.value) {
-    // You can access the selected file using selectedFile.value
-    const file = selectedFile.value;
-
-    // Perform any logic you need with the selected file
-    console.log('Selected file:', file);
-  }
+  // Open the upload document dialog
+  addDocumentModal.value = true;
 };
   </script>

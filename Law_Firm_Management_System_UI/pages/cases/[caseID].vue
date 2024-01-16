@@ -108,7 +108,7 @@
                   <v-divider vertical class="mx-5 my-0" style="border-color: white !important; opacity: 0.5;"></v-divider>
                   <div v-for="document in caseDocumentList" :key="document.id">
                     <div class="case-detail-item">
-                      <a :href="`/api/Document/GetDocument/${document.id}`" target="_blank">
+                      <a :href="`/documents/repositories/${document.id}`" target="_blank">
                         <v-card-subtitle>{{ document.documentName }}</v-card-subtitle>
                       </a>
                     </div>
@@ -123,20 +123,24 @@
                 </div>
               </v-col>
             </v-row>
-              <!--Upload Documents-->
-              <v-file-input
-                v-model="selectedFile"
-                accept=".pdf, .doc, .docx"
-                show-size
-                label="Upload Document"
-                @change="handleFileUpload"
-              ></v-file-input>
+
+              <!-- Add New Document Button -->
+                <el-affix
+                  class="position-absolute"
+                  position="bottom"
+                  :offset="30"
+                  style="right: 30px; bottom: 100px;"
+                >
+                  <v-tooltip text="Upload Document" activator="parent" location="left" offset="2"/>
+                  <v-btn icon="mdi-file-document-plus-outline" color="primary" size="large" @click="addDocumentModal = true"/>
+                </el-affix>
             </v-card-item>
           </div>
         </div>
       </v-card>
     </v-col>
 </v-row>
+
 
 <!--Rename Case-->
 <SharedUiModal v-model="renameCaseModal" title="Rename Case" width="500">
@@ -155,6 +159,14 @@
     @close-modal="(e) => editClientModal = e"
   />
 </SharedUiModal>
+
+<!-- Add New Document Modal -->
+<SharedUiModal v-model="addDocumentModal" title="Add New Document" width="500">
+  <CaseUploadDocument 
+  :caseId="caseInfo.id"
+  @close-modal="(e) => addDocumentModal = e"/>
+</SharedUiModal>
+
 </template>
 
 <style scoped>
@@ -163,7 +175,7 @@
   background-color: #ddd !important;
 }
 .current-status-name {
-  color:#2b4c65;
+  color:#95b4cc;
   font-weight: bold;
 }
 
@@ -188,6 +200,7 @@ const { data: caseList } = await fetchData.$get("/Case/PartnerPerspectiveCaseLis
 const { data: caseDocumentList } = await fetchData.$get(`/Document/GetDocumentNamesByCase/${routeParameter.value.caseID}`);
 const { data: clientList } = await fetchData.$get("/Client")
 
+const addDocumentModal = ref(false)
 const renameCaseDetails = ref({
   caseId: null,
   name: null,
@@ -271,21 +284,6 @@ const editClientGet = (caseId, clientId) => {
   editClientDetails.value.caseId = caseId;
   editClientDetails.value.clientId = clientId;
   editClientModal.value = true;
-};
-
-// Data for handling file upload
-const selectedFile = ref(null);
-
-// Method for handling file upload
-const handleFileUpload = () => {
-  // Check if a file is selected
-  if (selectedFile.value) {
-    // You can access the selected file using selectedFile.value
-    const file = selectedFile.value;
-
-    // Perform any logic you need with the selected file
-    console.log('Selected file:', file);
-  }
 };
 
 const showConfirmationDialog = async (caseId, newStatus) => {
