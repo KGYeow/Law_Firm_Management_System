@@ -59,7 +59,7 @@
                         @confirm="updateEvent(eventInfo.id)"
                       >
                         <template #reference>
-                          <v-btn icon="mdi-update" size="small" variant="text"/>
+                          <v-btn class="mt-n2" icon="mdi-update" size="small" variant="text"/>
                         </template>
                       </el-popconfirm>
                     </li>
@@ -97,6 +97,11 @@
                       <div class="event-detail-item"><v-card-subtitle>No Related Document</v-card-subtitle></div>
                     </div>
                   </div>
+                </v-col>
+              </v-row>
+              <v-row class="pb-2">
+                <v-col>
+                  <v-file-input label="Upload Documents" variant="outlined"></v-file-input>
                 </v-col>
               </v-row>
             </v-card-item>

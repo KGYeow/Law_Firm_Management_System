@@ -76,7 +76,7 @@
                 </td>
                 <td>
                   <ul class="m-0 list-inline hstack">
-                    <li>
+                    <!--li>
                       <v-tooltip text="Update Status" activator="parent" location="top" offset="2"/>
                       <el-popconfirm
                         title="Are you sure to update status of this event?"
@@ -92,7 +92,7 @@
                     <li>
                       <v-tooltip text="Rename" activator="parent" location="top" offset="2"/>
                       <v-btn icon="mdi-rename-outline" size="small" variant="text" @click="renameEventGet(item.id, item.name)"/>
-                    </li>
+                    </li-->
                     <li>
                       <v-tooltip text="Delete Permanently" activator="parent" location="top" offset="2"/>
                       <el-popconfirm
@@ -183,6 +183,7 @@
               <v-col>
               <v-label class="text-caption">Event Name</v-label>
               <v-text-field
+                variant="outlined"
                 density="compact"
                 :error-messages="addEventDetails.name.errorMessage"
                 v-model="addEventDetails.name.value"
