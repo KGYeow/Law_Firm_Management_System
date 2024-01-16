@@ -72,6 +72,11 @@ const { handleSubmit } = useForm({
       return value ? true : 'Case is required'
     },
     attachment(value) {
+      // const fileSize = (this.newDocumentDetails.attachment.length * 3) / 4 / 1024; // Convert base64 size to KB
+      // if (fileSize > 10000) {
+      //   this.$noty.error('Document size cannot exceeds 10MB.');
+      //   return;
+      // }
       if (!value)
         return 'Document is required'
       const fileType = getFileType(addDocumentDetails.value.name)

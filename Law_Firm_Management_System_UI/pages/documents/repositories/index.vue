@@ -82,7 +82,7 @@
           >
             <template #item="{ item }">
               <tr>
-                <td>{{ item.name }}</td>
+                <td class="row-link">{{ item.name }}</td>
                 <td>{{ item.categoryName }}</td>
                 <td>{{ item.caseName ?? '-' }}</td>
                 <td>{{ item.modifiedBy }}</td>
@@ -157,13 +157,14 @@
       :docName="renameDocumentDetails.name"
       @close-modal="(e) => renameDocumentModal = e"
     />
-  </SharedUiModal>-
+  </SharedUiModal>
 </template>
 
 <script setup>
 import { FileDescriptionIcon } from "vue-tabler-icons"
 import dayjs from 'dayjs'
 import UiParentCard from '@/components/shared/UiParentCard.vue'
+import { Buffer } from 'buffer'
 
 // Data
 const filter = ref({
@@ -230,14 +231,19 @@ const downloadDocument = async(docId, docName, type) => {
     "Word": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
     "Excel": "application/vnd.ms-excel",
   }
-  const arrayBuffer = atob(attachment.value)
+  const arrayBuffer = Buffer.from(attachment.value, 'base64');
   const blob = new Blob([arrayBuffer], { type: mimeType[type] })
   const url = URL.createObjectURL(blob)
-  const link = document.createElement('a')
-  link.href = url
-  link.download = docName
-  link.click()
-  document.body.removeChild(link)
+
+  if (type == 'PDF')
+    window.open(url, '_blank')
+  else {
+    const link = document.createElement('a')
+    link.href = url
+    link.download = docName
+    link.click()
+    document.body.removeChild(link)
+  }
 }
 const archiveDocument = async(docId) => {
   try {
