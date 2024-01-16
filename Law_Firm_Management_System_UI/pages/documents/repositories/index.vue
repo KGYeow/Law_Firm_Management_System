@@ -82,7 +82,7 @@
           >
             <template #item="{ item }">
               <tr>
-                <td class="row-link">{{ item.name }}</td>
+                <td>{{ item.name }}</td>
                 <td>{{ item.categoryName }}</td>
                 <td>{{ item.caseName ?? '-' }}</td>
                 <td>{{ item.modifiedBy }}</td>
@@ -113,6 +113,10 @@
                           <v-btn icon="mdi-archive-outline" size="small" variant="text"/>
                         </template>
                       </el-popconfirm>
+                    </li>
+                    <li>
+                      <v-tooltip text="View Details" activator="parent" location="top" offset="2"/>
+                      <v-btn icon="mdi-open-in-new" size="small" variant="text" :href="`/documents/repositories/${item.id}`"/>
                     </li>
                   </ul>
                 </td>

@@ -17,17 +17,26 @@ export default defineNuxtRouteMiddleware(async(to, from) => {
     // Check if the user is authorized to access the requested page
     const isAuthorized = checkAuthorization(filteredSidebarMenu, to.path)
     
-    // Redirect to the dashboard if not authorized
+    // If the user is not authorized to access the route path corresponding to the sidebar menu
     if (!isAuthorized) {
+      // If user is client
       if (user.value?.userRoleId == 3) {
-        return navigateTo('/dashboard-client')
+        return navigateTo('/dashboard-client') // Redirect to the dashboard page
       }
+      // If user is paralegal
+      else if (user.value?.userRoleId == 2) {
+        if (to.path.match("/documents/repositories/")) return // Redirect to document details page
+        if (to.path.match("/contacts/clients")) return // Redirect to client details page
+        return navigateTo('/dashboard') // Redirect to the dashboard page
+      }
+      // If user is partner (admin)
       else {
-        if (to.path.match("/contacts/clients")) return
-        if (user.value?.userRoleId == 1 && to.path.match("/cases")) return
-        if (user.value?.userRoleId == 1 && to.path.match("/events")) return
-        if (user.value?.userRoleId == 1 && to.path.match("/configuration/user-settings")) return 
-        return navigateTo('/dashboard')
+        if (to.path.match("/cases")) return // Redirect to case details page
+        if (to.path.match("/events")) return // Redirect to event details page
+        if (to.path.match("/documents/repositories/")) return // Redirect to document details page
+        if (to.path.match("/contacts/clients")) return // Redirect to client details page
+        if (to.path.match("/configuration/user-settings")) return // Redirect to user details page
+        return navigateTo('/dashboard') // Redirect to the dashboard page
       }
     }
   }
