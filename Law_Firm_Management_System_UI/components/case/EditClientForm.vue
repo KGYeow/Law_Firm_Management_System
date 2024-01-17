@@ -47,13 +47,11 @@
     },
   });
   
-  const editedClientDetails = ref({
-    clientId: useField('clientId'),
+const editedClientDetails = ref({
+  clientId: useField('clientId'),
 });
   
 const editClient = handleSubmit(async (values) => {
-    console.log("Form Values:", values);
-
     try {
         // Call your API to update the client associated with the case
         const result = await fetchData.$put("/Case/EditClient", {
@@ -61,18 +59,11 @@ const editClient = handleSubmit(async (values) => {
             clientId: values.clientId,
         });
 
-        console.log("API Response:", result);
-
         if (!result.error) {
             emit('close-modal', false);
             editedClientDetails.value.clientId.resetField();
             ElNotification.success({ message: result.message });
-
-            // Log the updated case details to the console
-            console.log("Updated Case Details:", result.updatedCase);
-
-            nuxtRefreshData();
-            //refreshNuxtData();
+            refreshNuxtData();
         } else {
             ElNotification.error({ message: result.message });
         }
