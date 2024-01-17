@@ -32,7 +32,7 @@
                     <ul class="m-0 list-inline hstack">
                       <li>
                         <v-tooltip text="Rename" activator="parent" location="top" offset="2"/>
-                        <v-btn class="mt-n2" icon="mdi-rename-outline" size="small" variant="text" @click="renameEventGet(eventInfo.id, eventInfo.name)"/>
+                        <v-btn class="mt-n3" icon="mdi-rename-outline" size="small" variant="text" @click="renameEventGet(eventInfo.id, eventInfo.name)"/>
                       </li>
                     </ul>
                   </div>
@@ -59,7 +59,7 @@
                         @confirm="updateEvent(eventInfo.id)"
                       >
                         <template #reference>
-                          <v-btn class="mt-n2" icon="mdi-update" size="small" variant="text"/>
+                          <v-btn class="mt-n3" icon="mdi-update" size="small" variant="text"/>
                         </template>
                       </el-popconfirm>
                     </li>
@@ -77,31 +77,6 @@
                     <v-label class="text-h6 pb-3">Description</v-label>
                   </div>
                   <v-card-subtitle>{{ eventInfo.description }}</v-card-subtitle>
-                </v-col>
-              </v-row>
-                <v-row class="pb-2">
-                <v-col>
-                  <div class="d-flex align-center">
-                    <v-label class="text-h6 pb-3">Related Documents</v-label>
-                  </div>
-                  <div v-if="eventInfo.documentName" class=" d-flex flex-column event-details-container pa-md-4">
-                    <v-divider vertical class="mx-5 my-0" style="border-color: white !important; opacity: 0.5;"></v-divider>
-                    <div>
-                      <div class="event-detail-item"><v-card-subtitle>{{ eventInfo.documentName }}</v-card-subtitle></div>
-                    </div>
-                  </div>
-                  <!-- Display a message if no related document -->
-                  <div v-else class=" d-flex flex-column event-details-container pa-md-4">
-                    <v-divider vertical class="mx-5 my-0" style="border-color: white !important; opacity: 0.5;"></v-divider>
-                    <div>
-                      <div class="event-detail-item"><v-card-subtitle>No Related Document</v-card-subtitle></div>
-                    </div>
-                  </div>
-                </v-col>
-              </v-row>
-              <v-row class="pb-2">
-                <v-col>
-                  <v-file-input label="Upload Documents" variant="outlined"></v-file-input>
                 </v-col>
               </v-row>
             </v-card-item>

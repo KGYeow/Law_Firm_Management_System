@@ -169,6 +169,7 @@
 
   <!-- Add New Event Modal -->
   <v-dialog v-model="addEventModal" width="auto">
+  <el-scrollbar max-height="400px">
     <v-card elevation="10" class="withbg rounded-3 overflow-visible" width="500px">
       <v-card-title class="px-4 py-4 d-sm-flex align-center justify-space-between bg-background rounded-top-3">
         <h5 class="text-h5 mb-0 d-flex align-center">
@@ -246,8 +247,10 @@
           <v-btn color="primary" type="submit">Submit</v-btn>
         </v-card-actions>
       </form>
-    </v-card>
+    </v-card> 
+  </el-scrollbar>
   </v-dialog>
+
 
   <!-- Rename Event Modal -->
   <SharedUiModal v-model="renameEventModal" title="Rename Event" width="500">
