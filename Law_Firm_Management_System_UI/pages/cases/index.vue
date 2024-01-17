@@ -88,7 +88,7 @@
                     </li>
                     <li>
                       <v-tooltip text="View Details" activator="parent" location="top" offset="2"/>
-                      <v-btn icon="mdi-open-in-new" size="small" variant="text" :href="`/cases/${item.id}`"/>
+                      <v-btn icon="mdi-open-in-new" size="small" variant="text" :href="`/cases/${item.id}`" target="_blank"/>
                     </li>
                 </td>
               </tr>
@@ -416,29 +416,23 @@ const editClientGet = (caseId, clientId) => {
 //Change Case Status
 const changeCaseStatus = async (caseId, newStatus) => {
   try {
-    console.log('Changing status for caseId:', caseId, 'to', newStatus);
-
-    const response = await fetchData.$put(`/Case/ChangeStatus/${caseId}`, {
+    const result = await fetchData.$put(`/Case/ChangeStatus/${caseId}`, {
       NewStatus: newStatus,
     });
 
-    console.log('Response from server:', response);
-
-    if (response && response.data) {
-      // Update the ClosedTime if the new status is "Settled"
-      if (newStatus === 'Settled') {
-        // Make a new request to update the ClosedTime
-        const closedTimeResponse = await fetchData.$put(`/Case/UpdateClosedTime/${caseId}`);
-        console.log('ClosedTime updated:', closedTimeResponse);
-      }
-
-      // Optionally, you can refresh the case details or perform other actions
-      // based on the successful status change.
-      ElNotification.success({ message: response.data.message });
-      refreshNuxtData(); // Refresh the case list or perform any necessary actions
-    } else {
-      ElNotification.error({ message: "Failed to change case status" });
+    if (newStatus === 'Settled') {
+      const closedTimeResponse = await fetchData.$put(`/Case/UpdateClosedTime/${caseId}`);
+      console.log('ClosedTime updated:', closedTimeResponse);
     }
+
+    if (!result.error) {
+      emit('close-modal', false);
+      editedClientDetails.value.clientId.resetField();
+      ElNotification.success({ message: result.message });
+      refreshNuxtData();
+      } else {
+        ElNotification.error({ message: result.message });
+      }
   } catch (error) {
     console.error('Error while changing case status:', error);
     ElNotification.error({ message: "There is a problem with the server. Please try again later." });

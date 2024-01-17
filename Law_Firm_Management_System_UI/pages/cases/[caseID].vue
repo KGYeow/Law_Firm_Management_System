@@ -50,7 +50,7 @@
                 <v-col>
                   <v-label class="text-h6 pb-3">Current Case Status</v-label>
                   <!-- Make Vuetify timeline horizontal -->
-                  <v-timeline direction="horizontal">
+                  <v-timeline direction="horizontal" class="timeline-status">
                     <v-timeline-item
                       v-for="(status, index) in statusList"
                       :key="index"
@@ -69,35 +69,6 @@
                 </v-col>
               </v-row>
               
-              
-              <!-- Status Bar
-            <div class="status-container">
-              <div class="pa-md-4"><strong>Current Case Status</strong></div>
-              <div class="status-bar">
-                <div
-                  v-for="(status, index) in statusList"
-                  :key="index"
-                  class="status-item"
-                  :class="{ 'current-status': index === selectedCaseDetails.statusId - 1 }"
-                >
-                  <div class="status-part">
-                    <div
-                      class="circle"
-                      @click="changeCaseStatus(selectedCaseDetails.id, status.name)"
-                    >
-                      {{ status.id }}
-                    </div>
-                    <span class="status-name" :class="{ 'bold': index === selectedCaseDetails.statusId - 1 }">
-                      {{ status.name }}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            <div class="status-description">
-                <strong>{{ selectedCaseDetails.statusDescription }}</strong>
-            </div>
-          </div>-->
-
             <!--Related Document-->
             <v-row class="pb-2">
               <v-col>
@@ -108,9 +79,16 @@
                   <v-divider vertical class="mx-5 my-0" style="border-color: white !important; opacity: 0.5;"></v-divider>
                   <div v-for="document in caseDocumentList" :key="document.id">
                     <div class="case-detail-item">
-                      <a :href="`/documents/repositories/${document.id}`" target="_blank">
-                        <v-card-subtitle>{{ document.documentName }}</v-card-subtitle>
-                      </a>
+                      <v-list-item
+                        class="mb-2 rounded-3 bg-background list-link"
+                        density="compact"
+                        prepend-icon="mdi-file-document-outline"
+                        link
+                        @click="downloadDocument(document.id)"
+                        style="padding: 10px;"
+                      >
+                        {{ document.documentName }}
+                      </v-list-item>
                     </div>
                   </div>
                 </div>
@@ -123,13 +101,13 @@
                 </div>
               </v-col>
             </v-row>
-
+            
               <!-- Add New Document Button -->
                 <el-affix
                   class="position-absolute"
                   position="bottom"
                   :offset="30"
-                  style="right: 30px; bottom: 100px;"
+                  style="right: 20px; bottom: 20px;"
                 >
                   <v-tooltip text="Upload Document" activator="parent" location="left" offset="2"/>
                   <v-btn icon="mdi-file-document-plus-outline" color="primary" size="large" @click="addDocumentModal = true"/>
@@ -140,7 +118,6 @@
       </v-card>
     </v-col>
 </v-row>
-
 
 <!--Rename Case-->
 <SharedUiModal v-model="renameCaseModal" title="Rename Case" width="500">
@@ -170,6 +147,10 @@
 </template>
 
 <style scoped>
+.timeline-status {
+  padding:20px 0;
+}
+
 .clickable-circle {
   cursor:pointer;
   background-color: #ddd !important;
@@ -247,16 +228,6 @@ const openDialog = (caseDetails) => {
   isDialogOpen.value = true;
 };
 
-// Define reactive variable for adding case modal
-const addCaseModal = ref(false);
-
-// Define reactive variable for new case details
-const newCaseDetails = reactive({
-  name: '',
-  clientId: null,
-  status: null,
-});
-
 // Methods
 const statusList = ref([
   { id: 1, name: 'Active' },
@@ -265,7 +236,6 @@ const statusList = ref([
   { id: 4, name: 'Court Proceedings' },
   { id: 5, name: 'On Hold' },
   { id: 6, name: 'Settled' },
-  // ... other statuses ...
 ]);
 
 //Rename Event Methods
@@ -339,4 +309,27 @@ const changeCaseStatus = async (caseId, newStatus) => {
     ElNotification.error({ message: "There is a problem with the server. Please try again later." });
   }
 };
+
+const downloadDocument = async(docId) => {
+  const { data: docInfo } = await fetchData.$get(`/Document/Info/${docId}`)
+  const { data: attachment } = await fetchData.$get(`/Document/GetAttachment/${docId}`)
+  const mimeType = {
+    "PDF": "application/pdf",
+    "Word": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    "Excel": "application/vnd.ms-excel",
+  }
+  const arrayBuffer = Buffer.from(attachment.value, 'base64');
+  const blob = new Blob([arrayBuffer], { type: mimeType[docInfo.value.type] })
+  const url = URL.createObjectURL(blob)
+
+  if (docInfo.value.type == 'PDF')
+    window.open(url, '_blank')
+  else {
+    const link = document.createElement('a')
+    link.href = url
+    link.download = docInfo.value.name
+    link.click()
+    document.body.removeChild(link)
+  }
+}
 </script>
