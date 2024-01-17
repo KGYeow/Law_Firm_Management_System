@@ -117,9 +117,21 @@ namespace Law_Firm_Management_System_API.Controllers
                 DueTime = dto.DueTime,
                 InProgress = false
             };
-
             context.Tasks.Add(task);
             context.SaveChanges();
+
+            if (dto.IsAssignedParalegal)
+            {
+                var notification = new Notification
+                {
+                    UserId = (int)partner.ParalegalUserId,
+                    Title = "New To Do Task",
+                    Description = "Your partner has assigned a new to-do task to you.",
+                    IsRead = false,
+                };
+                context.Notifications.Add(notification);
+                context.SaveChanges();
+            }
 
             return Ok(new Response { Message = "New task created successfully" });
         }
@@ -158,6 +170,20 @@ namespace Law_Firm_Management_System_API.Controllers
             context.Tasks.Update(existingTask);
             context.SaveChanges();
 
+            if (existingTask.ParalegalUserId != null)
+            {
+                var assignedPartner = context.Partners.Where(a => a.ParalegalUserId == existingTask.ParalegalUserId).FirstOrDefault();
+                var notification = new Notification
+                {
+                    UserId = assignedPartner.UserId,
+                    Title = "Task Completed by Paralegal",
+                    Description = "Your paralegal has completed a task assigned by you.",
+                    IsRead = false,
+                };
+                context.Notifications.Add(notification);
+                context.SaveChanges();
+            }
+
             return Ok(new Response { Message = "Task updated successfully" });
         }
 
@@ -170,6 +196,20 @@ namespace Law_Firm_Management_System_API.Controllers
             existingTask.InProgress = true;
             context.Tasks.Update(existingTask);
             context.SaveChanges();
+
+            if (existingTask.ParalegalUserId != null)
+            {
+                var assignedPartner = context.Partners.Where(a => a.ParalegalUserId == existingTask.ParalegalUserId).FirstOrDefault();
+                var notification = new Notification
+                {
+                    UserId = assignedPartner.UserId,
+                    Title = "Task In Progress by Paralegal",
+                    Description = "Your paralegal has started to progress a task assigned by you.",
+                    IsRead = false,
+                };
+                context.Notifications.Add(notification);
+                context.SaveChanges();
+            }
 
             return Ok(new Response { Message = "Task updated successfully" });
         }
