@@ -108,7 +108,7 @@
                     </li>
                     <li>
                       <v-tooltip text="View Details" activator="parent" location="top" offset="2"/>
-                      <v-btn icon="mdi-open-in-new" size="small" variant="text" :href="`/events/${item.id}`"/>
+                      <v-btn icon="mdi-open-in-new" size="small" variant="text" :href="`/events/${item.id} `" target="_blank"/>
                     </li>
                   </ul>
                 </td>

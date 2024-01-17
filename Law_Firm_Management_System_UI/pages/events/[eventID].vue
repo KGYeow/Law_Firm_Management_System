@@ -42,8 +42,16 @@
                 <v-col cols="4">
                   <div class="d-flex align-center">
                     <v-label class="text-h6 pb-3">Related Case</v-label>
+                    <ul class="m-0 list-inline hstack">
+                      <li>
+                        <v-tooltip text="Edit Case" activator="parent" location="top" offset="2"/>
+                        <v-btn class="mt-n3" icon="mdi-rename-outline" size="small" variant="text" @click="editCaseGet(eventInfo.id, eventInfo.caseId)"/>
+                      </li>
+                    </ul>
                   </div>
-                  <v-card-subtitle>{{ eventInfo.caseName }}</v-card-subtitle>
+                  <v-card-subtitle>
+                  <a :href="`/events/${eventInfo.id}`" target="_blank" class="row-link">{{ eventInfo.caseName }}</a>
+                  </v-card-subtitle>
                 </v-col>
 
                 <v-col cols="4">
@@ -95,6 +103,15 @@
     />
   </SharedUiModal>
 
+    <!-- Edit Case Modal -->
+    <SharedUiModal v-model="editCaseModal" title="Edit Case" width="500">
+    <EventEditCase
+      :eventId="editCaseDetails.eventId"
+      :caseId="editCaseDetails.caseId"
+      @close-modal="(e) => editCaseModal = e"
+    />
+  </SharedUiModal>
+
 </template>
 
 <script setup>
@@ -117,13 +134,11 @@ const renameEventDetails = ref({
 })
 const renameEventModal = ref(false)
 
-/*
-const editClientDetails = ref({
+const editCaseDetails = ref({
+  eventId: null,
   caseId: null,
-  clientId: null,
 });
-const editClientModal = ref(false);
-*/
+const editCaseModal = ref(false);
 
 // Head
 useHead({
@@ -158,6 +173,13 @@ const renameEventGet = (eventId, caseName) => {
   renameEventModal.value = true
 }
 
+// Edit Event Case Methods
+const editCaseGet = (eventId, caseId) => {
+  editCaseDetails.value.eventId = eventId;
+  editCaseDetails.value.caseId = caseId;
+  editCaseModal.value = true;
+};
+
 const props = defineProps({
   eventId: Number,
 });
@@ -175,14 +197,4 @@ const updateEvent = async(eventId) => {
     }
   } catch { ElNotification.error({ message: "There is a problem with the server. Please try again later." }) }
 };
-/*
-// Edit Client Event Methods
-const editClientGet = (caseId, clientId) => {
-  editClientDetails.value.caseId = caseId;
-  editClientDetails.value.clientId = clientId;
-  editClientModal.value = true;
-};
-*/
-
-
 </script>
