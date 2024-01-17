@@ -7,7 +7,7 @@
       <v-row>
         <!-- Filters -->
         <v-col class="pe-0">
-          <v-select
+          <v-autocomplete
             :items="partnerList"
             item-title="fullName"
             item-value="userId"
@@ -17,12 +17,7 @@
             variant="outlined"
             v-model="filter.partnerUserId"
             hide-details
-            :single-line="true"
-          >
-            <template v-slot:prepend-item>
-              <v-list-item title="All Partners" @click="filter.partnerUserId = null"/>
-            </template>
-          </v-select>
+          />
         </v-col>
         <v-col class="pe-0">
           <v-select
@@ -78,45 +73,44 @@
     </template>
     <template v-slot:item="{ item }">
       <v-col class="pb-8" cols="3">
-        <v-card elevation="10" class="withbg">
-          <el-tag
-            :type="item.status == 'Approved' ? 'success' : item.status == 'Pending' ? 'warning' : item.status == 'Rejected' ? 'danger' : 'info'"
-            class="position-absolute"
-            effect="dark"
-            style="bottom: -10px; right: -15px; border-radius: 10px;"
-          >
-            <i class="mdi mdi-check" v-if="item.status == 'Approved'"></i>
-            <i class="mdi mdi-timer-sand-complete" v-else-if="item.status == 'Pending'"></i>
-            <i class="mdi mdi-close" v-else-if="item.status == 'Rejected'"></i>
-            <i class="mdi mdi-cancel" v-else-if="item.status == 'Cancelled'"></i>
-            {{ item.status }}
-          </el-tag>
-          <v-card-actions
-            class="p-0 text-subtitle-2 fw-bold justify-content-center text-white"
-            style="background-color: rgb(43, 76, 101); min-height: 35px; border-top-right-radius: 10px; border-top-left-radius: 10px;"
-          >
-            {{ item.category }}
-          </v-card-actions>
-          <v-card-item class="pt-3">
-            <v-card-title class="text-subtitle-2 fw-bold">
-              Appointment Time
+        <v-card elevation="10" class="withbg overflow-hidden">
+          <v-card-item class="pa-0 border-top border-5">
+            <v-card-title class="px-4 py-2 d-sm-flex align-center text-h6 fw-bold" style="white-space: unset;">
+              {{ item.category }}
             </v-card-title>
+          </v-card-item>
+          <v-card-text class="px-5 pt-2 pb-0 text-body-1">
+            <v-card-subtitle class="text-subtitle-2 fw-bold">
+              Appointment Time
+            </v-card-subtitle>
             <v-card-subtitle class="text-subtitle-2">
               <i class="mdi mdi-calendar-blank-outline me-1"></i>
               {{ dayjs(item.appointmentTime).format("DD MMM YYYY, hh:mm A") }}
             </v-card-subtitle>
-            <v-divider class="my-3"/>
-            <el-scrollbar class="text-body-1" height="60px">
-              <div class="d-flex pt-sm-2 align-center">
-                <v-avatar
-                  class="mb-0"
-                  image="/images/users/avatar.jpg"
-                  size="40"
-                />
-                <strong class="ms-5">{{ item.fullName }}</strong>
-              </div>
-            </el-scrollbar>
-          </v-card-item>
+            <v-divider class="my-1"/>
+            <div class="d-flex pt-sm-2 align-center">
+              <v-avatar
+                class="mb-0"
+                image="/images/users/avatar.jpg"
+                size="40"
+              />
+              <strong class="ms-5">{{ item.fullName }}</strong>
+            </div>
+          </v-card-text>
+          <v-card-actions class="py-2">
+            <el-tag type="success" effect="light" v-if="item.status == 'Approved'">
+              <i class="mdi mdi-check"/>{{ item.status }}
+            </el-tag>
+            <el-tag type="warning" effect="light" v-if="item.status == 'Pending'">
+              <i class="mdi mdi-timer-sand-complete"/>{{ item.status }}
+            </el-tag>
+            <el-tag type="danger" effect="light" v-if="item.status == 'Rejected'">
+              <i class="mdi mdi-close"/>{{ item.status }}
+            </el-tag>
+            <el-tag type="info" effect="light" v-if="item.status == 'Cancelled'">
+              <i class="mdi mdi-cancel"/>{{ item.status }}
+            </el-tag>
+          </v-card-actions>
         </v-card>
       </v-col>
     </template>
