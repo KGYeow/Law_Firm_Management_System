@@ -26,18 +26,6 @@ namespace Law_Firm_Management_System_API.Controllers
             return Ok(l);
         }
 
-        // Get the list of event-ori.
-        /*
-        [HttpGet]
-        [Route("")]
-        public IActionResult GetEventList()
-        {
-            var l = context.Events.Include(a => a.Case).OrderBy(a => a.Name).ToList()
-                .Select(x => new { caseID = x.Case?.Id, name = x.Name, createdTime = x.CreatedTime, eventTime = x.EventTime, isCompleted = x.IsCompleted });
-            return Ok(l);
-        }
-        */
-
         // Get the list of events from partner's perspective.
         [HttpGet]
         [Route("PartnerPerspectiveEventList")]

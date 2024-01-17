@@ -28,21 +28,21 @@
                   <!-- Filters -->
                   <v-col class="pe-0" cols="2">
                     <v-select
-                    :items="caseList"
-                    item-title="name"
-                    item-value="id"
-                    placeholder="Cases"
-                    density="compact"
-                    variant="outlined"
-                    v-model="filter.caseID"
-                    hide-details
+                      :items="caseList"
+                      item-title="name"
+                      item-value="id"
+                      placeholder="Cases"
+                      density="compact"
+                      variant="outlined"
+                      v-model="filter.caseID"
+                      hide-details
                   >
                     <template v-slot:prepend-item>
                       <v-list-item title="All Cases" @click="filter.caseID = null"/>
                     </template>
                   </v-select>
                 </v-col>
-                </v-row>
+              </v-row>
                 <v-divider/>
           <!-- Event Item List -->
           <v-data-table
@@ -236,6 +236,7 @@
 // Data
 const currentPage = ref(1)
 const itemsPerPage = ref(10)
+/*
 const headers = ref([
     { key: "number", title: "No." },
     { key: "name", title: "Event Name" },
@@ -246,11 +247,11 @@ const headers = ref([
     { key: "isCompleted", title: "Event Status"},
     { key: "actions", sortable: false },
 ])
-
+*/
 // Define reactive variables 
 const { data: upcomingEventList } = await fetchData.$get("/Event/ClientPerspectiveUpcomingEventList", filter.value)
 const { data: pastEventList } = await fetchData.$get("/Event/ClientPerspectivePastEventList", filter.value)
-const { data: caseList } = await fetchData.$get("/Case")
+const { data: caseList } = await fetchData.$get("/Case/ClientPerspectiveCaseList")
 const { data: upcomingEventCalendar } = await fetchData.$get("/Event/UpcomingEvents/Client")
  
   // Head

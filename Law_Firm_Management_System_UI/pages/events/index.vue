@@ -57,7 +57,7 @@
           <v-data-table 
             density="comfortable"
             v-model:page="currentPage"
-            :headers="headers"
+            :headers="headersPartner"
             :items="eventList"
             :items-per-page="itemsPerPage"
             hover
@@ -132,7 +132,7 @@
           <v-data-table 
             density="comfortable"
             v-model:page="currentPage"
-            :headers="headers"
+            :headers="headersParalegal"
             :items="eventListParalegal"
             :items-per-page="itemsPerPage"
             hover
@@ -169,7 +169,7 @@
 
   <!-- Add New Event Modal -->
   <v-dialog v-model="addEventModal" width="auto">
-  <el-scrollbar max-height="400px">
+  <el-scrollbar max-height="600px">
     <v-card elevation="10" class="withbg rounded-3 overflow-visible" width="500px">
       <v-card-title class="px-4 py-4 d-sm-flex align-center justify-space-between bg-background rounded-top-3">
         <h5 class="text-h5 mb-0 d-flex align-center">
@@ -279,11 +279,21 @@ const { data: user } = useAuth()
 const currentPage = ref(1)
 const itemsPerPage = ref(10)
 
-const headers = ref([
+const headersPartner = ref([
   { key: "number", title: "No." },
   { key: "name", title: "Event Name" },
   { key: "caseName", title: "Case Name" },
-  { key: "employeeName", title: "Related Employee" },
+  { key: "paralegalName", title: "Paralegal Name" },
+  { key: "createdTime" , title: "Created Time" },
+  { key: "eventTime", title: "Event Time"},
+  { key: "isCompleted", title: "Status"},
+])
+
+const headersParalegal = ref([
+  { key: "number", title: "No." },
+  { key: "name", title: "Event Name" },
+  { key: "caseName", title: "Case Name" },
+  { key: "partnerName", title: "Partner Name" },
   { key: "createdTime" , title: "Created Time" },
   { key: "eventTime", title: "Event Time"},
   { key: "isCompleted", title: "Status"},
@@ -316,7 +326,6 @@ const renameEventModal = ref(false)
 const { data: eventList } = await fetchData.$get("/Event/PartnerPerspectiveEventList", filter.value)
 const { data: eventListParalegal } = await fetchData.$get("/Event/ParalegalPerspectiveEventList", filter.value)
 const { data: caseList } = await fetchData.$get("/Case")
-const { data: clientList } = await fetchData.$get("/Client")
 const { data: userRole } = await fetchData.$get("/UserRole/RoleName")
 
 
@@ -370,6 +379,7 @@ const addEvent = handleSubmit(async(values) => {
   } catch { ElNotification.error({ message: "There is a problem with the server. Please try again later." }) }
 })
 
+/*
 //Rename Event Methods
 const renameEventGet = (eventId, eventName) => {
   renameEventDetails.value.eventId = eventId
@@ -390,6 +400,7 @@ const updateEvent = async(eventId) => {
     }
   } catch { ElNotification.error({ message: "There is a problem with the server. Please try again later." }) }
 }
+*/
 
 //Delete event
 const deleteEvent = async(eventId) => {
