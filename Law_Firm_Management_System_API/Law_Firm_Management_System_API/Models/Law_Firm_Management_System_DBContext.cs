@@ -78,6 +78,8 @@ namespace Law_Firm_Management_System_API.Models
 
                 entity.Property(e => e.ClientId).HasColumnName("ClientID");
 
+                entity.Property(e => e.Description).IsUnicode(false);
+
                 entity.Property(e => e.PartnerUserId).HasColumnName("PartnerUserID");
 
                 entity.Property(e => e.Status)

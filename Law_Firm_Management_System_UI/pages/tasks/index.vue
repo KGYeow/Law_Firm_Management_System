@@ -183,19 +183,19 @@
         </v-card-title>
         <v-card-subtitle class="text-subtitle-2">
           <v-row v-if="userRole == 'Partner'">
-            <v-col cols="3" class="pb-0">Task Assignment:</v-col>
+            <v-col cols="3" class="pb-0">Task Assignment</v-col>
             <v-col class="pb-0">
-              <div v-if="selectedTask.paralegalUserId">Your paralegal, {{ selectedTask.paralegalFullName }}</div>
-              <div v-else>Yourself</div>
+              <div v-if="selectedTask.paralegalUserId">: Your paralegal, {{ selectedTask.paralegalFullName }}</div>
+              <div v-else>: Yourself</div>
             </v-col>
           </v-row>
           <v-row :class="{ 'pt-3': userRole == 'Paralegal' }">
-            <v-col cols="3" class="py-0">Assigned Time:</v-col>
-            <v-col class="py-0">{{ dayjs(selectedTask.assignedTime).format("DD MMM YYYY, h:mm A") }}</v-col>
+            <v-col cols="3" class="py-0">Assigned Time</v-col>
+            <v-col class="py-0">: {{ dayjs(selectedTask.assignedTime).format("DD MMM YYYY, h:mm A") }}</v-col>
           </v-row>
           <v-row>
-            <v-col cols="3" class="pt-0">Due Time:</v-col>
-            <v-col class="pt-0">{{ dayjs(selectedTask.dueTime).format("DD MMM YYYY, h:mm A") }}</v-col>
+            <v-col cols="3" class="pt-0">Due Time</v-col>
+            <v-col class="pt-0">: {{ dayjs(selectedTask.dueTime).format("DD MMM YYYY, h:mm A") }}</v-col>
           </v-row>
         </v-card-subtitle>
         <v-divider class="mt-3 mb-0"/>

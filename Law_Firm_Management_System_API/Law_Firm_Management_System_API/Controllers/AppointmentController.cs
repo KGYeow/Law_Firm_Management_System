@@ -24,6 +24,17 @@ namespace Law_Firm_Management_System_API.Controllers
             return Ok(l);
         }
 
+        // Get the specific appointment's information.
+        [HttpGet]
+        [Route("Info/{AppointmentId}")]
+        public IActionResult GetAppointmentInformation(int appointmentId)
+        {
+            var appointmentInfo = context.Appointments.Include(a => a.Client).Include(a => a.Category).Include(a => a.PartnerUser).Where(a => a.Id == appointmentId)
+                .Select(x => new { id = x.Id, clientId = x.ClientId, clientFullName = x.Client.FullName, partnerUserId = x.PartnerUserId, partnerFullName = x.PartnerUser.FullName, category = x.Category.Name, appointmentTime = x.AppointmentTime, status = x.Status, description = x.Description })
+                .FirstOrDefault();
+            return Ok(appointmentInfo);
+        }
+
         // Get the list of client appointments from partner's perspective.
         [HttpGet]
         [Route("PartnerPerspectiveList")]
@@ -31,7 +42,7 @@ namespace Law_Firm_Management_System_API.Controllers
         {
             var user = userService.GetUser(User);
             var l = context.Appointments.Include(a => a.Client).Include(a => a.Category).Where(a => a.PartnerUserId == user.Id).OrderByDescending(a => a.Id).ToList()
-                .Select(x => new { id = x.Id, clientId = x.ClientId, fullName = x.Client?.FullName, category = x.Category.Name, appointmentTime = x.AppointmentTime, status = x.Status });
+                .Select(x => new { id = x.Id, clientId = x.ClientId, fullName = x.Client?.FullName, category = x.Category.Name, appointmentTime = x.AppointmentTime, status = x.Status, description = x.Description });
             
             if (dto.ClientId != null)
                 l = l.Where(a => a.clientId == dto.ClientId);
@@ -51,7 +62,8 @@ namespace Law_Firm_Management_System_API.Controllers
         {
             var user = userService.GetUser(User);
             var l = context.Appointments.Include(a => a.PartnerUser).Include(a => a.Category).Where(a => a.Client.UserId == user.Id).OrderByDescending(a => a.Id).ToList()
-                .Select(x => new { id = x.Id, partnerUserId = x.PartnerUserId, fullName = x.PartnerUser?.FullName, category = x.Category.Name, appointmentTime = x.AppointmentTime, status = x.Status });
+                .Select(x => new { id = x.Id, partnerUserId = x.PartnerUserId, fullName = x.PartnerUser?.FullName, category = x.Category.Name, appointmentTime = x.AppointmentTime, 
+                = x.Status, description = x.Description });
 
             if (dto.PartnerUserId != null)
                 l = l.Where(a => a.partnerUserId == dto.PartnerUserId);
@@ -78,7 +90,8 @@ namespace Law_Firm_Management_System_API.Controllers
                 PartnerUserId = dto.PartnerUserId,
                 CategoryId = dto.CategoryId,
                 AppointmentTime = dto.AppointmentTime,
-                Status = "Pending"
+                Status = "Pending",
+                Description = dto.Description
             };
             context.Appointments.Add(appointment);
             context.SaveChanges();
@@ -109,7 +122,8 @@ namespace Law_Firm_Management_System_API.Controllers
                 PartnerUserId = user.Id,
                 CategoryId = dto.CategoryId,
                 AppointmentTime = dto.AppointmentTime,
-                Status = "Approved"
+                Status = "Approved",
+                Description = dto.Description
             };
             context.Appointments.Add(appointment);
             context.SaveChanges();
@@ -200,6 +214,7 @@ namespace Law_Firm_Management_System_API.Controllers
             public int PartnerUserId { get; set; }
             public int CategoryId { get; set; }
             public DateTime AppointmentTime { get; set; }
+            public string? Description { get; set; }
         }
 
         public class AppointmentPartnerCreateDto
@@ -207,6 +222,7 @@ namespace Law_Firm_Management_System_API.Controllers
             public int ClientId { get; set; }
             public int CategoryId { get; set; }
             public DateTime AppointmentTime { get; set; }
+            public string? Description { get; set; }
         }
 
         public class AppointmentFilterDto

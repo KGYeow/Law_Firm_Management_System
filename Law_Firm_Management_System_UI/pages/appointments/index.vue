@@ -117,6 +117,10 @@
                         </template>
                       </el-popconfirm>
                     </li>
+                    <li>
+                      <v-tooltip text="View Details" activator="parent" location="top" offset="2"/>
+                      <v-btn icon="mdi-open-in-new" size="small" variant="text" @click="getSelectedAppointment(item)"/>
+                    </li>
                   </ul>
                 </td>
               </tr>
@@ -201,6 +205,46 @@
       </v-card-actions>
     </form>
   </SharedUiModal>
+
+  <!-- View Appointment Modal -->
+  <SharedUiModal v-model="viewAppointmentModal" title="View Appointment Information" width="600">
+    <el-scrollbar max-height="400px">
+      <v-card-item class="px-8 py-4 text-body-1">
+        <v-card-title class="text-h6 fw-bold" style="white-space: unset;">
+          {{ selectedAppointmentDetails.category }}
+        </v-card-title>
+        <v-card-subtitle class="text-subtitle-2">
+          <v-row>
+            <v-col cols="3" class="pb-0">Client</v-col>
+            <v-col class="pb-0">: {{ selectedAppointmentDetails.fullName }}</v-col>
+          </v-row>
+          <v-row>
+            <v-col cols="3" class="pt-0">Appointment Time</v-col>
+            <v-col class="pt-0">: {{ dayjs(selectedAppointmentDetails.appointmentTime).format("DD MMM YYYY, h:mm A") }}</v-col>
+          </v-row>
+        </v-card-subtitle>
+        <v-divider class="mt-3 mb-0"/>
+      </v-card-item>
+      <v-card-text class="px-8 pt-0 text-body-1 text-justify">
+        <v-card-subtitle class="p-0 text-subtitle-2">Description:</v-card-subtitle>
+        {{ selectedAppointmentDetails.description ?? '-' }}
+      </v-card-text>
+      <v-card-actions class="justify-content-end">
+        <el-tag type="success" effect="light" v-if="selectedAppointmentDetails.status == 'Approved'">
+          <i class="mdi mdi-check"/>{{ selectedAppointmentDetails.status }}
+        </el-tag>
+        <el-tag type="warning" effect="light" v-if="selectedAppointmentDetails.status == 'Pending'">
+          <i class="mdi mdi-timer-sand-complete"/>{{ selectedAppointmentDetails.status }}
+        </el-tag>
+        <el-tag type="danger" effect="light" v-if="selectedAppointmentDetails.status == 'Rejected'">
+          <i class="mdi mdi-close"/>{{ selectedAppointmentDetails.status }}
+        </el-tag>
+        <el-tag type="info" effect="light" v-if="selectedAppointmentDetails.status == 'Cancelled'">
+          <i class="mdi mdi-cancel"/>{{ selectedAppointmentDetails.status }}
+        </el-tag>
+      </v-card-actions>
+    </el-scrollbar>
+  </SharedUiModal>
 </template>
 
 <script setup>
@@ -229,11 +273,13 @@ const filter = ref({
   status: null,
 })
 const addAppointmentModal = ref(false)
+const viewAppointmentModal = ref(false)
 const addAppointmentDetails = ref({
   clientId: useField('clientId'),
   categoryId: useField('categoryId'),
   appointmentTime: useField('appointmentTime'),
 })
+const selectedAppointmentDetails = ref({})
 const currentPage = ref(1)
 const itemsPerPage = ref(10)
 const headers = ref([
@@ -267,6 +313,11 @@ definePageMeta({
 // Methods
 const pageCount = () => {
   return Math.ceil(appointmentList.value.length / itemsPerPage.value)
+}
+const getSelectedAppointment = (appointmentInfo) => {
+  console.log(appointmentInfo)
+  selectedAppointmentDetails.value = appointmentInfo
+  viewAppointmentModal.value = true
 }
 const appointmentApproval = async(appointmentId, approvalStatus) => {
   try {

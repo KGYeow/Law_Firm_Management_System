@@ -12,8 +12,16 @@
 :root {
   --el-color-primary: rgb(var(--v-theme-primary)) !important;
   --el-color-success: rgb(var(--v-theme-success)) !important;
-  --el-color-danger: rgb(var(--v-theme-error)) !important;
   --el-color-warning: rgb(var(--v-theme-warning)) !important;
+  --el-color-danger: rgb(var(--v-theme-error)) !important;
+
+  --bs-primary: rgb(var(--v-theme-primary)) !important;
+  --bs-primary-rgb: 43, 76, 101 !important;
+  --bs-secondary: rgb(var(--v-theme-secondary)) !important;
+  --bs-secondary-rgb: 107, 139, 164 !important;
+  --bs-success: rgb(var(--v-theme-success)) !important;
+  --bs-warning: rgb(var(--v-theme-warning)) !important;
+  --bs-danger: rgb(var(--v-theme-error)) !important;
 
   .el-button--primary {
     --el-button-hover-bg-color: rgb(var(--v-theme-secondary)) !important;

@@ -11,6 +11,7 @@ namespace Law_Firm_Management_System_API.Models
         public int CategoryId { get; set; }
         public DateTime AppointmentTime { get; set; }
         public string Status { get; set; } = null!;
+        public string? Description { get; set; }
 
         public virtual AppointmentCategory Category { get; set; } = null!;
         public virtual Client Client { get; set; } = null!;

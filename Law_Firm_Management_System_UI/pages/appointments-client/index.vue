@@ -73,31 +73,31 @@
     </template>
     <template v-slot:item="{ item }">
       <v-col class="pb-8" cols="3">
-        <v-card elevation="10" class="withbg overflow-hidden">
-          <v-card-item class="pa-0 border-top border-5">
-            <v-card-title class="px-4 py-2 d-sm-flex align-center text-h6 fw-bold" style="white-space: unset;">
+        <v-card elevation="10" class="withbg overflow-hidden" link @click="getSelectedAppointment(item)">
+          <v-card-item class="p-0 border-top border-5 border-primary">
+            <v-card-title class="px-5 py-2 d-sm-flex align-center text-h6 fw-bold text-wrap" style="white-space: unset;">
               {{ item.category }}
             </v-card-title>
           </v-card-item>
-          <v-card-text class="px-5 pt-2 pb-0 text-body-1">
-            <v-card-subtitle class="text-subtitle-2 fw-bold">
+          <v-card-text class="px-5 py-0 text-body-1 text-wrap">
+            <v-card-subtitle class="p-0 text-subtitle-2">
               Appointment Time
             </v-card-subtitle>
-            <v-card-subtitle class="text-subtitle-2">
+            <span class="p-0 text-subtitle-2 fw-bold">
               <i class="mdi mdi-calendar-blank-outline me-1"></i>
               {{ dayjs(item.appointmentTime).format("DD MMM YYYY, hh:mm A") }}
-            </v-card-subtitle>
+            </span>
             <v-divider class="my-1"/>
-            <div class="d-flex pt-sm-2 align-center">
+            <div class="d-flex pt-sm-2 align-center overflow-hidden">
               <v-avatar
                 class="mb-0"
                 image="/images/users/avatar.jpg"
                 size="40"
               />
-              <strong class="ms-5">{{ item.fullName }}</strong>
+              <el-text class="ms-3 fw-bold" truncated>{{ item.fullName }}</el-text>
             </div>
           </v-card-text>
-          <v-card-actions class="py-2">
+          <v-card-actions class="px-5 py-2 justify-content-end">
             <el-tag type="success" effect="light" v-if="item.status == 'Approved'">
               <i class="mdi mdi-check"/>{{ item.status }}
             </el-tag>
@@ -128,68 +128,121 @@
   </v-data-table>
 
   <!-- Add New Appointment Modal -->
-  <SharedUiModal v-model="addAppointmentModal" title="Add New Appointment" width="550">
-    <form @submit.prevent="addAppointment">
+  <SharedUiModal v-model="addAppointmentModal" title="Add New Appointment" width="600">
+    <el-scrollbar max-height="400px">
+      <form @submit.prevent="addAppointment">
+        <v-card-item class="px-8 py-4 text-body-1">
+          <v-row>
+            <v-col>
+              <v-label class="text-caption">Partner</v-label>
+              <v-select
+                :items="partnerList"
+                item-title="fullName"
+                item-value="userId"
+                placeholder="Select partner"
+                variant="outlined"
+                density="compact"
+                :error-messages="addAppointmentDetails.partnerUserId.errorMessage"
+                v-model="addAppointmentDetails.partnerUserId.value"
+                hide-details="auto"
+              />
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col>
+              <v-label class="text-caption">Category</v-label>
+              <v-select
+                :items="categoryList"
+                item-title="name"
+                item-value="id"
+                placeholder="Select category"
+                variant="outlined"
+                density="compact"
+                :error-messages="addAppointmentDetails.categoryId.errorMessage"
+                v-model="addAppointmentDetails.categoryId.value"
+                hide-details="auto"
+              />
+            </v-col>
+            <v-col>
+              <v-label class="text-caption">Time</v-label>
+              <el-date-picker
+                :class="{ 'error': addAppointmentDetails.appointmentTime.errorMessage }"
+                placeholder="Select date and time"
+                type="datetime"
+                format="DD MMM YYYY, hh:mm A"
+                date-format="DD MMM YYYY"
+                time-format="HH:mm"
+                :teleported="false"
+                :disabled-date="(time) => { return time.getTime() < new Date() }"
+                v-model="addAppointmentDetails.appointmentTime.value"
+                style="height: 40px;"
+              />
+              <v-messages
+                :messages="addAppointmentDetails.appointmentTime.errorMessage"
+                :active="addAppointmentDetails.appointmentTime.errorMessage ? true : false"
+                color="#fa896b"
+                :transition="false"
+                style="padding: 3px 16px 3px; opacity: unset;"
+              />
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col>
+              <v-label class="text-caption">Description</v-label>
+              <v-textarea
+                variant="outlined"
+                density="compact"
+                v-model="addAppointmentDetails.description"
+                hide-details
+              />
+            </v-col>
+          </v-row>
+        </v-card-item>
+        <v-card-actions class="p-3 justify-content-end">
+          <v-btn color="primary" type="submit">Submit</v-btn>
+        </v-card-actions>
+      </form>
+    </el-scrollbar>
+  </SharedUiModal>
+
+  <!-- View Appointment Modal -->
+  <SharedUiModal v-model="viewAppointmentModal" title="View Appointment Information" width="600">
+    <el-scrollbar max-height="400px">
       <v-card-item class="px-8 py-4 text-body-1">
-        <v-row>
-          <v-col>
-            <v-label class="text-caption">Partner</v-label>
-            <v-select
-              :items="partnerList"
-              item-title="fullName"
-              item-value="userId"
-              placeholder="Select partner"
-              variant="outlined"
-              density="compact"
-              :error-messages="addAppointmentDetails.partnerUserId.errorMessage"
-              v-model="addAppointmentDetails.partnerUserId.value"
-              hide-details="auto"
-            />
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col>
-            <v-label class="text-caption">Category</v-label>
-            <v-select
-              :items="categoryList"
-              item-title="name"
-              item-value="id"
-              placeholder="Select category"
-              variant="outlined"
-              density="compact"
-              :error-messages="addAppointmentDetails.categoryId.errorMessage"
-              v-model="addAppointmentDetails.categoryId.value"
-              hide-details="auto"
-            />
-          </v-col>
-          <v-col>
-            <v-label class="text-caption">Time</v-label>
-            <el-date-picker
-              :class="{ 'error': addAppointmentDetails.appointmentTime.errorMessage }"
-              placeholder="Select date and time"
-              type="datetime"
-              format="DD MMM YYYY, hh:mm A"
-              date-format="DD MMM YYYY"
-              time-format="HH:mm"
-              :teleported="false"
-              :disabled-date="(time) => { return time.getTime() < new Date() }"
-              v-model="addAppointmentDetails.appointmentTime.value"
-              style="height: 40px;"
-            />
-            <v-messages
-              :messages="addAppointmentDetails.appointmentTime.errorMessage"
-              :active="addAppointmentDetails.appointmentTime.errorMessage ? true : false"
-              color="#fa896b"
-              :transition="false"
-              style="padding: 3px 16px 3px; opacity: unset;"
-            />
-          </v-col>
-        </v-row>
+        <v-card-title class="text-h6 fw-bold" style="white-space: unset;">
+          {{ selectedAppointmentDetails.category }}
+        </v-card-title>
+        <v-card-subtitle class="text-subtitle-2">
+          <v-row>
+            <v-col cols="3" class="pb-0">Partner</v-col>
+            <v-col class="pb-0">: {{ selectedAppointmentDetails.fullName }}</v-col>
+          </v-row>
+          <v-row>
+            <v-col cols="3" class="pt-0">Appointment Time</v-col>
+            <v-col class="pt-0">: {{ dayjs(selectedAppointmentDetails.appointmentTime).format("DD MMM YYYY, h:mm A") }}</v-col>
+          </v-row>
+        </v-card-subtitle>
+        <v-divider class="mt-3 mb-0"/>
       </v-card-item>
-      <v-card-actions class="p-3 justify-content-end">
-        <v-btn color="primary" type="submit">Submit</v-btn>
+      <v-card-text class="px-8 pt-0 text-body-1 text-justify">
+        <v-card-subtitle class="p-0 text-subtitle-2">Description:</v-card-subtitle>
+        {{ selectedAppointmentDetails.description ?? '-' }}
+      </v-card-text>
+      <v-card-actions class="justify-content-end">
+        <el-tag type="success" effect="light" v-if="selectedAppointmentDetails.status == 'Approved'">
+          <i class="mdi mdi-check"/>{{ selectedAppointmentDetails.status }}
+        </el-tag>
+        <el-tag type="warning" effect="light" v-if="selectedAppointmentDetails.status == 'Pending'">
+          <i class="mdi mdi-timer-sand-complete"/>{{ selectedAppointmentDetails.status }}
+        </el-tag>
+        <el-tag type="danger" effect="light" v-if="selectedAppointmentDetails.status == 'Rejected'">
+          <i class="mdi mdi-close"/>{{ selectedAppointmentDetails.status }}
+        </el-tag>
+        <el-tag type="info" effect="light" v-if="selectedAppointmentDetails.status == 'Cancelled'">
+          <i class="mdi mdi-cancel"/>{{ selectedAppointmentDetails.status }}
+        </el-tag>
       </v-card-actions>
-    </form>
+    </el-scrollbar>
   </SharedUiModal>
 </template>
 
@@ -220,11 +273,14 @@ const filter = ref({
 const currentPage = ref(1)
 const itemsPerPage = ref(8)
 const addAppointmentModal = ref(false)
+const viewAppointmentModal = ref(false)
 const addAppointmentDetails = ref({
   partnerUserId: useField('partnerUserId'),
   categoryId: useField('categoryId'),
   appointmentTime: useField('appointmentTime'),
+  description: null,
 })
+const selectedAppointmentDetails = ref({})
 const { data: partnerList } = await fetchData.$get("/Partner")
 const { data: categoryList } = await fetchData.$get("/Appointment/Category")
 const { data: appointmentList } = await fetchData.$get("/Appointment/ClientPerspectiveList", filter.value)
@@ -249,14 +305,26 @@ definePageMeta({
 const pageCount = () => {
   return Math.ceil(appointmentList.value.length / itemsPerPage.value)
 }
+const getSelectedAppointment = (appointmentInfo) => {
+  console.log(appointmentInfo)
+  selectedAppointmentDetails.value = appointmentInfo
+  viewAppointmentModal.value = true
+}
 const addAppointment = handleSubmit(async(values) => {
   try {
-    const result = await fetchData.$post(`/Appointment/ClientCreate`, values)
+    const result = await fetchData.$post(`/Appointment/ClientCreate`, {
+      partnerUserId: values.partnerUserId,
+      categoryId: values.categoryId,
+      appointmentTime: values.appointmentTime,
+      description: addAppointmentDetails.value.description,
+    })
+
     if (!result.error) {
       addAppointmentModal.value = false
       addAppointmentDetails.value.partnerUserId.resetField()
       addAppointmentDetails.value.categoryId.resetField()
       addAppointmentDetails.value.appointmentTime.resetField()
+      addAppointmentDetails.value.description = null
       ElNotification.success({ message: result.message })
       refreshNuxtData()
     }

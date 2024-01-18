@@ -11,8 +11,8 @@ CREATE TABLE [dbo].[User](
 	[FullName] [nvarchar](max) NOT NULL,
 	[Username] [nvarchar](100) NOT NULL,
 	[Email] [nvarchar](256) NOT NULL,
-	[Password] [nvarchar](100) NOT NULL,
 	[ProfilePhoto] [varbinary](max) NULL,
+	[Password] [nvarchar](100) NOT NULL,
  CONSTRAINT [PK_User] PRIMARY KEY CLUSTERED
 (
 	[ID] ASC
@@ -109,11 +109,12 @@ CREATE TABLE [dbo].[Appointment](
 	[CategoryID] [int] NOT NULL,
 	[AppointmentTime] [datetime] NOT NULL,
 	[Status] [varchar](100) NOT NULL,
+	[Description] [varchar](max) NULL,
  CONSTRAINT [PK_Appointment] PRIMARY KEY CLUSTERED 
 (
 	[ID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 /****** Object:  Table [dbo].[AppointmentCategory]    Script Date: 21/12/2023 8:53:00 PM ******/
 SET ANSI_NULLS ON
@@ -297,28 +298,28 @@ CREATE TABLE [dbo].[Partner](
 GO
 
 SET IDENTITY_INSERT [dbo].[User] ON
-INSERT [dbo].[User] ([ID], [UserRoleID], [FullName], [Username], [Email], [Password]) VALUES (1, 1, N'Partner', N'partner', N'partner@gmail.com', N'1168411515814412785149174972167513371245116')
-INSERT [dbo].[User] ([ID], [UserRoleID], [FullName], [Username], [Email], [Password]) VALUES (2, 2, N'Paralegal', N'paralegal', N'paralegal@gmail.com', N'89137941131780581697199247420039101219')
-INSERT [dbo].[User] ([ID], [UserRoleID], [FullName], [Username], [Email], [Password]) VALUES (3, 3, N'Client', N'client', N'client@gmail.com', N'98961428173194154141109188151842308924137')
-INSERT [dbo].[User] ([ID], [UserRoleID], [FullName], [Username], [Email], [Password]) VALUES (4, 3, N'Kaedehara Kazuha', N'kaedeharakazuha', N'kaedeharakazuha@gmail.com', N'1698229722215936261825011619413220617112')
-INSERT [dbo].[User] ([ID], [UserRoleID], [FullName], [Username], [Email], [Password]) VALUES (5, 3, N'Zhongli', N'zhongli', N'zhongli@gmail.com', N'160230839085551011691861531893924893237115')
-INSERT [dbo].[User] ([ID], [UserRoleID], [FullName], [Username], [Email], [Password]) VALUES (6, 3, N'Eula', N'eula', N'eula@gmail.com', N'1401131841402441261731401620461320023622254')
-INSERT [dbo].[User] ([ID], [UserRoleID], [FullName], [Username], [Email], [Password]) VALUES (7, 3, N'Nahida', N'nahida', N'nahida@gmail.com', N'1602187344681455415123073156876889172')
-INSERT [dbo].[User] ([ID], [UserRoleID], [FullName], [Username], [Email], [Password]) VALUES (8, 3, N'Venti', N'venti', N'venti@gmail.com', N'17699147227128127110140841261138315010621071')
-INSERT [dbo].[User] ([ID], [UserRoleID], [FullName], [Username], [Email], [Password]) VALUES (9, 3, N'Raiden Ei', N'raidenei', N'raidenei@gmail.com', N'107135552716210199193165434580186180116203')
-INSERT [dbo].[User] ([ID], [UserRoleID], [FullName], [Username], [Email], [Password]) VALUES (10, 3, N'Furina', N'furina', N'furina@gmail.com', N'881562001651901052256918214722090894819320')
-INSERT [dbo].[User] ([ID], [UserRoleID], [FullName], [Username], [Email], [Password]) VALUES (11, 3, N'Yelan', N'yelan', N'yelan@gmail.com', N'622011094815217810815163472101785479182184')
-INSERT [dbo].[User] ([ID], [UserRoleID], [FullName], [Username], [Email], [Password]) VALUES (12, 3, N'Cyno', N'cyno', N'cyno@gmail.com', N'3125514245153154221163672511941482102111671')
-INSERT [dbo].[User] ([ID], [UserRoleID], [FullName], [Username], [Email], [Password]) VALUES (13, 3, N'Kamisato Ayaka', N'kamisatoayaka', N'kamisatoayaka@gmail.com', N'10302252491371331381971833523518207176203124')
-INSERT [dbo].[User] ([ID], [UserRoleID], [FullName], [Username], [Email], [Password]) VALUES (14, 3, N'Kamisato Ayato', N'kamisatoayato', N'kamisatoayato@gmail.com', N'971751295718011822825314925166148162210223228')
-INSERT [dbo].[User] ([ID], [UserRoleID], [FullName], [Username], [Email], [Password]) VALUES (15, 3, N'Yae Miko', N'yaemiko', N'yaemiko@gmail.com', N'14124282371541311961724013872009619218100')
-INSERT [dbo].[User] ([ID], [UserRoleID], [FullName], [Username], [Email], [Password]) VALUES (16, 2, N'Yanfei', N'yanfei', N'yanfei@gmail.com', N'10812554593111297225504418545781096242')
-INSERT [dbo].[User] ([ID], [UserRoleID], [FullName], [Username], [Email], [Password]) VALUES (17, 1, N'Sangonomiya Kokomi', N'sangonomiyakokomi', N'sangonomiyakokomi@gmail.com', N'231367268801502362213214126112115194240144')
-INSERT [dbo].[User] ([ID], [UserRoleID], [FullName], [Username], [Email], [Password]) VALUES (18, 1, N'Neuvillette', N'neuvillette', N'neuvillette@gmail.com', N'10169119360185239137213194719522160242186')
-INSERT [dbo].[User] ([ID], [UserRoleID], [FullName], [Username], [Email], [Password]) VALUES (19, 2, N'Navia', N'navia', N'navia@gmail.com', N'199210190154140229241542024021514513556177193')
-INSERT [dbo].[User] ([ID], [UserRoleID], [FullName], [Username], [Email], [Password]) VALUES (20, 2, N'Clorinde', N'clorinde', N'clorinde@gmail.com', N'179170115257585241115441481492411931746055')
-INSERT [dbo].[User] ([ID], [UserRoleID], [FullName], [Username], [Email], [Password]) VALUES (21, 2, N'Gorou', N'gorou', N'gorou@gmail.com', N'145228208160331994022912622921219011880213')
-INSERT [dbo].[User] ([ID], [UserRoleID], [FullName], [Username], [Email], [Password]) VALUES (22, 3, N'Dehya', N'dehya', N'dehya@gmail.com', N'056210218223621831531095511965612247028')
+INSERT [dbo].[User] ([ID], [UserRoleID], [FullName], [Username], [Email], [ProfilePhoto], [Password]) VALUES (1, 1, N'Partner', N'partner', N'partner@gmail.com', NULL, N'1168411515814412785149174972167513371245116')
+INSERT [dbo].[User] ([ID], [UserRoleID], [FullName], [Username], [Email], [ProfilePhoto], [Password]) VALUES (2, 2, N'Paralegal', N'paralegal', N'paralegal@gmail.com', NULL, N'89137941131780581697199247420039101219')
+INSERT [dbo].[User] ([ID], [UserRoleID], [FullName], [Username], [Email], [ProfilePhoto], [Password]) VALUES (3, 3, N'Client', N'client', N'client@gmail.com', NULL, N'98961428173194154141109188151842308924137')
+INSERT [dbo].[User] ([ID], [UserRoleID], [FullName], [Username], [Email], [ProfilePhoto], [Password]) VALUES (4, 3, N'Kaedehara Kazuha', N'kaedeharakazuha', N'kaedeharakazuha@gmail.com', NULL, N'1698229722215936261825011619413220617112')
+INSERT [dbo].[User] ([ID], [UserRoleID], [FullName], [Username], [Email], [ProfilePhoto], [Password]) VALUES (5, 3, N'Zhongli', N'zhongli', N'zhongli@gmail.com', NULL, N'160230839085551011691861531893924893237115')
+INSERT [dbo].[User] ([ID], [UserRoleID], [FullName], [Username], [Email], [ProfilePhoto], [Password]) VALUES (6, 3, N'Eula', N'eula', N'eula@gmail.com', NULL, N'1401131841402441261731401620461320023622254')
+INSERT [dbo].[User] ([ID], [UserRoleID], [FullName], [Username], [Email], [ProfilePhoto], [Password]) VALUES (7, 3, N'Nahida', N'nahida', N'nahida@gmail.com', NULL, N'1602187344681455415123073156876889172')
+INSERT [dbo].[User] ([ID], [UserRoleID], [FullName], [Username], [Email], [ProfilePhoto], [Password]) VALUES (8, 3, N'Venti', N'venti', N'venti@gmail.com', NULL, N'17699147227128127110140841261138315010621071')
+INSERT [dbo].[User] ([ID], [UserRoleID], [FullName], [Username], [Email], [ProfilePhoto], [Password]) VALUES (9, 3, N'Raiden Ei', N'raidenei', N'raidenei@gmail.com', NULL, N'107135552716210199193165434580186180116203')
+INSERT [dbo].[User] ([ID], [UserRoleID], [FullName], [Username], [Email], [ProfilePhoto], [Password]) VALUES (10, 3, N'Furina', N'furina', N'furina@gmail.com', NULL, N'881562001651901052256918214722090894819320')
+INSERT [dbo].[User] ([ID], [UserRoleID], [FullName], [Username], [Email], [ProfilePhoto], [Password]) VALUES (11, 3, N'Yelan', N'yelan', N'yelan@gmail.com', NULL, N'622011094815217810815163472101785479182184')
+INSERT [dbo].[User] ([ID], [UserRoleID], [FullName], [Username], [Email], [ProfilePhoto], [Password]) VALUES (12, 3, N'Cyno', N'cyno', N'cyno@gmail.com', NULL, N'3125514245153154221163672511941482102111671')
+INSERT [dbo].[User] ([ID], [UserRoleID], [FullName], [Username], [Email], [ProfilePhoto], [Password]) VALUES (13, 3, N'Kamisato Ayaka', N'kamisatoayaka', N'kamisatoayaka@gmail.com', NULL, N'10302252491371331381971833523518207176203124')
+INSERT [dbo].[User] ([ID], [UserRoleID], [FullName], [Username], [Email], [ProfilePhoto], [Password]) VALUES (14, 3, N'Kamisato Ayato', N'kamisatoayato', N'kamisatoayato@gmail.com', NULL, N'971751295718011822825314925166148162210223228')
+INSERT [dbo].[User] ([ID], [UserRoleID], [FullName], [Username], [Email], [ProfilePhoto], [Password]) VALUES (15, 3, N'Yae Miko', N'yaemiko', N'yaemiko@gmail.com', NULL, N'14124282371541311961724013872009619218100')
+INSERT [dbo].[User] ([ID], [UserRoleID], [FullName], [Username], [Email], [ProfilePhoto], [Password]) VALUES (16, 2, N'Yanfei', N'yanfei', N'yanfei@gmail.com', NULL, N'10812554593111297225504418545781096242')
+INSERT [dbo].[User] ([ID], [UserRoleID], [FullName], [Username], [Email], [ProfilePhoto], [Password]) VALUES (17, 1, N'Sangonomiya Kokomi', N'sangonomiyakokomi', N'sangonomiyakokomi@gmail.com', NULL, N'231367268801502362213214126112115194240144')
+INSERT [dbo].[User] ([ID], [UserRoleID], [FullName], [Username], [Email], [ProfilePhoto], [Password]) VALUES (18, 1, N'Neuvillette', N'neuvillette', N'neuvillette@gmail.com', NULL, N'10169119360185239137213194719522160242186')
+INSERT [dbo].[User] ([ID], [UserRoleID], [FullName], [Username], [Email], [ProfilePhoto], [Password]) VALUES (19, 2, N'Navia', N'navia', N'navia@gmail.com', NULL, N'199210190154140229241542024021514513556177193')
+INSERT [dbo].[User] ([ID], [UserRoleID], [FullName], [Username], [Email], [ProfilePhoto], [Password]) VALUES (20, 2, N'Clorinde', N'clorinde', N'clorinde@gmail.com', NULL, N'179170115257585241115441481492411931746055')
+INSERT [dbo].[User] ([ID], [UserRoleID], [FullName], [Username], [Email], [ProfilePhoto], [Password]) VALUES (21, 2, N'Gorou', N'gorou', N'gorou@gmail.com', NULL, N'145228208160331994022912622921219011880213')
+INSERT [dbo].[User] ([ID], [UserRoleID], [FullName], [Username], [Email], [ProfilePhoto], [Password]) VALUES (22, 3, N'Dehya', N'dehya', N'dehya@gmail.com', NULL, N'056210218223621831531095511965612247028')
 SET IDENTITY_INSERT [dbo].[User] OFF
 GO
 
@@ -334,20 +335,19 @@ INSERT [dbo].[Page] ([ID], [Name], [AccessName]) VALUES (1, N'Dashboard', N'Dash
 INSERT [dbo].[Page] ([ID], [Name], [AccessName]) VALUES (2, N'Dashboard', N'Dashboard_Employee')
 INSERT [dbo].[Page] ([ID], [Name], [AccessName]) VALUES (3, N'Appointments', N'Appointments_Client')
 INSERT [dbo].[Page] ([ID], [Name], [AccessName]) VALUES (4, N'Appointments', N'Appointments_Employee')
-INSERT [dbo].[Page] ([ID], [Name], [AccessName]) VALUES (5, N'Cases', N'Cases')
-INSERT [dbo].[Page] ([ID], [Name], [AccessName]) VALUES (6, N'Tasks', N'Tasks')
-INSERT [dbo].[Page] ([ID], [Name], [AccessName]) VALUES (7, N'Events', N'Events_Client')
-INSERT [dbo].[Page] ([ID], [Name], [AccessName]) VALUES (8, N'Events', N'Events_Employee')
-INSERT [dbo].[Page] ([ID], [Name], [AccessName]) VALUES (9, N'Repositories', N'Repositories')
-INSERT [dbo].[Page] ([ID], [Name], [AccessName]) VALUES (10, N'Archives', N'Archives')
-INSERT [dbo].[Page] ([ID], [Name], [AccessName]) VALUES (11, N'Clients', N'Clients')
-INSERT [dbo].[Page] ([ID], [Name], [AccessName]) VALUES (12, N'Paralegals', N'Paralegals')
-INSERT [dbo].[Page] ([ID], [Name], [AccessName]) VALUES (13, N'Partners', N'Partners_Client')
-INSERT [dbo].[Page] ([ID], [Name], [AccessName]) VALUES (14, N'Partners', N'Partners_Employee')
-INSERT [dbo].[Page] ([ID], [Name], [AccessName]) VALUES (15, N'User Settings', N'UserSettings')
-INSERT [dbo].[Page] ([ID], [Name], [AccessName]) VALUES (16, N'Legal Information', N'LegalInformation')
-INSERT [dbo].[Page] ([ID], [Name], [AccessName]) VALUES (17, N'Cases', N'Cases_Client')
-INSERT [dbo].[Page] ([ID], [Name], [AccessName]) VALUES (18, N'Cases', N'Cases_Paralegal')
+INSERT [dbo].[Page] ([ID], [Name], [AccessName]) VALUES (5, N'Cases', N'Cases_Client')
+INSERT [dbo].[Page] ([ID], [Name], [AccessName]) VALUES (6, N'Cases', N'Cases_Paralegal')
+INSERT [dbo].[Page] ([ID], [Name], [AccessName]) VALUES (7, N'Cases', N'Cases')
+INSERT [dbo].[Page] ([ID], [Name], [AccessName]) VALUES (8, N'Tasks', N'Tasks')
+INSERT [dbo].[Page] ([ID], [Name], [AccessName]) VALUES (9, N'Events', N'Events_Client')
+INSERT [dbo].[Page] ([ID], [Name], [AccessName]) VALUES (10, N'Events', N'Events_Employee')
+INSERT [dbo].[Page] ([ID], [Name], [AccessName]) VALUES (11, N'Repositories', N'Repositories')
+INSERT [dbo].[Page] ([ID], [Name], [AccessName]) VALUES (12, N'Archives', N'Archives')
+INSERT [dbo].[Page] ([ID], [Name], [AccessName]) VALUES (13, N'Clients', N'Clients')
+INSERT [dbo].[Page] ([ID], [Name], [AccessName]) VALUES (14, N'Paralegals', N'Paralegals')
+INSERT [dbo].[Page] ([ID], [Name], [AccessName]) VALUES (15, N'Partners', N'Partners_Client')
+INSERT [dbo].[Page] ([ID], [Name], [AccessName]) VALUES (16, N'Partners', N'Partners_Employee')
+INSERT [dbo].[Page] ([ID], [Name], [AccessName]) VALUES (17, N'User Settings', N'UserSettings')
 SET IDENTITY_INSERT [dbo].[Page] OFF
 GO
 
@@ -355,32 +355,31 @@ SET IDENTITY_INSERT [dbo].[RoleAccessPage] ON
 /** Admin **/
 INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (1, 1, 2)
 INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (2, 1, 4)
-INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (3, 1, 5)
-INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (4, 1, 6)
-INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (5, 1, 8)
-INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (6, 1, 9)
-INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (7, 1, 10)
-INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (8, 1, 11)
-INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (9, 1, 12)
-INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (10, 1, 14)
-INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (11, 1, 15)
-INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (12, 1, 16)
+INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (3, 1, 7)
+INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (4, 1, 8)
+INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (5, 1, 10)
+INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (6, 1, 11)
+INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (7, 1, 12)
+INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (8, 1, 13)
+INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (9, 1, 14)
+INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (10, 1, 16)
+INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (11, 1, 17)
 /** Paralegal **/
-INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (13, 2, 2)
-INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (14, 2, 4)
-INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (15, 2, 18)
-INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (16, 2, 6)
-INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (17, 2, 8)
-INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (18, 2, 9)
-INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (19, 2, 11)
-INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (20, 2, 14)
-INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (21, 2, 16)
+INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (12, 2, 2)
+INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (13, 2, 4)
+INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (14, 2, 6)
+INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (15, 2, 8)
+INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (16, 2, 10)
+INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (17, 2, 11)
+INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (18, 2, 13)
+INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (19, 2, 16)
+INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (20, 2, 17)
 /** Client **/
-INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (22, 3, 1)
-INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (23, 3, 3)
-INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (24, 3, 17)
-INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (25, 3, 7)
-INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (26, 3, 13)
+INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (21, 3, 1)
+INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (22, 3, 3)
+INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (23, 3, 5)
+INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (24, 3, 9)
+INSERT [dbo].[RoleAccessPage] ([ID], [UserRoleID], [PageID]) VALUES (25, 3, 15)
 SET IDENTITY_INSERT [dbo].[RoleAccessPage] OFF
 GO
 
@@ -400,19 +399,19 @@ SET IDENTITY_INSERT [dbo].[Announcement] OFF
 GO
 
 SET IDENTITY_INSERT [dbo].[Appointment] ON
-INSERT [dbo].[Appointment] ([ID], [ClientID], [PartnerUserID], [CategoryID], [AppointmentTime], [Status]) VALUES (1, 1, 18, N'2', CAST(N'2023-11-15T10:54:11.157' AS DateTime), N'Pending')
-INSERT [dbo].[Appointment] ([ID], [ClientID], [PartnerUserID], [CategoryID], [AppointmentTime], [Status]) VALUES (2, 2, 17, N'5', CAST(N'2023-11-23T10:54:11.157' AS DateTime), N'Pending')
-INSERT [dbo].[Appointment] ([ID], [ClientID], [PartnerUserID], [CategoryID], [AppointmentTime], [Status]) VALUES (3, 3, 18, N'3', CAST(N'2023-11-08T10:54:11.157' AS DateTime), N'Pending')
-INSERT [dbo].[Appointment] ([ID], [ClientID], [PartnerUserID], [CategoryID], [AppointmentTime], [Status]) VALUES (4, 4, 17, N'2', CAST(N'2023-11-09T10:54:11.157' AS DateTime), N'Pending')
-INSERT [dbo].[Appointment] ([ID], [ClientID], [PartnerUserID], [CategoryID], [AppointmentTime], [Status]) VALUES (5, 5, 17, N'3', CAST(N'2023-12-01T10:54:11.157' AS DateTime), N'Pending')
-INSERT [dbo].[Appointment] ([ID], [ClientID], [PartnerUserID], [CategoryID], [AppointmentTime], [Status]) VALUES (6, 6, 18, N'6', CAST(N'2023-11-20T10:54:11.157' AS DateTime), N'Pending')
-INSERT [dbo].[Appointment] ([ID], [ClientID], [PartnerUserID], [CategoryID], [AppointmentTime], [Status]) VALUES (7, 7, 17, N'2', CAST(N'2023-11-30T10:54:11.157' AS DateTime), N'Pending')
-INSERT [dbo].[Appointment] ([ID], [ClientID], [PartnerUserID], [CategoryID], [AppointmentTime], [Status]) VALUES (8, 8, 17, N'3', CAST(N'2023-11-23T10:54:11.157' AS DateTime), N'Pending')
-INSERT [dbo].[Appointment] ([ID], [ClientID], [PartnerUserID], [CategoryID], [AppointmentTime], [Status]) VALUES (9, 9, 18, N'2', CAST(N'2023-11-25T10:54:11.157' AS DateTime), N'Pending')
-INSERT [dbo].[Appointment] ([ID], [ClientID], [PartnerUserID], [CategoryID], [AppointmentTime], [Status]) VALUES (10, 1, 1, N'4', CAST(N'2023-11-15T10:54:11.157' AS DateTime), N'Rejected')
-INSERT [dbo].[Appointment] ([ID], [ClientID], [PartnerUserID], [CategoryID], [AppointmentTime], [Status]) VALUES (11, 1, 17, N'2', CAST(N'2023-11-18T10:54:11.157' AS DateTime), N'Pending')
-INSERT [dbo].[Appointment] ([ID], [ClientID], [PartnerUserID], [CategoryID], [AppointmentTime], [Status]) VALUES (12, 1, 1, N'3', CAST(N'2023-11-22T10:54:11.157' AS DateTime), N'Pending')
-INSERT [dbo].[Appointment] ([ID], [ClientID], [PartnerUserID], [CategoryID], [AppointmentTime], [Status]) VALUES (13, 1, 17, N'4', CAST(N'2023-12-10T10:54:11.157' AS DateTime), N'Approved')
+INSERT [dbo].[Appointment] ([ID], [ClientID], [PartnerUserID], [CategoryID], [AppointmentTime], [Status], [Description]) VALUES (1, 1, 18, N'2', CAST(N'2023-11-15T10:54:11.157' AS DateTime), N'Pending', NULL)
+INSERT [dbo].[Appointment] ([ID], [ClientID], [PartnerUserID], [CategoryID], [AppointmentTime], [Status], [Description]) VALUES (2, 2, 17, N'5', CAST(N'2023-11-23T10:54:11.157' AS DateTime), N'Pending', NULL)
+INSERT [dbo].[Appointment] ([ID], [ClientID], [PartnerUserID], [CategoryID], [AppointmentTime], [Status], [Description]) VALUES (3, 3, 18, N'3', CAST(N'2023-11-08T10:54:11.157' AS DateTime), N'Pending', NULL)
+INSERT [dbo].[Appointment] ([ID], [ClientID], [PartnerUserID], [CategoryID], [AppointmentTime], [Status], [Description]) VALUES (4, 4, 17, N'2', CAST(N'2023-11-09T10:54:11.157' AS DateTime), N'Pending', NULL)
+INSERT [dbo].[Appointment] ([ID], [ClientID], [PartnerUserID], [CategoryID], [AppointmentTime], [Status], [Description]) VALUES (5, 5, 17, N'3', CAST(N'2023-12-01T10:54:11.157' AS DateTime), N'Pending', NULL)
+INSERT [dbo].[Appointment] ([ID], [ClientID], [PartnerUserID], [CategoryID], [AppointmentTime], [Status], [Description]) VALUES (6, 6, 18, N'6', CAST(N'2023-11-20T10:54:11.157' AS DateTime), N'Pending', NULL)
+INSERT [dbo].[Appointment] ([ID], [ClientID], [PartnerUserID], [CategoryID], [AppointmentTime], [Status], [Description]) VALUES (7, 7, 17, N'2', CAST(N'2023-11-30T10:54:11.157' AS DateTime), N'Pending', NULL)
+INSERT [dbo].[Appointment] ([ID], [ClientID], [PartnerUserID], [CategoryID], [AppointmentTime], [Status], [Description]) VALUES (8, 8, 17, N'3', CAST(N'2023-11-23T10:54:11.157' AS DateTime), N'Pending', NULL)
+INSERT [dbo].[Appointment] ([ID], [ClientID], [PartnerUserID], [CategoryID], [AppointmentTime], [Status], [Description]) VALUES (9, 9, 18, N'2', CAST(N'2023-11-25T10:54:11.157' AS DateTime), N'Pending', NULL)
+INSERT [dbo].[Appointment] ([ID], [ClientID], [PartnerUserID], [CategoryID], [AppointmentTime], [Status], [Description]) VALUES (10, 1, 1, N'4', CAST(N'2023-11-15T10:54:11.157' AS DateTime), N'Rejected', NULL)
+INSERT [dbo].[Appointment] ([ID], [ClientID], [PartnerUserID], [CategoryID], [AppointmentTime], [Status], [Description]) VALUES (11, 1, 17, N'2', CAST(N'2023-11-18T10:54:11.157' AS DateTime), N'Pending', NULL)
+INSERT [dbo].[Appointment] ([ID], [ClientID], [PartnerUserID], [CategoryID], [AppointmentTime], [Status], [Description]) VALUES (12, 1, 1, N'3', CAST(N'2023-11-22T10:54:11.157' AS DateTime), N'Pending', NULL)
+INSERT [dbo].[Appointment] ([ID], [ClientID], [PartnerUserID], [CategoryID], [AppointmentTime], [Status], [Description]) VALUES (13, 1, 17, N'4', CAST(N'2023-12-10T10:54:11.157' AS DateTime), N'Approved', NULL)
 SET IDENTITY_INSERT [dbo].[Appointment] OFF
 GO
 

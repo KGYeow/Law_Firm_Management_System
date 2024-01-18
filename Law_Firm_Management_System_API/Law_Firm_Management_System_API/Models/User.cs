@@ -23,8 +23,8 @@ namespace Law_Firm_Management_System_API.Models
         public string FullName { get; set; } = null!;
         public string Username { get; set; } = null!;
         public string Email { get; set; } = null!;
-        public string Password { get; set; } = null!;
         public byte[]? ProfilePhoto { get; set; }
+        public string Password { get; set; } = null!;
 
         public virtual UserRole UserRole { get; set; } = null!;
         public virtual Paralegal? Paralegal { get; set; }

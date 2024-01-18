@@ -1,11 +1,10 @@
 <template>
-  <div>Testing!!!!!!!!!</div>
+  <v-parallax src="https://cdn.vuetifyjs.com/images/backgrounds/vbanner.jpg"/>
 </template>
 
 <script setup>
-/*-For Set Blank Layout-*/
 definePageMeta({
-  layout: "blank",
+  layout: "guest",
   auth: { unauthenticatedOnly: true },
 })
 
