@@ -251,7 +251,7 @@ const headers = ref([
 // Define reactive variables 
 const { data: upcomingEventList } = await fetchData.$get("/Event/ClientPerspectiveUpcomingEventList", filter.value)
 const { data: pastEventList } = await fetchData.$get("/Event/ClientPerspectivePastEventList", filter.value)
-const { data: caseList } = await fetchData.$get("/Case/ClientPerspectiveCaseList")
+const { data: caseList } = await fetchData.$get("/Case")
 const { data: upcomingEventCalendar } = await fetchData.$get("/Event/UpcomingEvents/Client")
  
   // Head

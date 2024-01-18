@@ -21,11 +21,38 @@ namespace Law_Firm_Management_System_API.Controllers
         public IActionResult GetCaseList()
         {
             var user = userService.GetUser(User);
-            var l = context.Cases
+            // Retrieve the partner ID assigned to the paralegal
+            var partnerId = context.Partners
+                .Where(p => p.ParalegalUserId == user.Id)
+                .Select(p => p.UserId)
+                .FirstOrDefault();
+
+            if (context.Cases.Any(a => a.PartnerUserId == user.Id))
+            {
+                var l = context.Cases
                 .Where(a => a.PartnerUserId == user.Id)
                 .Select(x => new { id = x.Id, name = x.Name })
                 .ToList();
-            return Ok(l);
+                return Ok(l);
+            }
+
+            else if (context.Cases.Any(a => a.PartnerUserId == partnerId))
+            {
+                var l = context.Cases
+                .Where(a => a.PartnerUserId == partnerId)
+                .Select(x => new { id = x.Id, name = x.Name })
+                .ToList();
+                return Ok(l);
+            }
+
+            else 
+            {
+                var l = context.Cases
+                .Where(a => a.Client.UserId == user.Id)
+                .Select(x => new { id = x.Id, name = x.Name })
+                .ToList();
+                return Ok(l);
+            }
         }
 
         // Get the list of cases from partner's perspective.
