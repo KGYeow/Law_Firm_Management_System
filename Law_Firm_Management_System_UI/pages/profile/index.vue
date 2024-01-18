@@ -1,82 +1,111 @@
 <template>
   <v-row>
     <v-col cols="12" md="12">
-      <v-card elevation="0" class="bg-transparent">
+      <v-card elevation="10" class="withbg overflow-hidden">
         <div class="position-relative">
           <!-- Cover Image -->
           <v-img
-            height="200"
+            height="220"
             src="/images/background/default-cover.jpg"
             cover
           />
-          <!-- Profile Image -->
-          <v-avatar
-            class="border position-absolute"
-            image="/images/users/avatar.jpg"
-            size="110"
-            style="border-width: 5px !important; border-color: white !important; left: 40px; bottom: -60px;"
-          />
+          <div class="position-absolute" style="left: 40px; bottom: -50px;">
+            <!-- Profile Image -->
+            <v-avatar
+              class="border"
+              image="/images/users/avatar.jpg"
+              size="140"
+              style="border-width: 5px !important; border-color: white !important;"
+            />
+            <v-btn
+              class="position-absolute"
+              color="grey100"
+              icon="mdi-camera-outline"
+              size="small"
+              style="right: 0; bottom: 15px;"
+              flat
+              @click="uploadProfilePhotoModal = true"
+            />
+          </div>
         </div>
-        <form @submit.prevent="editUser">
-          <v-card-item class="pt-4">
-            <v-row class="d-flex justify-content-between">
-              <v-col cols="9">
-                <div class="fs-3 fw-bold" style="margin-left: 155px;">{{ user.fullName }}</div>
-              </v-col>
-              <v-col cols="3">
-                <div class="float-end">
-                  <v-btn color="primary" elevation="0" @click="isEdit = !isEdit" v-if="!isEdit">Edit Profile</v-btn>
-                  <div v-else>
-                    <v-btn color="primary" variant="outlined" @click="editUserCancel">Cancel</v-btn>
-                    <v-btn color="primary" class="ms-2" elevation="0" type="submit">Save Profile</v-btn>
-                  </div>
-                </div>
-              </v-col>
-            </v-row>
-          </v-card-item>
-          <v-card-text class="pb-7 pt-10 px-10 text-body-1">
-            <div style="width: 500px;">
-              <div class="row">
-                <div class="col">
-                  <label class="my-1 fw-bold">User ID</label>
-                  <v-text-field variant="outlined" density="compact" v-model="user.id" disabled/>
-                </div>
-                <div class="col">
-                  <label class="my-1 fw-bold">Role</label>
-                  <v-text-field variant="outlined" density="compact" v-model="userRole" disabled/>
-                </div>
-              </div>
-              <div class="row">
-                <label class="my-1 fw-bold">Full Name</label>
-                <v-text-field variant="outlined" density="compact" v-model="editUserDetails.fullName" :disabled="!isEdit"/>
-              </div>
-              <div class="row">
-                <label class="my-1 fw-bold">Username</label>
-                <v-text-field variant="outlined" density="compact" v-model="editUserDetails.username" :disabled="!isEdit"/>
-              </div>
-              <div class="row">
-                <label class="my-1 fw-bold">Email Address</label>
-                <v-text-field variant="outlined" density="compact" v-model="editUserDetails.email" :disabled="!isEdit"/>
-              </div>
-            </div>
-          </v-card-text>
-        </form>
+        <v-card-item class="pt-2 pb-6">
+          <v-card-title class="text-h4 font-weight-black text-wrap" style="margin-left: 175px;">{{ user.fullName }}</v-card-title>
+        </v-card-item>
       </v-card>
     </v-col>
   </v-row>
+  <v-row>
+    <v-col cols="12" md="12">
+      <v-card elevation="10" class="withbg">
+        <v-tabs
+          class="mx-8 mb-5 border-bottom"
+          selected-class="text-secondary"
+          v-model="tab"
+        >
+          <v-tab value="1">Profile</v-tab>
+          <v-tab value="2">{{ userRole }}</v-tab>
+          <v-tab value="3">Password</v-tab>
+        </v-tabs>
+        <v-window v-model="tab">
+          <v-window-item value="1">
+            <ProfileEditForm :user-info="user" :role="userRole"/>
+          </v-window-item>
+          <v-window-item value="2">
+            <ProfileEditPartnerForm :role-info="userRoleInfo" v-if="userRole == 'Partner'"/>
+            <ProfileEditParalegalForm :role-info="userRoleInfo" v-else-if="userRole == 'Paralegal'"/>
+            <ProfileEditClientForm :role-info="userRoleInfo" v-else/>
+          </v-window-item>
+          <v-window-item value="3">
+            <ProfileEditPasswordForm :user-info="user"/>
+          </v-window-item>
+        </v-window>
+      </v-card>
+    </v-col>
+  </v-row>
+
+  <SharedUiModal v-model="uploadProfilePhotoModal" title="Upload Profile Photo" width="500">
+    <v-card-text class="px-8 py-4 text-body-1 text-justify">
+      <el-upload
+        class="avatar-uploader"
+        :show-file-list="false"
+        :on-success="handleAvatarSuccess"
+        :before-upload="uploadProfilePhoto"
+      >
+        <img v-if="imageUrl" :src="imageUrl" class="avatar"/>
+        <el-icon v-else class="avatar-uploader-icon"><i class="mdi mdi-image-plus-outline"/></el-icon>
+      </el-upload>
+    </v-card-text>
+    <v-card-actions class="p-3 justify-content-end">
+      <v-btn color="primary" type="submit">Submit</v-btn>
+    </v-card-actions>
+  </SharedUiModal>
 </template>
 
 <script setup>
 import { UserIcon } from "vue-tabler-icons"
+import { useField, useForm } from 'vee-validate'
 
 // Data
-const { data: user } = useAuth()
+const tab = ref(null)
+const imageUrl = ref('')
+const uploadProfilePhotoModal = ref(false)
+const { data: user } = await fetchData.$get("/User/Me")
 const { data: userRole } = await fetchData.$get("/UserRole/RoleName")
-const isEdit = ref(false)
-const editUserDetails = ref({
-  username: user.value.username,
-  fullName: user.value.fullName,
-  email: user.value.email
+const { data: userRoleInfo } = await fetchData.$get("/User/Me/Info/Role")
+const { handleSubmit } = useForm({
+  validationSchema: {
+    attachment(value) {
+      if (!value)
+        return 'Document is required'
+
+      const fileSize = (value.length * 3) / 4 / 1024 // Convert base64 size to KB
+      if (fileSize > 28000)
+        return 'Document size cannot exceeds 28MB'
+
+      const fileType = getFileType(addDocumentDetails.value.name)
+      return fileType ? true : 'The document type must be in PDF, Word, or Excel'
+    }
+  }
 })
 
 // Head
@@ -96,22 +125,73 @@ definePageMeta({
 })
 
 // Methods
-const editUser = async() => {
-  try {
-    const result = await fetchData.$put(`/User/Me/${user.value.id}`, editUserDetails.value)
-    if (!result.error) {
-      isEdit.value = !isEdit.value
-      ElNotification.success({ message: result.message })
-    }
-    else {
-      ElNotification.error({ message: "The user profile has been edited unsuccessfully." })
-    }
-  } catch { ElNotification.error({ message: "There is a problem with the server. Please try again later." }) }
+const handleAvatarSuccess = (response, uploadFile) => {
+  imageUrl.value = URL.createObjectURL(uploadFile.raw)
+  console.log(uploadFile)
 }
-const editUserCancel = () => {
-  isEdit.value = !isEdit.value
-  editUserDetails.value.username = user.value.username
-  editUserDetails.value.fullName = user.value.fullName
-  editUserDetails.value.email = user.value.email
+const uploadProfilePhoto = (rawFile) => {
+  
+  if (rawFile.type !== 'image/jpeg') {
+    ElMessage.error('Avatar picture must be JPG format!')
+    return false 
+  } else if (rawFile.size / 1024 / 1024 > 2) {
+    ElMessage.error('Avatar picture size can not exceed 2MB!')
+    return false
+  }
+  return true
 }
+// const uploadProfilePhoto = async() => {
+  // const file = addDocumentDetails.value.attachmentInfo[0]
+  // if (file) {
+  //   // Read file as DataURL using a promise-based approach
+  //   const reader = new FileReader()
+  //   reader.readAsDataURL(file)
+  //   try {
+  //     const base64Data = await new Promise((resolve, reject) => {
+  //       reader.onload = () => resolve(reader.result)
+  //       reader.onerror = reject
+  //     })
+  //     addDocumentDetails.value.attachment.value = base64Data.replace(/^.+?;base64,/, '')
+  //     addDocumentDetails.value.name = file.name
+  //     addDocumentDetails.value.type = getFileType(file.name)
+  //   } catch(e) { ElNotification.error({ message: `Error reading file: ${e}` }) }
+  // }
+  // else
+  // {
+  //   addDocumentDetails.value.name = null
+  //   addDocumentDetails.value.type = null
+  //   addDocumentDetails.value.attachment.value = null
+  // }
+// }
 </script>
+
+<style scoped>
+.avatar-uploader .avatar {
+  width: 178px;
+  height: 178px;
+  display: block;
+}
+</style>
+
+<style>
+.avatar-uploader .el-upload {
+  border: 1px dashed var(--el-border-color);
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: var(--el-transition-duration-fast);
+}
+
+.avatar-uploader .el-upload:hover {
+  border-color: var(--el-color-primary);
+}
+
+.el-icon.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 178px;
+  height: 178px;
+  text-align: center;
+}
+</style>

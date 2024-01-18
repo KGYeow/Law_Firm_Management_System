@@ -47,6 +47,7 @@ namespace RnD_Traceability_System_API
             var user = userService.GetUser(model.Username);
             var authClaims = new List<Claim>
             {
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString() ?? ""),
                 new Claim(ClaimTypes.Name, user.Username ?? ""),
             };
 

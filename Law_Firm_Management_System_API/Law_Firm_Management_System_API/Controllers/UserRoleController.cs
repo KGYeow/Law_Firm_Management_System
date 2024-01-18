@@ -28,7 +28,7 @@ namespace Law_Firm_Management_System_API.Controllers
         {
             var user = userService.GetUser(User);
             var role = context.UserRoles.Where(a => a.Id == user.UserRoleId).FirstOrDefault();
-            return Ok(role?.Name);
+            return Ok(role.Name);
         }
     }
 }

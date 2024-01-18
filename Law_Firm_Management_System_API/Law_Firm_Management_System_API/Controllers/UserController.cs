@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using static Law_Firm_Management_System_API.Controllers.ClientController;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Law_Firm_Management_System_API.Controllers
 {
@@ -18,6 +18,7 @@ namespace Law_Firm_Management_System_API.Controllers
         {
         }
 
+        // Get the list of user accounts.
         [HttpGet]
         [Route("")]
         public IActionResult Get()
@@ -27,36 +28,53 @@ namespace Law_Firm_Management_System_API.Controllers
             return Ok(l);
         }
 
+        // Get the self user information.
+        [HttpGet]
+        [Route("Me")]
+        public IActionResult Me()
+        {
+            var user = userService.GetUser(User);
+            return Ok(user);
+        }
+
         // Update the current logged-in user account information.
         [HttpPut]
-        [Route("Me/{Id}")]
-        public IActionResult MeUpdate(int id, [FromBody] UserEditDto dto)
+        [Route("Me")]
+        public IActionResult MeUpdate([FromBody] UserMeEditDto dto)
         {
-            var userCurrent = context.Users.Where(a => a.Id == id).FirstOrDefault();
-            userCurrent.Username = dto.Username;
-            userCurrent.FullName = dto.FullName;
-            userCurrent.Email = dto.Email;
+            var user = userService.GetUser(User);
+            user.Username = dto.Username;
+            user.FullName = dto.FullName;
+            user.Email = dto.Email;
 
-            context.Users.Update(userCurrent);
+            context.Users.Update(user);
             context.SaveChanges();
 
-            return Ok(new Response { Status = "Success", Message = "The user profile has been edited successfully!" });
+            return Ok(new Response { Status = "Success", Message = "Your user profile has been edited successfully" });
         }
 
         // Change the password of the current logged-in user.
         [HttpPut]
-        [Route("MePassword/{Id}")]
-        public IActionResult MeUpdatePassword(int id, [FromBody] string password)
+        [Route("Me/Password/{NewPassword}")]
+        public IActionResult MeUpdatePassword(string newPassword)
         {
-            var userCurrent = context.Users.Where(a => a.Id == id).FirstOrDefault();
+            var user = userService.GetUser(User);
 
-            if (password != null && password != "")
-                userCurrent.Password = AppStatic.Encrypt(password);
+            if (!string.IsNullOrEmpty(newPassword))
+            {
+                var encryptedPassword = AppStatic.Encrypt(newPassword);
 
-            context.Users.Update(userCurrent);
-            context.SaveChanges();
+                if (user.Password != encryptedPassword)
+                {
+                    user.Password = encryptedPassword;
+                    context.Users.Update(user);
+                    context.SaveChanges();
+                }
+                else
+                    throw new Exception("The new password is the same as the old password");
+            }
 
-            return Ok(new Response { Status = "Success", Message = "User update password successfully" });
+            return Ok(new Response { Status = "Success", Message = "Your password updated successfully" });
         }
 
         // Get the specific user's account information.
@@ -104,6 +122,113 @@ namespace Law_Firm_Management_System_API.Controllers
             context.SaveChanges();
 
             return Ok(new Response { Status = "Success", Message = "User account deleted successfully" });
+        }
+
+        // Get the current logged-in user role information.
+        [HttpGet]
+        [Route("Me/Info/Role")]
+        public IActionResult GetMeRoleInfo()
+        {
+            var user = userService.GetUser(User);
+            var role = context.UserRoles.Where(a => a.Id == user.UserRoleId).FirstOrDefault();
+
+            if (role.Name == "Partner")
+            {
+                var roleInfo = context.Partners.Include(a => a.User).Include(a => a.ParalegalUser).Where(a => a.UserId == user.Id)
+                    .Select(x => new { assignedParalegal = x.ParalegalUser.User.FullName, phoneNum = x.PhoneNumber, address = x.Address })
+                    .FirstOrDefault();
+
+                return Ok(roleInfo);
+            }
+            else if (role.Name == "Paralegal")
+            {
+                var assignedPartner = context.Partners.Include(a => a.User).Where(a => a.ParalegalUserId == user.Id)
+                    .Select(x => new { fullName = x.User.FullName }).FirstOrDefault();
+
+                var roleInfo = context.Paralegals.Include(a => a.User).Where(a => a.UserId == user.Id)
+                    .Select(x => new { assignedPartner = assignedPartner.fullName, phoneNum = x.PhoneNumber, address = x.Address })
+                    .FirstOrDefault();
+
+                return Ok(roleInfo);
+            }
+            else
+            {
+                var roleInfo = context.Clients.Include(a => a.User).Where(a => a.UserId == user.Id)
+                    .Select(x => new { clientId = x.Id, fullName = x.FullName, phoneNum = x.PhoneNumber, email = x.Email, address = x.Address })
+                    .FirstOrDefault();
+                return Ok(roleInfo);
+            }
+        }
+
+        // Update the current logged-in user partner information.
+        [HttpPut]
+        [Route("Me/Info/Role/Partner")]
+        public IActionResult MeUpdatePartnerInfo([FromBody] UserMePartnerParalegalEditDto dto)
+        {
+            var user = userService.GetUser(User);
+            var roleInfo = context.Partners.Where(a => a.UserId == user.Id).FirstOrDefault();
+
+            roleInfo.PhoneNumber = string.IsNullOrEmpty(dto.PhoneNum) ? null : dto.PhoneNum;
+            roleInfo.Address = string.IsNullOrEmpty(dto.Address) ? null : dto.Address;
+            context.Partners.Update(roleInfo);
+            context.SaveChanges();
+
+            return Ok(new Response { Status = "Success", Message = "Your partner information has been edited successfully" });
+        }
+
+        // Update the current logged-in user paralegal information.
+        [HttpPut]
+        [Route("Me/Info/Role/Paralegal")]
+        public IActionResult MeUpdateParalegalInfo([FromBody] UserMePartnerParalegalEditDto dto)
+        {
+            var user = userService.GetUser(User);
+            var roleInfo = context.Paralegals.Where(a => a.UserId == user.Id).FirstOrDefault();
+
+            roleInfo.PhoneNumber = string.IsNullOrEmpty(dto.PhoneNum) ? null : dto.PhoneNum;
+            roleInfo.Address = string.IsNullOrEmpty(dto.Address) ? null : dto.Address;
+            context.Paralegals.Update(roleInfo);
+            context.SaveChanges();
+
+            return Ok(new Response { Status = "Success", Message = "Your paralegal information has been edited successfully" });
+        }
+
+        // Update the current logged-in user client information.
+        [HttpPut]
+        [Route("Me/Info/Role/Client")]
+        public IActionResult MeUpdateClientInfo([FromBody] UserMeClientEditDto dto)
+        {
+            var user = userService.GetUser(User);
+            var roleInfo = context.Clients.Where(a => a.UserId == user.Id).FirstOrDefault();
+
+            roleInfo.FullName = dto.FullName;
+            roleInfo.PhoneNumber = string.IsNullOrEmpty(dto.PhoneNum) ? null : dto.PhoneNum;
+            roleInfo.Email = string.IsNullOrEmpty(dto.Email) ? null : dto.Email;
+            roleInfo.Address = string.IsNullOrEmpty(dto.Address) ? null : dto.Address;
+            context.Clients.Update(roleInfo);
+            context.SaveChanges();
+
+            return Ok(new Response { Status = "Success", Message = "Your client information has been edited successfully" });
+        }
+
+        public class UserMeEditDto
+        {
+            public string Username { get; set; } = null!;
+            public string FullName { get; set; } = null!;
+            public string Email { get; set; } = null!;
+        }
+        
+        public class UserMePartnerParalegalEditDto
+        {
+            public string? PhoneNum { get; set; }
+            public string? Address { get; set; }
+        }
+
+        public class UserMeClientEditDto
+        {
+            public string FullName { get; set; } = null!;
+            public string? PhoneNum { get; set; }
+            public string? Email { get; set; }
+            public string? Address { get; set; }
         }
 
         public class UserEditDto

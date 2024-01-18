@@ -51,10 +51,10 @@ namespace Law_Firm_Management_System_API.Service
                 throw new Exception("Invalid token");
 
             var identity = (ClaimsIdentity)claimsPrincipal.Identity;
-            var claim = identity.FindFirst(ClaimTypes.Name);
+            var claim = identity.FindFirst(ClaimTypes.NameIdentifier);
             if (claim != null)
             {
-                var user = GetUser(claim.Value);
+                var user = GetUser(int.Parse(claim.Value));
                 if (user != null)
                     return user;
             }
