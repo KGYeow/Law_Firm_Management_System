@@ -62,8 +62,7 @@ namespace Law_Firm_Management_System_API.Controllers
         {
             var user = userService.GetUser(User);
             var l = context.Appointments.Include(a => a.PartnerUser).Include(a => a.Category).Where(a => a.Client.UserId == user.Id).OrderByDescending(a => a.Id).ToList()
-                .Select(x => new { id = x.Id, partnerUserId = x.PartnerUserId, fullName = x.PartnerUser?.FullName, category = x.Category.Name, appointmentTime = x.AppointmentTime, 
-                = x.Status, description = x.Description });
+                .Select(x => new { id = x.Id, partnerUserId = x.PartnerUserId, fullName = x.PartnerUser?.FullName, category = x.Category.Name, appointmentTime = x.AppointmentTime, status = x.Status, description = x.Description });
 
             if (dto.PartnerUserId != null)
                 l = l.Where(a => a.partnerUserId == dto.PartnerUserId);

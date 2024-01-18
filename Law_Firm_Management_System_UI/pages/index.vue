@@ -1,5 +1,5 @@
 <template>
-  <v-parallax src="https://cdn.vuetifyjs.com/images/backgrounds/vbanner.jpg"/>
+  <v-parallax src="/images/background/login-cover.jpg"/>
 </template>
 
 <script setup>
