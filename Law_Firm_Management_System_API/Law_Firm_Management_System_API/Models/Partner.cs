@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Law_Firm_Management_System_API.Models
 {

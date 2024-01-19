@@ -11,18 +11,22 @@
               size="110"
               style="border-width: 3px !important; border-color: lightgrey !important;"
             />
-            <div class="mb-2 text-h5 d-sm-flex align-center justify-content-center">
-              {{ caseInfo.clientName }}
-              <ul class="m-0 list-inline hstack">
-                <li>
-                  <v-tooltip text="Rename" activator="parent" location="top" offset="2"/>
-                  <v-btn icon="mdi-rename-outline" size="small" variant="text" @click="editClientGet(caseInfo.id, caseInfo.clientId)"/>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <span><strong>Phone Number: </strong>{{ caseInfo.clientPhone ?? '-' }}</span><br>
-              <span><strong>Email: </strong>{{ caseInfo.clientEmail }}</span>
+            <div class="mb-2 text-h5 d-sm-flex align-center justify-content-center" >
+              <div style="flex-direction: column;">
+                <div style="display: flex; justify-content: center;">
+                  <span>{{ caseInfo.clientName }}</span>
+                  <ul class="m-0 list-inline hstack">
+                    <li>
+                      <v-tooltip text="Rename" activator="parent" location="top" offset="2"/>
+                      <v-btn class="mt-n1" icon="mdi-rename-outline" size="small" variant="text" @click="editClientGet(caseInfo.id, caseInfo.clientId)"/>
+                    </li>
+                  </ul>
+                </div>
+                <div style="display: flex; flex-direction: column;">
+                  <span><strong>Phone Number: </strong>{{ caseInfo.clientPhone ?? '-' }}</span>
+                  <span><strong>Email: </strong>{{ caseInfo.clientEmail }}</span>
+                </div>
+              </div>
             </div>
           </div>
           <v-divider vertical/>
@@ -54,12 +58,14 @@
                     <v-timeline-item
                       v-for="(status, index) in statusList"
                       :key="index"
-                      dot-color="#ddd"
+                      :dot-color="index === caseInfo.statusId - 1 ? '#2b4c65' : '#ddd'"
                       :class="{ 'clickable-circle': true, 'current-status': index === caseInfo.statusId - 1 }"
-                      @click="showConfirmationDialog(caseInfo.id, status.name)"
+                      @click="userRole == 'Partner' ? showConfirmationDialog(caseInfo.id, status.name) : null"
                     >
                       <v-timeline-item-title>
-                        <span :class="{ 'current-status-name': index === caseInfo.statusId - 1 }">{{ status.name }}</span>
+                        <span :class="{ 'current-status-name': index === caseInfo.statusId - 1 }">
+                          {{ status.name }}
+                        </span>
                       </v-timeline-item-title>
                     </v-timeline-item>
                   </v-timeline>
@@ -68,7 +74,7 @@
                   </div>
                 </v-col>
               </v-row>
-              
+
             <!--Related Document-->
             <v-row class="pb-2">
               <v-col>
@@ -156,12 +162,8 @@
   background-color: #ddd !important;
 }
 .current-status-name {
-  color:#95b4cc;
+  color:#2b4c65;
   font-weight: bold;
-}
-
-.current-status .v-timeline-item-dot {
-  background-color: #2b4c65 !important;
 }
 </style>
 
@@ -180,6 +182,7 @@ const { data: caseInfo } = await fetchData.$get(`/Case/Info/${routeParameter.val
 const { data: caseList } = await fetchData.$get("/Case/PartnerPerspectiveCaseList", filter.value)
 const { data: caseDocumentList } = await fetchData.$get(`/Document/GetDocumentNamesByCase/${routeParameter.value.caseID}`);
 const { data: clientList } = await fetchData.$get("/Client")
+const { data: userRole } = await fetchData.$get("/UserRole/RoleName")
 
 const addDocumentModal = ref(false)
 const renameCaseDetails = ref({

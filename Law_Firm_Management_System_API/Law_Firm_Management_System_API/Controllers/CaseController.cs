@@ -79,7 +79,7 @@ namespace Law_Firm_Management_System_API.Controllers
                     statusId = x.StatusId, 
                     status = x.Status.StatusName,
                     statusDescription = x.Status.StatusDescription,
-                    });
+                });
 
             if (dto.ClientId != null)
                 l = l.Where(a => a.clientId == dto.ClientId);
@@ -183,7 +183,9 @@ namespace Law_Firm_Management_System_API.Controllers
                     closedTime = x.ClosedTime,
                     statusId = x.StatusId,
                     status = x.Status.StatusName,
-                    statusDescription = x.Status.StatusDescription
+                    statusDescription = x.Status.StatusDescription,
+                    partnerName = x.PartnerUser.FullName,
+                    partnerEmail = x.PartnerUser.Email
                 })
                 .FirstOrDefault();
             return Ok(caseInfo);

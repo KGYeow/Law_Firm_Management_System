@@ -21,6 +21,7 @@ export default defineNuxtRouteMiddleware(async(to, from) => {
     if (!isAuthorized) {
       // If user is client
       if (user.value?.userRoleId == 3) {
+        if (to.path.match("/cases-client")) return // Redirect to case details page
         return navigateTo('/dashboard-client') // Redirect to the dashboard page
       }
       // If user is paralegal

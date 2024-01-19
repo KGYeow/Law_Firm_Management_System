@@ -58,7 +58,7 @@
             </template>
             <template v-slot:item="{ item }">
               <v-col class="pb-8" cols="3">
-                <v-card elevation="10" class="withbg">
+                <v-card elevation="10" class="withbg" :href="`/cases-client/${item.id}`" target="_blank">
                   <el-tag
                     :type="item.status == 'Active' ? 'success' : item.status == 'Under Review' ? '' :item.status == 'Negotiation' ? '' : item.status == 'Court Proceeding' ? '' : item.status == 'On Hold' ? 'danger' : item.status == 'Settled' ? 'success' : 'info'"
                     class="position-absolute"
@@ -78,6 +78,7 @@
                     style="background-color: rgb(43, 76, 101); min-height: 35px; border-top-right-radius: 10px; border-top-left-radius: 10px;"
                   >
                     {{ item.name }}
+                    {{ item.id }}
                   </v-card-actions>
                   <v-card-item class="pt-3">
                     <v-card-title class="text-subtitle-2 fw-bold">
