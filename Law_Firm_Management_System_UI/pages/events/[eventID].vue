@@ -78,9 +78,19 @@
                       <el-tag type="danger" v-else>Incompleted</el-tag>
                     </td>
                   </v-col>
-              </v-row>
-              <v-row class="pb-2">
-                <v-col>
+                  <v-col cols="4">
+                  <div class="d-flex align-center">
+                    <v-label class="text-h6 pb-3">Event Time</v-label>
+                    <ul class="m-0 list-inline hstack">
+                      <li>
+                        <v-tooltip text="Reschedule" activator="parent" location="top" offset="2"/>
+                        <v-btn class="mt-n3" icon="mdi-rename-outline" size="small" variant="text" @click="editTimeGet(eventInfo.id, eventInfo.time)"/>
+                      </li>
+                    </ul>
+                  </div>
+                  <v-card-subtitle>{{ dayjs(eventInfo.eventTime).format("DD MMM YYYY, hh:mm A") }}</v-card-subtitle>
+                </v-col>
+                <v-col cols="4">
                   <div class="d-flex align-center">
                     <v-label class="text-h6 pb-3">Description</v-label>
                   </div>
@@ -103,20 +113,29 @@
     />
   </SharedUiModal>
 
-    <!-- Edit Case Modal -->
-    <SharedUiModal v-model="editCaseModal" title="Edit Case" width="500">
-    <EventEditCase
+  <!-- Edit Case Modal -->
+  <SharedUiModal v-model="editCaseModal" title="Edit Case" width="500">
+  <EventEditCase
       :eventId="editCaseDetails.eventId"
       :caseId="editCaseDetails.caseId"
       @close-modal="(e) => editCaseModal = e"
     />
   </SharedUiModal>
 
+  <!-- Edit Event Time Modal -->
+  <SharedUiModal v-model="editTimeModal" title="Edit Event Time" width="500">
+  <EventEditTime
+      :eventId="editTimeDetails.eventId"
+      :eventTime="editTimeDetails.eventTime"
+      @close-modal="(e) => editTimeModal = e"
+    />
+  </SharedUiModal>
 </template>
 
 <script setup>
 import { ref, shallowRef } from 'vue';
 import { CalendarIcon } from "vue-tabler-icons"
+import dayjs from 'dayjs';
 
 const filter = ref({
   clientId: null,
@@ -126,7 +145,7 @@ const filter = ref({
 const routeParameter = ref(useRoute().params)
 const { data: eventInfo } = await fetchData.$get(`/Event/Info/${routeParameter.value.eventID}`)
 const { data: eventList } = await fetchData.$get("/Event/PartnerPerspectiveEventList", filter.value)
-const { data: clientList } = await fetchData.$get("/Client")
+//const { data: clientList } = await fetchData.$get("/Client")
 
 const renameEventDetails = ref({
   eventId: null,
@@ -139,6 +158,12 @@ const editCaseDetails = ref({
   caseId: null,
 });
 const editCaseModal = ref(false);
+
+const editTimeDetails = ref({
+  eventId: null,
+  eventTime: null,
+});
+const editTimeModal = ref(false);
 
 // Head
 useHead({
@@ -178,6 +203,13 @@ const editCaseGet = (eventId, caseId) => {
   editCaseDetails.value.eventId = eventId;
   editCaseDetails.value.caseId = caseId;
   editCaseModal.value = true;
+};
+
+// Edit Event Time Methods
+const editTimeGet = (eventId, eventTime) => {
+  editTimeDetails.value.eventId = eventId;
+  editTimeDetails.value.time = eventTime;
+  editTimeModal.value = true;
 };
 
 const props = defineProps({

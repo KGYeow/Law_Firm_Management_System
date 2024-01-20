@@ -266,6 +266,58 @@ namespace Law_Firm_Management_System_API.Controllers
             return Ok(new Response { Status = "Success", Message = "Event renamed successfully" });
         }
 
+        //Edit Case of Event
+        [HttpPut]
+        [Route("EditCase")]
+        public IActionResult EditCase([FromBody] EditCaseDto dto)
+        {
+            var user = userService.GetUser(User);
+            var existingEvt = context.Events
+                .Include(c => c.Case)  // Make sure to include the Case navigation property
+                .FirstOrDefault(c => c.Id == dto.EventId);
+
+            if (existingEvt == null)
+            {
+                return NotFound(new Response { Status = "Error", Message = "Event not found" });
+            }
+
+            // Check if the case ID has changed
+            if (existingEvt.CaseId != dto.CaseId)
+            {
+                // Fetch the new case
+                var newCase = context.Cases.FirstOrDefault(cases => cases.Id == dto.CaseId);
+
+                if (newCase == null)
+                {
+                    return NotFound(new Response { Status = "Error", Message = "Case not found" });
+                }
+
+                // Update the event with the new case
+                existingEvt.Case = newCase;  // Set the Case navigation property
+                existingEvt.CaseId = newCase.Id;
+            }
+
+            context.Events.Update(existingEvt);
+            context.SaveChanges();
+
+            return Ok(new Response { Status = "Success", Message = "Case updated successfully" });
+        }
+
+        // Reschedule the existing event.
+        [HttpPut]
+        [Route("EditTime")]
+        public IActionResult EditTime([FromBody] EventTimeDto dto)
+        {
+            var user = userService.GetUser(User);
+            var existingEvt = context.Events.Where(a => a.Id == dto.EventId).FirstOrDefault();
+
+            existingEvt.EventTime = dto.EventTime;
+            context.Events.Update(existingEvt);
+            context.SaveChanges();
+
+            return Ok(new Response { Status = "Success", Message = "Event rescheduled successfully" });
+        }
+
         // Delete the event permanently.
         [HttpDelete]
         [Route("{EventId}")]
@@ -326,6 +378,16 @@ namespace Law_Firm_Management_System_API.Controllers
         {
             public int EventId { get; set; }
             public string Name { get; set; } = null!;
+        }
+        public class EditCaseDto
+        {
+            public int EventId { get; set; }
+            public int CaseId { get; set; }
+        }
+        public class EventTimeDto
+        {
+            public int EventId { get; set; }
+            public DateTime EventTime { get; set; }
         }
     }
 }
