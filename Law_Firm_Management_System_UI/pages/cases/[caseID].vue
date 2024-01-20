@@ -170,6 +170,7 @@
 <script setup>
 import { ref, shallowRef } from 'vue';
 import { BriefcaseIcon } from "vue-tabler-icons"
+import { Buffer } from 'buffer'
 
 const filter = ref({
   clientId: null,
