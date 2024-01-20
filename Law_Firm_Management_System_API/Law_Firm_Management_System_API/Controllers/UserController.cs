@@ -53,6 +53,34 @@ namespace Law_Firm_Management_System_API.Controllers
             return Ok(new Response { Status = "Success", Message = "Your user profile has been edited successfully" });
         }
 
+        // Update the current logged-in user account profile photo.
+        [HttpPut]
+        [Route("Me/ProfilePhoto")]
+        public IActionResult MeUpdateProfilePhoto([FromBody] UserMeProfilePhotoDto dto)
+        {
+            var user = userService.GetUser(User);
+            user.ProfilePhoto = dto.ProfilePhoto;
+
+            context.Users.Update(user);
+            context.SaveChanges();
+
+            return Ok(new Response { Status = "Success", Message = "Your profile photo has been updated successfully" });
+        }
+
+        // Delete the current logged-in user account profile photo.
+        [HttpPut]
+        [Route("Me/ProfilePhoto/Delete")]
+        public IActionResult MeDeleteProfilePhoto()
+        {
+            var user = userService.GetUser(User);
+            user.ProfilePhoto = null;
+
+            context.Users.Update(user);
+            context.SaveChanges();
+
+            return Ok(new Response { Status = "Success", Message = "Your profile photo has been deleted successfully" });
+        }
+
         // Change the password of the current logged-in user.
         [HttpPut]
         [Route("Me/Password/{NewPassword}")]
@@ -216,7 +244,12 @@ namespace Law_Firm_Management_System_API.Controllers
             public string FullName { get; set; } = null!;
             public string Email { get; set; } = null!;
         }
-        
+
+        public class UserMeProfilePhotoDto
+        {
+            public byte[] ProfilePhoto { get; set; } = null!;
+        }
+
         public class UserMePartnerParalegalEditDto
         {
             public string? PhoneNum { get; set; }

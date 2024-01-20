@@ -1,0 +1,24 @@
+.avatar-uploader {
+  // width: fit-content;
+  // height: fit-content;
+
+  .el-upload {
+    border: 1px dashed var(--el-border-color);
+    border-radius: 10px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: var(--el-transition-duration-fast);
+
+    &:hover {
+      border-color: var(--el-color-primary);
+    }
+
+    .avatar-uploader-icon {
+      color: #8c939d;
+      width: 180px;
+      height: 180px;
+      text-align: center;
+    }
+  }
+}

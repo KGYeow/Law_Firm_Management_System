@@ -13,19 +13,11 @@
             <!-- Profile Image -->
             <v-avatar
               class="border"
-              image="/images/users/avatar.jpg"
+              :image="user.profilePhoto ? getProfilePhoto(user.profilePhoto) : '/images/users/avatar.jpg'"
               size="140"
               style="border-width: 5px !important; border-color: white !important;"
             />
-            <v-btn
-              class="position-absolute"
-              color="grey100"
-              icon="mdi-camera-outline"
-              size="small"
-              style="right: 0; bottom: 15px;"
-              flat
-              @click="uploadProfilePhotoModal = true"
-            />
+            <ProfileEditProfilePhoto/>
           </div>
         </div>
         <v-card-item class="pt-2 pb-6">
@@ -62,51 +54,17 @@
       </v-card>
     </v-col>
   </v-row>
-
-  <SharedUiModal v-model="uploadProfilePhotoModal" title="Upload Profile Photo" width="500">
-    <v-card-text class="px-8 py-4 text-body-1 text-justify">
-      <el-upload
-        class="avatar-uploader"
-        :show-file-list="false"
-        :on-success="handleAvatarSuccess"
-        :before-upload="uploadProfilePhoto"
-      >
-        <img v-if="imageUrl" :src="imageUrl" class="avatar"/>
-        <el-icon v-else class="avatar-uploader-icon"><i class="mdi mdi-image-plus-outline"/></el-icon>
-      </el-upload>
-    </v-card-text>
-    <v-card-actions class="p-3 justify-content-end">
-      <v-btn color="primary" type="submit">Submit</v-btn>
-    </v-card-actions>
-  </SharedUiModal>
 </template>
 
 <script setup>
 import { UserIcon } from "vue-tabler-icons"
-import { useField, useForm } from 'vee-validate'
+import { Buffer } from 'buffer'
 
 // Data
 const tab = ref(null)
-const imageUrl = ref('')
-const uploadProfilePhotoModal = ref(false)
 const { data: user } = await fetchData.$get("/User/Me")
 const { data: userRole } = await fetchData.$get("/UserRole/RoleName")
 const { data: userRoleInfo } = await fetchData.$get("/User/Me/Info/Role")
-const { handleSubmit } = useForm({
-  validationSchema: {
-    attachment(value) {
-      if (!value)
-        return 'Document is required'
-
-      const fileSize = (value.length * 3) / 4 / 1024 // Convert base64 size to KB
-      if (fileSize > 28000)
-        return 'Document size cannot exceeds 28MB'
-
-      const fileType = getFileType(addDocumentDetails.value.name)
-      return fileType ? true : 'The document type must be in PDF, Word, or Excel'
-    }
-  }
-})
 
 // Head
 useHead({
@@ -125,73 +83,9 @@ definePageMeta({
 })
 
 // Methods
-const handleAvatarSuccess = (response, uploadFile) => {
-  imageUrl.value = URL.createObjectURL(uploadFile.raw)
-  console.log(uploadFile)
+const getProfilePhoto = (attachment) => {
+  const arrayBuffer = Buffer.from(attachment, 'base64');
+  const blob = new Blob([arrayBuffer], { type: 'image/jpeg' })
+  return URL.createObjectURL(blob)
 }
-const uploadProfilePhoto = (rawFile) => {
-  
-  if (rawFile.type !== 'image/jpeg') {
-    ElMessage.error('Avatar picture must be JPG format!')
-    return false 
-  } else if (rawFile.size / 1024 / 1024 > 2) {
-    ElMessage.error('Avatar picture size can not exceed 2MB!')
-    return false
-  }
-  return true
-}
-// const uploadProfilePhoto = async() => {
-  // const file = addDocumentDetails.value.attachmentInfo[0]
-  // if (file) {
-  //   // Read file as DataURL using a promise-based approach
-  //   const reader = new FileReader()
-  //   reader.readAsDataURL(file)
-  //   try {
-  //     const base64Data = await new Promise((resolve, reject) => {
-  //       reader.onload = () => resolve(reader.result)
-  //       reader.onerror = reject
-  //     })
-  //     addDocumentDetails.value.attachment.value = base64Data.replace(/^.+?;base64,/, '')
-  //     addDocumentDetails.value.name = file.name
-  //     addDocumentDetails.value.type = getFileType(file.name)
-  //   } catch(e) { ElNotification.error({ message: `Error reading file: ${e}` }) }
-  // }
-  // else
-  // {
-  //   addDocumentDetails.value.name = null
-  //   addDocumentDetails.value.type = null
-  //   addDocumentDetails.value.attachment.value = null
-  // }
-// }
 </script>
-
-<style scoped>
-.avatar-uploader .avatar {
-  width: 178px;
-  height: 178px;
-  display: block;
-}
-</style>
-
-<style>
-.avatar-uploader .el-upload {
-  border: 1px dashed var(--el-border-color);
-  border-radius: 6px;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-  transition: var(--el-transition-duration-fast);
-}
-
-.avatar-uploader .el-upload:hover {
-  border-color: var(--el-color-primary);
-}
-
-.el-icon.avatar-uploader-icon {
-  font-size: 28px;
-  color: #8c939d;
-  width: 178px;
-  height: 178px;
-  text-align: center;
-}
-</style>
