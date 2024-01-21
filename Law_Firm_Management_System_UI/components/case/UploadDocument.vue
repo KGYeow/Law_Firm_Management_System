@@ -156,7 +156,6 @@ const addDocument = handleSubmit(async (values) => {
       emit('close-modal', false)
       addDocumentDetails.value.name = null
       addDocumentDetails.value.categoryId.resetField()
-      addDocumentDetails.value.caseId.resetField()
       addDocumentDetails.value.attachment.resetField()
       addDocumentDetails.value.type = null
       addDocumentDetails.value.isSignedDocument = false

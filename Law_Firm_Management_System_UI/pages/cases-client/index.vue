@@ -78,7 +78,6 @@
                     style="background-color: rgb(43, 76, 101); min-height: 35px; border-top-right-radius: 10px; border-top-left-radius: 10px;"
                   >
                     {{ item.name }}
-                    {{ item.id }}
                   </v-card-actions>
                   <v-card-item class="pt-3">
                     <v-card-title class="text-subtitle-2 fw-bold">
