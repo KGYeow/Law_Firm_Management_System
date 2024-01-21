@@ -143,8 +143,8 @@
                 <td>{{ item.name }}</td>
                 <td>{{ item.caseName }}</td>
                 <td>{{ item.partnerName }}</td>
-                <td>{{ dayjs(item.createdTime).format("DD MMM YYYY, hh:mm A") }}</td>
-                <td>{{ dayjs(item.eventTime).format("DD MMM YYYY, hh:mm A") }}</td>
+                <td>{{ dayjs(item.createdTime).tz('Asia/London').format("DD MMM YYYY, hh:mm A") }}</td>
+                <td>{{ dayjs(item.eventTime).tz('Asia/London').format("DD MMM YYYY, hh:mm A") }}</td>
                 <td>
                   <el-tag type="success" v-if="item.isCompleted">Completed</el-tag>
                   <el-tag type="danger" v-else>Incompleted</el-tag>
@@ -268,6 +268,8 @@ import { useField, useForm } from 'vee-validate'
 import dayjs from 'dayjs';
 import { CalendarIcon } from "vue-tabler-icons"
 import UiParentCard from "@/components/shared/UiParentCard.vue";
+import moment from 'moment-timezone'
+moment.tz.setDefault('Asia/London')
 
 const filter = ref({
   caseID: null,

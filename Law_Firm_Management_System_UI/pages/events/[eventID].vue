@@ -7,7 +7,7 @@
           <!-- Client Profile Image -->
           <v-avatar
               class="border my-5"
-              image="/images/users/avatar.jpg"
+              :image="clientInfo.profilePhoto ? getProfilePhoto(clientInfo.profilePhoto) : '/images/users/avatar.jpg'"
               size="110"
               style="border-width: 3px !important; border-color: lightgrey !important;"
             />
@@ -151,6 +151,7 @@
 import { ref, shallowRef } from 'vue';
 import { CalendarIcon } from "vue-tabler-icons"
 import dayjs from 'dayjs';
+import { Buffer } from 'buffer'
 
 const filter = ref({
   clientId: null,
@@ -160,7 +161,14 @@ const filter = ref({
 const routeParameter = ref(useRoute().params)
 const { data: eventInfo } = await fetchData.$get(`/Event/Info/${routeParameter.value.eventID}`)
 const { data: eventList } = await fetchData.$get("/Event/PartnerPerspectiveEventList", filter.value)
-//const { data: clientList } = await fetchData.$get("/Client")
+const { data: clientInfo } = await fetchData.$get(`/Client/Info/${eventInfo.value.clientId}`)
+
+//avatar profile 
+const getProfilePhoto = (attachment) => {
+    const arrayBuffer = Buffer.from(attachment, 'base64');
+    const blob = new Blob([arrayBuffer], { type: 'image/jpeg' })
+    return URL.createObjectURL(blob)
+  }
 
 const renameEventDetails = ref({
   eventId: null,
