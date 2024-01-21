@@ -314,7 +314,7 @@ const addAppointment = handleSubmit(async(values) => {
     const result = await fetchData.$post(`/Appointment/ClientCreate`, {
       partnerUserId: values.partnerUserId,
       categoryId: values.categoryId,
-      appointmentTime: values.appointmentTime,
+      appointmentTime: dayjs(values.appointmentTime).format("DD MMM YYYY, h:mm A"),
       description: addAppointmentDetails.value.description,
     })
 
