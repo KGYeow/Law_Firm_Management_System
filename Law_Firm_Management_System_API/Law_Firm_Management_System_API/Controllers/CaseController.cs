@@ -185,7 +185,8 @@ namespace Law_Firm_Management_System_API.Controllers
                     status = x.Status.StatusName,
                     statusDescription = x.Status.StatusDescription,
                     partnerName = x.PartnerUser.FullName,
-                    partnerEmail = x.PartnerUser.Email
+                    partnerEmail = x.PartnerUser.Email,
+                    partnerId = x.PartnerUserId
                 })
                 .FirstOrDefault();
             return Ok(caseInfo);

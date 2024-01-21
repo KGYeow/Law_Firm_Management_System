@@ -7,7 +7,7 @@
              <!-- Client Profile Image -->
              <v-avatar
               class="border my-5"
-              image="/images/users/avatar.jpg"
+              :image="clientInfo.profilePhoto ? getProfilePhoto(clientInfo.profilePhoto) : '/images/users/avatar.jpg'"
               size="110"
               style="border-width: 3px !important; border-color: lightgrey !important;"
             />
@@ -165,7 +165,7 @@
    const { data: caseInfo } = await fetchData.$get(`/Case/Info/${routeParameter.value.caseID}`)
    const { data: caseList } = await fetchData.$get("/Case/PartnerPerspectiveCaseList", filter.value)
    const { data: caseDocumentList } = await fetchData.$get(`/Document/GetDocumentNamesByCase/${routeParameter.value.caseID}`);
-   const { data: clientList } = await fetchData.$get("/Client")
+   const { data: clientInfo } = await fetchData.$get(`/Client/Info/${caseInfo.value.clientId}`)
    const { data: userRole } = await fetchData.$get("/UserRole/RoleName")
    
    const addDocumentModal = ref(false)
@@ -226,6 +226,12 @@
      { id: 5, name: 'On Hold' },
      { id: 6, name: 'Settled' },
    ]);
+
+   const getProfilePhoto = (attachment) => {
+    const arrayBuffer = Buffer.from(attachment, 'base64');
+    const blob = new Blob([arrayBuffer], { type: 'image/jpeg' })
+    return URL.createObjectURL(blob)
+  }
    
    const showConfirmationDialog = async (caseId, newStatus) => {
      try {
