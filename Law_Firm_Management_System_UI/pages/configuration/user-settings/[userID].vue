@@ -7,7 +7,7 @@
             <!-- Client Profile Image -->
             <v-avatar
               class="border my-5"
-              image="/images/users/avatar.jpg"
+              :image="userInfo.profilePhoto ? getProfilePhoto(userInfo.profilePhoto) : '/images/users/avatar.jpg'"
               size="110"
               style="border-width: 3px !important; border-color: lightgrey !important;"
             />
@@ -113,6 +113,7 @@
 <script setup>
 import { useField, useForm } from 'vee-validate'
 import { SettingsIcon } from 'vue-tabler-icons'
+import { Buffer } from 'buffer'
 
 // Data
 const isEdit = ref(false)
@@ -173,6 +174,11 @@ definePageMeta({
 })
 
 // Methods
+const getProfilePhoto = (attachment) => {
+  const arrayBuffer = Buffer.from(attachment, 'base64');
+  const blob = new Blob([arrayBuffer], { type: 'image/jpeg' })
+  return URL.createObjectURL(blob)
+}
 const editUserCancel = () => {
   isEdit.value = false
   editUserDetails.value.fullName.resetField()

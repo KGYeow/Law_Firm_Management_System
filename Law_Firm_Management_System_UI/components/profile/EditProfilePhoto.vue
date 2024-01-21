@@ -63,11 +63,10 @@ const { handleSubmit } = useForm({
     attachment(value) {
       if (!value)
         return 'Profile photo is required'
-      console.log(value.length)
       if (addProfilePhotoDetails.value.type != 'image/jpeg')
-        return 'Avatar picture must be JPG format'
-      else if (addProfilePhotoDetails.value.size / 1024 / 1024 > 2)
-        return 'Avatar picture size can not exceed 2MB'
+        return 'Profile photo must be JPG format'
+      else if (addProfilePhotoDetails.value.size / 1024 / 1024 > 5)
+        return 'Profile photo size can not exceed 5MB'
       return true
     }
   }

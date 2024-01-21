@@ -2,9 +2,7 @@
   <v-menu :close-on-content-click="false">
     <template v-slot:activator="{ props }">
       <v-btn class="profileBtn custom-hover-primary" variant="text" v-bind="props" icon>
-        <v-avatar size="35">
-          <img src="/images/users/avatar.jpg" height="35" alt="user" />
-        </v-avatar>
+        <v-avatar size="35" :image="user.profilePhoto ? getProfilePhoto(user.profilePhoto) : '/images/users/avatar.jpg'"/>
       </v-btn>
     </template>
     <v-sheet rounded="md" width="200" elevation="10" class="mt-2" :border="true">
@@ -24,10 +22,18 @@
 </template>
 
 <script setup>
+import { Buffer } from 'buffer'
+
 // Data
 const { signOut } = useAuth()
+const { data: user } = await fetchData.$get("/User/Me")
 
 // Methods
+const getProfilePhoto = (attachment) => {
+  const arrayBuffer = Buffer.from(attachment, 'base64');
+  const blob = new Blob([arrayBuffer], { type: 'image/jpeg' })
+  return URL.createObjectURL(blob)
+}
 const logout = async() => {
   try {
     const result = await fetchData.$get("/Authenticate/Logout")
