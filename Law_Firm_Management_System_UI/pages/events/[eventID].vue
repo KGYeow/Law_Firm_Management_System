@@ -50,7 +50,7 @@
                     </ul>
                   </div>
                   <v-card-subtitle>
-                  <a :href="`/events/${eventInfo.id}`" target="_blank" class="row-link">{{ eventInfo.caseName }}</a>
+                  <a :href="`/cases/${eventInfo.caseID}`" target="_blank" class="row-link">{{ eventInfo.caseName }}</a>
                   </v-card-subtitle>
                 </v-col>
 
