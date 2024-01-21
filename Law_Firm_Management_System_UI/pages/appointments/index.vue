@@ -143,67 +143,80 @@
 
   <!-- Add New Appointment Modal -->
   <SharedUiModal v-model="addAppointmentModal" title="Add New Appointment" width="550">
-    <form @submit.prevent="addAppointment">
-      <v-card-item class="px-8 py-4 text-body-1">
-        <v-row>
-          <v-col>
-            <v-label class="text-caption">Client</v-label>
-            <v-select
-              :items="clientList"
-              item-title="fullName"
-              item-value="id"
-              placeholder="Select client"
-              variant="outlined"
-              density="compact"
-              :error-messages="addAppointmentDetails.clientId.errorMessage"
-              v-model="addAppointmentDetails.clientId.value"
-              hide-details="auto"
-            />
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col>
-            <v-label class="text-caption">Category</v-label>
-            <v-select
-              :items="categoryList"
-              item-title="name"
-              item-value="id"
-              placeholder="Select category"
-              variant="outlined"
-              density="compact"
-              :error-messages="addAppointmentDetails.categoryId.errorMessage"
-              v-model="addAppointmentDetails.categoryId.value"
-              hide-details="auto"
-            />
-          </v-col>
-          <v-col>
-            <v-label class="text-caption">Time</v-label>
-            <el-date-picker
-              :class="{ 'error': addAppointmentDetails.appointmentTime.errorMessage }"
-              placeholder="Select date and time"
-              type="datetime"
-              format="DD MMM YYYY, hh:mm A"
-              date-format="DD MMM YYYY"
-              time-format="HH:mm"
-              :teleported="false"
-              :disabled-date="(time) => { return time.getTime() < new Date() }"
-              v-model="addAppointmentDetails.appointmentTime.value"
-              style="height: 40px;"
-            />
-            <v-messages
-              :messages="addAppointmentDetails.appointmentTime.errorMessage"
-              :active="addAppointmentDetails.appointmentTime.errorMessage ? true : false"
-              color="#fa896b"
-              :transition="false"
-              style="padding: 3px 16px 3px; opacity: unset;"
-            />
-          </v-col>
-        </v-row>
-      </v-card-item>
-      <v-card-actions class="p-3 justify-content-end">
-        <v-btn color="primary" type="submit">Submit</v-btn>
-      </v-card-actions>
-    </form>
+    <el-scrollbar max-height="400px" class="overflow-visible">
+      <form @submit.prevent="addAppointment">
+        <v-card-item class="px-8 py-4 text-body-1">
+          <v-row>
+            <v-col>
+              <v-label class="text-caption">Client</v-label>
+              <v-select
+                :items="clientList"
+                item-title="fullName"
+                item-value="id"
+                placeholder="Select client"
+                variant="outlined"
+                density="compact"
+                :error-messages="addAppointmentDetails.clientId.errorMessage"
+                v-model="addAppointmentDetails.clientId.value"
+                hide-details="auto"
+              />
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col>
+              <v-label class="text-caption">Category</v-label>
+              <v-select
+                :items="categoryList"
+                item-title="name"
+                item-value="id"
+                placeholder="Select category"
+                variant="outlined"
+                density="compact"
+                :error-messages="addAppointmentDetails.categoryId.errorMessage"
+                v-model="addAppointmentDetails.categoryId.value"
+                hide-details="auto"
+              />
+            </v-col>
+            <v-col>
+              <v-label class="text-caption">Time</v-label>
+              <el-date-picker
+                :class="{ 'error': addAppointmentDetails.appointmentTime.errorMessage }"
+                placeholder="Select date and time"
+                type="datetime"
+                format="DD MMM YYYY, hh:mm A"
+                date-format="DD MMM YYYY"
+                time-format="HH:mm"
+                :teleported="false"
+                :disabled-date="(time) => { return time.getTime() < new Date() }"
+                v-model="addAppointmentDetails.appointmentTime.value"
+                style="height: 40px;"
+              />
+              <v-messages
+                :messages="addAppointmentDetails.appointmentTime.errorMessage"
+                :active="addAppointmentDetails.appointmentTime.errorMessage ? true : false"
+                color="#fa896b"
+                :transition="false"
+                style="padding: 3px 16px 3px; opacity: unset;"
+              />
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col>
+              <v-label class="text-caption">Description</v-label>
+              <v-textarea
+                variant="outlined"
+                density="compact"
+                v-model="addAppointmentDetails.description"
+                hide-details
+              />
+            </v-col>
+          </v-row>
+        </v-card-item>
+        <v-card-actions class="p-3 justify-content-end">
+          <v-btn color="primary" type="submit">Submit</v-btn>
+        </v-card-actions>
+      </form>
+    </el-scrollbar>
   </SharedUiModal>
 
   <!-- View Appointment Modal -->
@@ -278,6 +291,7 @@ const addAppointmentDetails = ref({
   clientId: useField('clientId'),
   categoryId: useField('categoryId'),
   appointmentTime: useField('appointmentTime'),
+  description: null,
 })
 const selectedAppointmentDetails = ref({})
 const currentPage = ref(1)
@@ -337,12 +351,19 @@ const appointmentApproval = async(appointmentId, approvalStatus) => {
 }
 const addAppointment = handleSubmit(async(values) => {
   try {
-    const result = await fetchData.$post(`/Appointment/PartnerCreate`, values)
+    const result = await fetchData.$post(`/Appointment/PartnerCreate`, {
+      clientId: values.clientId,
+      categoryId: values.categoryId,
+      appointmentTime: values.appointmentTime,
+      description: addAppointmentDetails.value.description,
+    })
+
     if (!result.error) {
       addAppointmentModal.value = false
       addAppointmentDetails.value.clientId.resetField()
       addAppointmentDetails.value.categoryId.resetField()
       addAppointmentDetails.value.appointmentTime.resetField()
+      addAppointmentDetails.value.description = null
       ElNotification.success({ message: result.message })
       refreshNuxtData()
     }

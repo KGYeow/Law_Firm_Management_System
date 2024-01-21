@@ -22,12 +22,14 @@ export default defineNuxtRouteMiddleware(async(to, from) => {
       // If user is client
       if (user.value?.userRoleId == 3) {
         if (to.path.match("/cases-client")) return // Redirect to case details page
+        if (to.path.match("/partners")) return // Redirect to partner details page
         return navigateTo('/dashboard-client') // Redirect to the dashboard page
       }
       // If user is paralegal
       else if (user.value?.userRoleId == 2) {
         if (to.path.match("/documents/repositories/")) return // Redirect to document details page
         if (to.path.match("/contacts/clients")) return // Redirect to client details page
+        if (to.path.match("/contacts/partners")) return // Redirect to partner details page
         return navigateTo('/dashboard') // Redirect to the dashboard page
       }
       // If user is partner (admin)
@@ -36,6 +38,8 @@ export default defineNuxtRouteMiddleware(async(to, from) => {
         if (to.path.match("/events")) return // Redirect to event details page
         if (to.path.match("/documents/repositories/")) return // Redirect to document details page
         if (to.path.match("/contacts/clients")) return // Redirect to client details page
+        if (to.path.match("/contacts/paralegals")) return // Redirect to paralegal details page
+        if (to.path.match("/contacts/partners")) return // Redirect to partner details page
         if (to.path.match("/configuration/user-settings")) return // Redirect to user details page
         return navigateTo('/dashboard') // Redirect to the dashboard page
       }

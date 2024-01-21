@@ -129,7 +129,7 @@
 
   <!-- Add New Appointment Modal -->
   <SharedUiModal v-model="addAppointmentModal" title="Add New Appointment" width="600">
-    <el-scrollbar max-height="400px">
+    <el-scrollbar max-height="400px" class="overflow-visible">
       <form @submit.prevent="addAppointment">
         <v-card-item class="px-8 py-4 text-body-1">
           <v-row>
@@ -306,7 +306,6 @@ const pageCount = () => {
   return Math.ceil(appointmentList.value.length / itemsPerPage.value)
 }
 const getSelectedAppointment = (appointmentInfo) => {
-  console.log(appointmentInfo)
   selectedAppointmentDetails.value = appointmentInfo
   viewAppointmentModal.value = true
 }

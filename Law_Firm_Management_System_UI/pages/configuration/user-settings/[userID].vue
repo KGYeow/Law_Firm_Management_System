@@ -158,7 +158,7 @@ definePageMeta({
   breadcrumbsIcon: shallowRef(SettingsIcon),
   breadcrumbs: [
     {
-      title: 'Contacts',
+      title: 'Configuration',
       disabled: false,
     },
     {

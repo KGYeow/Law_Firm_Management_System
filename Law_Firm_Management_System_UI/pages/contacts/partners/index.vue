@@ -45,6 +45,14 @@
                 <td>{{ item.email }}</td>
                 <td>{{ item.phoneNumber ?? '-' }}</td>
                 <td>{{ item.address ?? '-' }}</td>
+                <td>
+                  <ul class="m-0 list-inline hstack">
+                    <li>
+                      <v-tooltip text="View Details" activator="parent" location="top" offset="2"/>
+                      <v-btn icon="mdi-open-in-new" size="small" variant="text" :href="`/contacts/partners/${item.userId}`"/>
+                    </li>
+                  </ul>
+                </td>
               </tr>
             </template>
             <template v-slot:bottom>
@@ -78,6 +86,7 @@ const headers = ref([
   { key: "email" , title: "Email" },
   { key: "phoneNumber" , title: "Phone No." },
   { key: "address" , title: "Address" },
+  { key: "actions", sortable: false, width: 0 },
 ])
 const { data: partnerList } = await fetchData.$get("/Partner")
 const { data: userRole } = await fetchData.$get("/UserRole/RoleName")

@@ -7,14 +7,14 @@
             <!-- Client Profile Image -->
             <v-avatar
               class="border my-5"
-              image="/images/users/avatar.jpg"
+              :image="clientInfo.profilePhoto ? getProfilePhoto(clientInfo.profilePhoto) : '/images/users/avatar.jpg'"
               size="110"
               style="border-width: 3px !important; border-color: lightgrey !important;"
             />
             <div class="mb-2 text-h5 d-sm-flex align-center justify-content-center">
               {{ clientInfo.fullName }}
             </div>
-            <div class="text-body-1 d-sm-flex align-center justify-content-center" v-if="clientInfo.userId != null">
+            <div class="text-body-1 d-sm-flex align-center justify-content-center" v-if="clientInfo.userId != null && userRole == 'Partner'">
               <a :href="`/configuration/user-settings/${clientInfo.userId}`" class="text-secondary">
                 <i class="mdi mdi-open-in-new"></i>
                 View User Information
@@ -91,7 +91,7 @@
                   </v-col>
                 </v-row>
               </v-card-item>
-              <v-card-actions class="justify-content-end p-3">
+              <v-card-actions class="justify-content-end p-3" v-if="userRole == 'Partner'">
                 <div v-if="!isEdit">
                   <v-btn color="primary" variant="tonal" flat @click="isEdit = true">Edit</v-btn>
                 </div>
@@ -111,10 +111,12 @@
 <script setup>
 import { useField, useForm } from 'vee-validate'
 import { AddressBookIcon } from "vue-tabler-icons"
+import { Buffer } from 'buffer'
 
 // Data
 const isEdit = ref(false)
 const routeParameter = ref(useRoute().params)
+const { data: userRole } = await fetchData.$get("/UserRole/RoleName")
 const { data: clientInfo } = await fetchData.$get(`/Client/Info/${routeParameter.value.clientID}`)
 const { handleSubmit } = useForm({
   initialValues: {
@@ -171,6 +173,11 @@ definePageMeta({
 })
 
 // Methods
+const getProfilePhoto = (attachment) => {
+  const arrayBuffer = Buffer.from(attachment, 'base64');
+  const blob = new Blob([arrayBuffer], { type: 'image/jpeg' })
+  return URL.createObjectURL(blob)
+}
 const editClientCancel = () => {
   isEdit.value = false
   editClientDetails.value.fullName.resetField()

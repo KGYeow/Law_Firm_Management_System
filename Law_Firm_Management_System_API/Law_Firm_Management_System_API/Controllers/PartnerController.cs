@@ -20,8 +20,19 @@ namespace Law_Firm_Management_System_API.Controllers
         public IActionResult GetPartnerList()
         {
             var l = context.Partners.Include(a => a.User).Include(a => a.ParalegalUser.User).OrderBy(a => a.User.FullName).ToList()
-                .Select(x => new { userId = x.UserId, fullName = x.User.FullName, assignedParalegal = x.ParalegalUser?.User.FullName, phoneNumber = x.PhoneNumber, address = x.Address, email = x.User.Email});
+                .Select(x => new { userId = x.UserId, fullName = x.User.FullName, assignedParalegal = x.ParalegalUser?.User.FullName, phoneNumber = x.PhoneNumber, address = x.Address, email = x.User.Email, profilePhoto = x.User.ProfilePhoto });
             return Ok(l);
+        }
+
+        // Get the specific partner's information.
+        [HttpGet]
+        [Route("Info/{PartnerUserId}")]
+        public IActionResult GetPartnerInfo(int partnerUserId)
+        {
+            var partnerInfo = context.Partners.Include(a => a.User).Include(a => a.ParalegalUser).Where(a => a.UserId == partnerUserId)
+                .Select(x => new { userId = x.UserId, assignedParalegalUserId = x.ParalegalUserId, assignedParalegal = x.ParalegalUser.User.FullName, fullName = x.User.FullName, phoneNum = x.PhoneNumber, email = x.User.Email, address = x.Address, profilePhoto = x.User.ProfilePhoto })
+                .FirstOrDefault();
+            return Ok(partnerInfo);
         }
 
         // Get the assigned paralegal of a specific partner.

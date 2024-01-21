@@ -48,10 +48,15 @@ namespace Law_Firm_Management_System_API.Controllers
         [Route("Info/{ParalegalUserId}")]
         public IActionResult GetParalegalInfo(int paralegalUserId)
         {
+            var assignedPartner = context.Partners.Where(a => a.ParalegalUserId == paralegalUserId)
+                .Select(x => new { userId = x.UserId, fullName = x.User.FullName })
+                .FirstOrDefault();
+
             var paralegalInfo = context.Paralegals.Include(a => a.User).Where(a => a.UserId == paralegalUserId)
                 .Select(x => new { userId = x.UserId, fullName = x.User.FullName, email = x.User.Email, phoneNumber = x.PhoneNumber, address = x.Address, isActive = x.IsActive, profilePhoto = x.User.ProfilePhoto })
                 .FirstOrDefault();
-            return Ok(paralegalInfo);
+
+            return Ok(new { paralegalInfo, assignedPartner });
         }
 
         // Get the assigned partner of a paralegal.

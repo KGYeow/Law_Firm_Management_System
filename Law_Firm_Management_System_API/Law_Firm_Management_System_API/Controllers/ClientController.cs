@@ -29,7 +29,7 @@ namespace Law_Firm_Management_System_API.Controllers
         public IActionResult GetClientInfo(int clientId)
         {
             var clientInfo = context.Clients.Include(a => a.User).Where(a => a.Id == clientId)
-                .Select(x => new { clientId = x.Id, userId = (int?)x.User.Id, fullName = x.FullName, phoneNum = x.PhoneNumber, email = x.Email, address = x.Address })
+                .Select(x => new { clientId = x.Id, userId = (int?)x.User.Id, fullName = x.FullName, phoneNum = x.PhoneNumber, email = x.Email, address = x.Address, profilePhoto = x.User.ProfilePhoto })
                 .FirstOrDefault();
             return Ok(clientInfo);
         }
