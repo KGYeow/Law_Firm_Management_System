@@ -1,3 +1,4 @@
+//cases
 <template>
  <v-row>
     <v-col cols="12" md="12">
@@ -86,7 +87,7 @@
                   <div v-for="document in caseDocumentList" :key="document.id">
                     <div class="case-detail-item">
                       <v-list-item
-                        class="mb-2 rounded-3 bg-background list-link"
+                        class="client-case-document-list mb-2 rounded-3 bg-background list-link"
                         density="compact"
                         prepend-icon="mdi-file-document-outline"
                         link
@@ -94,7 +95,16 @@
                         style="padding: 10px;"
                       >
                         {{ document.documentName }}
+                        <ul class="m-0 list-inline hstack">
+                          <li>
+                            <v-tooltip text="Update Document" activator="parent" location="top" offset="2"/>
+                            <v-btn class = "mt-n1" icon="mdi-upload-outline" size="small" variant="text" @click.stop="getEditAttachmentInfo(document.id)"/>
+                          </li>
+                        </ul>
                       </v-list-item>
+                    </div>
+                    <div class="mb-5" v-if="document.isSignedDocument == true">
+                      <v-card-subtitle>This document require client's signed.</v-card-subtitle>
                     </div>
                   </div>
                 </div>
@@ -150,6 +160,14 @@
   @close-modal="(e) => addDocumentModal = e"/>
 </SharedUiModal>
 
+   <!-- Edit Document Attachment Modal -->
+   <SharedUiModal v-model="editAttachmentModal" title="Update Document File" width="500">
+    <DocumentEditAttachmentForm
+      :document-id="editAttachmentInfoId"
+      @close-modal="(e) => editAttachmentModal = e"
+    />
+  </SharedUiModal>
+
 </template>
 
 <style scoped>
@@ -186,6 +204,8 @@ const { data: clientList } = await fetchData.$get("/Client")
 const { data: userRole } = await fetchData.$get("/UserRole/RoleName")
 
 const addDocumentModal = ref(false)
+const editAttachmentInfoId = ref(null)
+const editAttachmentModal = ref(false)
 const renameCaseDetails = ref({
   caseId: null,
   name: null,
@@ -202,6 +222,7 @@ const editClientModal = ref(false);
 useHead({
   title: "Cases | CaseCraft",
 })
+
 
 // Page Meta
 definePageMeta({
@@ -259,6 +280,11 @@ const editClientGet = (caseId, clientId) => {
   editClientDetails.value.clientId = clientId;
   editClientModal.value = true;
 };
+
+const getEditAttachmentInfo = (docId) => {
+  editAttachmentInfoId.value = docId
+  editAttachmentModal.value = true
+}
 
 const showConfirmationDialog = async (caseId, newStatus) => {
   try {

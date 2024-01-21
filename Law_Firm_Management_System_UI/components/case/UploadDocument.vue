@@ -1,3 +1,4 @@
+//upload-document
 <template>
     <form @submit.prevent="addDocument">
       <v-card-item class="px-8 py-4 text-body-1">
@@ -35,6 +36,22 @@
             />
           </v-col>
         </v-row>
+        <v-row>
+              <v-col class="pt-0">
+                <v-switch
+                  class=""
+                  color="secondary"
+                  density="compact"
+                  v-model="addDocumentDetails.isSignedDocument"
+                  inset
+                  hide-details
+                >
+                  <template #prepend>
+                    <v-label class="p-0 text-caption">Is Signed Document</v-label>
+                  </template>
+                </v-switch>
+              </v-col>
+            </v-row>
       </v-card-item>
       <v-card-actions class="p-3 justify-content-end">
         <v-btn color="primary" type="submit">Submit</v-btn>
@@ -74,6 +91,7 @@
     caseId: props.caseId,
     type: null,
     attachmentInfo: null,
+    isSignedDocument: false,
   })
   const acceptedDocInput = ref(
     `application/pdf,
@@ -131,6 +149,7 @@ const addDocument = handleSubmit(async (values) => {
       categoryId: values.categoryId,
       attachment: addDocumentDetails.value.attachment.value, // Use the base64-encoded value
       type: addDocumentDetails.value.type,
+      isSignedDocument: addDocumentDetails.value.isSignedDocument,
     });
 
     if (!result.error) {
@@ -140,6 +159,7 @@ const addDocument = handleSubmit(async (values) => {
       addDocumentDetails.value.caseId.resetField()
       addDocumentDetails.value.attachment.resetField()
       addDocumentDetails.value.type = null
+      addDocumentDetails.value.isSignedDocument = false
       ElNotification.success({ message: result.message })
       refreshNuxtData()
     } else {

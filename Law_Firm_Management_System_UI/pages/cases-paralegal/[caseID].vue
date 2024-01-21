@@ -1,4 +1,3 @@
-//case-client
 <template>
     <v-row>
        <v-col cols="12" md="12">
@@ -7,21 +6,22 @@
              <div class="p-4 w-25 text-center">
              <!-- Client Profile Image -->
              <v-avatar
-                 class="border my-5"
-                 image="/images/users/avatar.jpg"
-                 size="110"
-                 style="border-width: 3px !important; border-color: lightgrey !important;"
-               />
-               <div class="mb-2 text-h5 d-sm-flex align-center justify-content-center" >
-                 <div style="flex-direction: column;">
-                   <div style="display: flex; justify-content: center;">
-                     <span>{{ caseInfo.partnerName }}</span>
-                   </div>
-                   <div style="display: flex; flex-direction: column;">
-                     <span><strong>Email: </strong>{{ caseInfo.partnerEmail }}</span>
-                   </div>
-                 </div>
-               </div>
+              class="border my-5"
+              image="/images/users/avatar.jpg"
+              size="110"
+              style="border-width: 3px !important; border-color: lightgrey !important;"
+            />
+            <div class="mb-2 text-h5 d-sm-flex align-center justify-content-center" >
+              <div style="flex-direction: column;">
+                <div style="display: flex; justify-content: center;">
+                  <span>{{ caseInfo.clientName }}</span>
+                </div>
+                <div style="display: flex; flex-direction: column;">
+                  <span><strong>Phone Number: </strong>{{ caseInfo.clientPhone ?? '-' }}</span>
+                  <span><strong>Email: </strong>{{ caseInfo.clientEmail }}</span>
+                </div>
+              </div>
+            </div>
              </div>
              <v-divider vertical/>
              <div class="p-4 w-75">
@@ -82,16 +82,16 @@
                            style="padding: 10px;"
                          >
                            {{ document.documentName }} 
-                           <ul v-if="document.isSignedDocument == true" class="m-0 list-inline hstack">
+                           <ul class="m-0 list-inline hstack">
                             <li>
                               <v-tooltip text="Update Document" activator="parent" location="top" offset="2"/>
                               <v-btn class = "mt-n1" icon="mdi-upload-outline" size="small" variant="text" @click.stop="getEditAttachmentInfo(document.id)"/>
                             </li>
                           </ul>
                          </v-list-item>
-                         <div class="mb-5" v-if="document.isSignedDocument == true">
-                          <v-card-subtitle>This document require client's signed.</v-card-subtitle>
-                        </div>
+                      </div>
+                      <div class="mb-5" v-if="document.isSignedDocument == true">
+                        <v-card-subtitle>This document require client's signed.</v-card-subtitle>
                       </div>
                      </div>
                    </div>
@@ -105,7 +105,7 @@
                  </v-col>
                </v-row>
                
-                 <!-- Add New Document Button 
+                 <!-- Add New Document Button -->
                    <el-affix
                      class="position-absolute"
                      position="bottom"
@@ -114,7 +114,7 @@
                    >
                      <v-tooltip text="Upload Document" activator="parent" location="left" offset="2"/>
                      <v-btn icon="mdi-file-document-plus-outline" color="primary" size="large" @click="addDocumentModal = true"/>
-                   </el-affix>-->
+                   </el-affix>
                </v-card-item>
              </div>
            </div>
@@ -195,7 +195,7 @@
        {
          title: 'Cases',
          disabled: false,
-         href: '/cases-client',
+         href: '/cases-paralegal',
        },
        {
          title: 'Case Details',
@@ -226,7 +226,7 @@
      { id: 5, name: 'On Hold' },
      { id: 6, name: 'Settled' },
    ]);
-  
+   
    const showConfirmationDialog = async (caseId, newStatus) => {
      try {
        const confirmDialogOptions = {

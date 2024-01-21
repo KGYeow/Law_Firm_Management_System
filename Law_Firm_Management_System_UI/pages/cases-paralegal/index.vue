@@ -1,4 +1,3 @@
-//Case.vue
 <template>
   <v-row>
     <v-col>
@@ -68,8 +67,8 @@
                   </td>
                   <td class="list-inline hstack">
                     <li>
-                      <v-tooltip text="Case Details" activator="parent" location="top" offset="2"/>
-                      <v-icon @click.stop="openDialog(item)">mdi-open-in-new</v-icon>
+                      <v-tooltip text="View Details" activator="parent" location="top" offset="2"/>
+                      <v-btn icon="mdi-open-in-new" size="small" variant="text" :href="`/cases-paralegal/${item.id}`" target="_blank"/>
                     </li>
                 </td>
               </tr>

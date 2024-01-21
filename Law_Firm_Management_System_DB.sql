@@ -226,6 +226,7 @@ CREATE TABLE [dbo].[Document](
 	[Type] [varchar](10) NOT NULL,
 	[IsArchived] [bit] NOT NULL,
 	[Attachment] [varbinary](max) NOT NULL,
+	[IsSignedDocument] [bit] NOT NULL,
  CONSTRAINT [PK_Document] PRIMARY KEY CLUSTERED 
 (
 	[ID] ASC

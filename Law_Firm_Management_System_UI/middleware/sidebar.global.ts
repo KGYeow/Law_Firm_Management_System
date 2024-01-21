@@ -30,6 +30,7 @@ export default defineNuxtRouteMiddleware(async(to, from) => {
         if (to.path.match("/documents/repositories/")) return // Redirect to document details page
         if (to.path.match("/contacts/clients")) return // Redirect to client details page
         if (to.path.match("/contacts/partners")) return // Redirect to partner details page
+        if (to.path.match("/cases-paralegal")) return // Redirect to case details page
         return navigateTo('/dashboard') // Redirect to the dashboard page
       }
       // If user is partner (admin)

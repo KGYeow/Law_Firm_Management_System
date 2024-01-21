@@ -95,7 +95,8 @@ namespace Law_Firm_Management_System_API.Controllers
                 ModifiedTime = DateTime.Now,
                 Attachment = dto.Attachment,
                 Type = dto.Type,
-                IsArchived = false 
+                IsArchived = false,
+                IsSignedDocument = dto.IsSignedDocument
             };
             context.Documents.Add(document);
             context.SaveChanges();
@@ -166,7 +167,7 @@ namespace Law_Firm_Management_System_API.Controllers
         {
             var documentNames = context.Documents
                 .Where(d => d.CaseId == caseId && d.IsArchived == false)
-                .Select(x => new { id = x.Id, documentName = x.Name })
+                .Select(x => new { id = x.Id, documentName = x.Name, isSignedDocument = x.IsSignedDocument })
                 .ToList();
 
             return Ok(documentNames);
@@ -186,6 +187,7 @@ namespace Law_Firm_Management_System_API.Controllers
             public int? CaseId { get; set; }
             public byte[] Attachment { get; set; } = null!;
             public string Type { get; set; } = null!;
+            public bool IsSignedDocument { get; set; }
         }
 
         public class DocEditInfoDto
