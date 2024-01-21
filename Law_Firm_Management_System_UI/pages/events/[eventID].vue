@@ -93,6 +93,12 @@
                 <v-col cols="4">
                   <div class="d-flex align-center">
                     <v-label class="text-h6 pb-3">Description</v-label>
+                    <ul class="m-0 list-inline hstack">
+                      <li>
+                        <v-tooltip text="Edit Description" activator="parent" location="top" offset="2"/>
+                        <v-btn class="mt-n3" icon="mdi-rename-outline" size="small" variant="text" @click="editDescriptionGet(eventInfo.id, eventInfo.description)"/>
+                      </li>
+                    </ul>
                   </div>
                   <v-card-subtitle>{{ eventInfo.description }}</v-card-subtitle>
                 </v-col>
@@ -130,6 +136,15 @@
       @close-modal="(e) => editTimeModal = e"
     />
   </SharedUiModal>
+
+  <!-- Edit Event Description Modal -->
+  <SharedUiModal v-model="editDescriptionModal" title="Edit Event Description" width="500">
+  <EventEditDescription
+      :eventId="editDescriptionDetails.eventId"
+      :description="editDescriptionDetails.description"
+      @close-modal="(e) => editDescriptionModal = e"
+    />
+  </SharedUiModal>
 </template>
 
 <script setup>
@@ -164,6 +179,12 @@ const editTimeDetails = ref({
   eventTime: null,
 });
 const editTimeModal = ref(false);
+
+const editDescriptionDetails = ref({
+  eventId: null,
+  description: null,
+});
+const editDescriptionModal = ref(false);
 
 // Head
 useHead({
@@ -210,6 +231,13 @@ const editTimeGet = (eventId, eventTime) => {
   editTimeDetails.value.eventId = eventId;
   editTimeDetails.value.time = eventTime;
   editTimeModal.value = true;
+};
+
+// Edit Event Description Methods
+const editDescriptionGet = (eventId, description) => {
+  editDescriptionDetails.value.eventId = eventId;
+  editDescriptionDetails.value.description = description;
+  editDescriptionModal.value = true;
 };
 
 const props = defineProps({

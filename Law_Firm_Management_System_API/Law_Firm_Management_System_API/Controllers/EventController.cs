@@ -318,6 +318,21 @@ namespace Law_Firm_Management_System_API.Controllers
             return Ok(new Response { Status = "Success", Message = "Event rescheduled successfully" });
         }
 
+        // Edit description the existing event.
+        [HttpPut]
+        [Route("EditDescription")]
+        public IActionResult EditDescription([FromBody] EventDescriptionDto dto)
+        {
+            var user = userService.GetUser(User);
+            var existingEvt = context.Events.Where(a => a.Id == dto.EventId).FirstOrDefault();
+
+            existingEvt.Description = dto.Description;
+            context.Events.Update(existingEvt);
+            context.SaveChanges();
+
+            return Ok(new Response { Status = "Success", Message = "Event description updated successfully" });
+        }
+
         // Delete the event permanently.
         [HttpDelete]
         [Route("{EventId}")]
@@ -388,6 +403,12 @@ namespace Law_Firm_Management_System_API.Controllers
         {
             public int EventId { get; set; }
             public DateTime EventTime { get; set; }
+        }
+
+        public class EventDescriptionDto
+        {
+            public int EventId { get; set; }
+            public string Description { get; set; } = null!;
         }
     }
 }
