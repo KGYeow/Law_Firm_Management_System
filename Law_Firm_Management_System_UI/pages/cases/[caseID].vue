@@ -201,7 +201,7 @@ const { data: caseInfo } = await fetchData.$get(`/Case/Info/${routeParameter.val
 const { data: caseList } = await fetchData.$get("/Case/PartnerPerspectiveCaseList", filter.value)
 const { data: caseDocumentList } = await fetchData.$get(`/Document/GetDocumentNamesByCase/${routeParameter.value.caseID}`);
 const { data: userRole } = await fetchData.$get("/UserRole/RoleName")
-const { data: clientInfo } = await fetchData.$get(`/Client/Info/${caseInfo.clientID}`)
+const { data: clientInfo } = await fetchData.$get(`/Client/Info/${caseInfo.value.clientId}`)
 
 const addDocumentModal = ref(false)
 const editAttachmentInfoId = ref(null)
