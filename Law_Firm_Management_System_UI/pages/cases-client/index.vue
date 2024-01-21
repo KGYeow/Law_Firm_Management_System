@@ -117,21 +117,6 @@
         </v-data-table>
       </v-col>
     </v-row>
-    <!--Upload Button-->
-    <el-affix
-      class="position-absolute"
-      position="bottom"
-      :offset="30"
-      style="right: 30px; bottom: 100px;"
-    >
-      <v-tooltip text="Upload Document" activator="parent" location="left" offset="2"/>
-      <v-btn icon="mdi-file-document-plus-outline" color="primary" size="large" @click="addDocumentModal = true"/>
-    </el-affix>
-    <!-- Add New Document Modal -->
-    <SharedUiModal v-model="addDocumentModal" title="Add New Document" width="500">
-      <DocumentCreateForm
-        @close-modal="(e) => addDocumentModal = e"/>
-    </SharedUiModal>
   </template>
   
   <script setup>

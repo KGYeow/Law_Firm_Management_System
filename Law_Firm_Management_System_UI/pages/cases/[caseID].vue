@@ -200,8 +200,8 @@ const routeParameter = ref(useRoute().params)
 const { data: caseInfo } = await fetchData.$get(`/Case/Info/${routeParameter.value.caseID}`)
 const { data: caseList } = await fetchData.$get("/Case/PartnerPerspectiveCaseList", filter.value)
 const { data: caseDocumentList } = await fetchData.$get(`/Document/GetDocumentNamesByCase/${routeParameter.value.caseID}`);
-const { data: clientList } = await fetchData.$get("/Client")
 const { data: userRole } = await fetchData.$get("/UserRole/RoleName")
+const { data: clientInfo } = await fetchData.$get(`/Client/Info/${caseInfo.clientId}`)
 
 const addDocumentModal = ref(false)
 const editAttachmentInfoId = ref(null)
@@ -325,7 +325,7 @@ const changeCaseStatus = async (caseId, newStatus) => {
       if (newStatus === 'Settled') {
         await fetchData.$put(`/Case/UpdateClosedTime/${caseId}`);
       }
-
+      
       emit('close-modal', false);
       ElNotification.success({ message: result.data.message });
       refreshNuxtData(); // Refresh the case list or perform any necessary actions

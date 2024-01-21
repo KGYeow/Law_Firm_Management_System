@@ -1,4 +1,3 @@
-//Case.vue
 <template>
   <v-row>
     <v-col>
@@ -40,10 +39,15 @@
             </v-select>
           </v-col>
           <v-col>
-            <!-- Add New Case -->
+            <!-- Add New Case
             <v-btn class="float-end" color="primary" flat @click="addCaseModal = true">
               <v-icon>mdi-plus</v-icon> &nbsp; New Case
-            </v-btn>
+            </v-btn> -->
+          </v-col>
+
+          <v-col>
+            <!-- Add New Case -->
+            <v-btn class="float-end" color="primary" prepend-icon="mdi-plus" flat @click="addCaseModal = true">New Case</v-btn>
           </v-col>
         </v-row>
         <!--Case List-->
@@ -124,7 +128,14 @@
           <v-row>
             <v-col>
               <v-label class="text-caption">Case Name</v-label>
-              <v-text-field variant="outlined" v-model="newCaseDetails.name" outlined dense/>
+              <v-text-field 
+                density="compact" 
+                variant="outlined" 
+                v-model="addCaseDetails.name" 
+                outlined dense
+                :error-messages="nameErrors"
+                @input="clearNameErrors"
+              />
             </v-col>
           </v-row>
           <v-row>
@@ -137,8 +148,10 @@
                 placeholder="Select client"
                 variant="outlined"
                 density="compact"
-                v-model="newCaseDetails.clientId"
+                v-model="addCaseDetails.clientId"
                 hide-details="auto"
+                :error-messages="clientErrors"
+                @input="clearClientErrors"
               />
             </v-col>
           </v-row>
@@ -344,32 +357,96 @@ const openDialog = (caseDetails) => {
   isDialogOpen.value = true;
 };
 
+
 // Define reactive variable for adding case modal
 const addCaseModal = ref(false);
 
 // Define reactive variable for new case details
-const newCaseDetails = reactive({
+const addCaseDetails = reactive({
   name: '',
   clientId: null,
   status: null,
 });
 
-// Methods
+// Define validation error messages and methods
+const nameErrors = ref([]);
+const clientErrors = ref([]);
+
+const clearNameErrors = () => {
+  nameErrors.value = [];
+};
+
+const clearClientErrors = () => {
+  clientErrors.value = [];
+};
+
+const validateForm = () => {
+  let isValid = true;
+
+  // Validate case name
+  if (!addCaseDetails.name.trim()) {
+    nameErrors.value = ['Case name is required'];
+    isValid = false;
+  }
+
+  // Validate client selection
+  if (!addCaseDetails.clientId) {
+    clientErrors.value = ['Client selection is required'];
+    isValid = false;
+  }
+
+  return isValid;
+};
+
 const addCase = async () => {
-  try {
-    const result = await fetchData.$post(`/Case/CaseCreate`, newCaseDetails);
-    if (!result.error) {
-      addCaseModal.value = false;
-      newCaseDetails.name = ''; // Clear the case name after successful submission
-      ElNotification.success({ message: result.message });
-      refreshNuxtData(); // Refresh the case list or perform any necessary actions
-    } else {
-      ElNotification.error({ message: result.message });
+  clearNameErrors();
+  clearClientErrors();
+
+  if (validateForm()) {
+    // Form is valid, proceed with submission logic
+    try {
+      const result = await fetchData.$post(`/Case/CaseCreate`, addCaseDetails);
+
+      if (!result.error) {
+        addCaseModal.value = false;
+        addCaseDetails.name = '';
+        ElNotification.success({ message: result.message });
+        refreshNuxtData();
+      } else {
+        ElNotification.error({ message: result.message });
+      }
+    } catch {
+      ElNotification.error({ message: "There is a problem with the server. Please try again later." });
     }
-  } catch {
-    ElNotification.error({ message: "There is a problem with the server. Please try again later." });
   }
 };
+
+/*
+const addCaseModal = ref(false)
+const addCaseDetails = ref({
+  name: useField('name'),
+  clientId: useField('clientId'),
+});
+
+const addCase = handleSubmit(async(values) => {
+  try {
+    const result = await fetchData.$post(`/Case/CaseCreate`, {
+      name: values.name,
+      clientId: values.clientId,
+    })
+
+    if (!result.error) {
+      addCaseModal.value = false
+      addCaseDetails.value.name.resetField()
+      addCaseDetails.value.clientId.resetField()
+      ElNotification.success({ message: result.message })
+      refreshNuxtData()
+    }
+    else {
+      ElNotification.error({ message: result.message })
+    }
+  } catch { ElNotification.error({ message: "There is a problem with the server. Please try again later." }) }
+})*/
 
 const deleteCase = async(caseId) => {
   try {
@@ -383,59 +460,4 @@ const deleteCase = async(caseId) => {
     }
   } catch { ElNotification.error({ message: "There is a problem with the server. Please try again later." }) }
 }
-
-// Assuming you have a statusList and currentStatusIndex in your component data
-const statusList = ref([
-  { id: 1, name: 'Active' },
-  { id: 2, name: 'Under Review' },
-  { id: 3, name: 'Negotiation' },
-  { id: 4, name: 'Court Proceedings' },
-  { id: 5, name: 'In Hold' },
-  { id: 6, name: 'Settled' },
-  // ... other statuses ...
-]);
-
-//Rename Event Methods
-const renameCaseGet = (caseId, caseName) => {
-  renameCaseDetails.value.caseId = caseId
-  renameCaseDetails.value.name = caseName
-  renameCaseModal.value = true
-}
-
-const props = defineProps({
-  caseId: Number,
-});
-
-// Edit Client Event Methods
-const editClientGet = (caseId, clientId) => {
-  editClientDetails.value.caseId = caseId;
-  editClientDetails.value.clientId = clientId;
-  editClientModal.value = true;
-};
-
-//Change Case Status
-const changeCaseStatus = async (caseId, newStatus) => {
-  try {
-    const result = await fetchData.$put(`/Case/ChangeStatus/${caseId}`, {
-      NewStatus: newStatus,
-    });
-
-    if (newStatus === 'Settled') {
-      const closedTimeResponse = await fetchData.$put(`/Case/UpdateClosedTime/${caseId}`);
-      console.log('ClosedTime updated:', closedTimeResponse);
-    }
-
-    if (!result.error) {
-      emit('close-modal', false);
-      editedClientDetails.value.clientId.resetField();
-      ElNotification.success({ message: result.message });
-      refreshNuxtData();
-      } else {
-        ElNotification.error({ message: result.message });
-      }
-  } catch (error) {
-    console.error('Error while changing case status:', error);
-    ElNotification.error({ message: "There is a problem with the server. Please try again later." });
-  }
-};
 </script>

@@ -43,20 +43,8 @@
 
           <!-- Icon 4 -->
           <v-col class="d-flex justify-center flex-column align-center">
-            <v-icon class="mb-4" size="70">mdi-check-circle-outline</v-icon>
-            <v-col style ="font-size: 25px;">Quality Service</v-col>
-          </v-col>
-
-          <!-- Icon 5 -->
-          <v-col class="d-flex justify-center flex-column align-center">
-            <v-icon class="mb-4" size="70">mdi-clock-outline</v-icon>
-            <v-col style ="font-size: 25px;">Timely Delivery</v-col>
-          </v-col>
-
-          <!-- Icon 6 -->
-          <v-col class="d-flex justify-center flex-column align-center">
-            <v-icon class="mb-4" size="70">mdi-account-group-outline</v-icon>
-            <v-col style ="font-size: 25px;">Experienced Team</v-col>
+            <v-icon class="mb-4" size="70">mdi-trophy</v-icon>
+            <v-col style ="font-size: 25px;">We Are The Best</v-col>
           </v-col>
         </v-row>
         </v-col>
