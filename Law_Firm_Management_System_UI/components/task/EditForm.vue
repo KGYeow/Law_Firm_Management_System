@@ -125,6 +125,7 @@
 
 <script setup>
 import { useField, useForm } from 'vee-validate'
+import dayjs from 'dayjs'
 
 // Properties
 const props = defineProps({
@@ -173,7 +174,7 @@ const editTask = handleSubmit(async(values) => {
       taskId: props.initialValues.id,
       title: values.title,
       description: values.description,
-      dueTime: values.dueTime,
+      dueTime: dayjs(values.dueTime).format("DD MMM YYYY, h:mm A"),
       caseId: editTaskDetails.value.caseId,
       eventId: editTaskDetails.value.eventId,
       documentId: editTaskDetails.value.docId,
