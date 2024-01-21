@@ -163,3 +163,7 @@ left: 0%;
 .status-item:nth-child(even) .status-name {
 left: 10%;
 }
+
+.client-case-document-list .v-list-item__content {
+  display:flex;
+}

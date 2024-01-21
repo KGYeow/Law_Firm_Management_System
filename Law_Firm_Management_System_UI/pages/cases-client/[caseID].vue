@@ -72,17 +72,23 @@
                      <v-divider vertical class="mx-5 my-0" style="border-color: white !important; opacity: 0.5;"></v-divider>
                      <div v-for="document in caseDocumentList" :key="document.id">
                        <div class="case-detail-item">
-                         <v-list-item
-                           class="mb-2 rounded-3 bg-background list-link"
+                         <v-list-item 
+                           class="client-case-document-list mb-2 rounded-3 bg-background list-link"
                            density="compact"
                            prepend-icon="mdi-file-document-outline"
                            link
                            @click="downloadDocument(document.id)"
                            style="padding: 10px;"
                          >
-                           {{ document.documentName }}
+                           {{ document.documentName }} 
+                           <ul class="m-0 list-inline hstack">
+                            <li>
+                              <v-tooltip text="Update Document" activator="parent" location="top" offset="2"/>
+                              <v-btn class = "mt-n1" icon="mdi-upload-outline" size="small" variant="text" @click.stop="getEditAttachmentInfo(document.id)"/>
+                            </li>
+                          </ul>
                          </v-list-item>
-                       </div>
+                      </div>
                      </div>
                    </div>
                    <!-- Display a message if no related document -->
@@ -112,24 +118,6 @@
        </v-col>
    </v-row>
    
-   <!--Rename Case-->
-   <SharedUiModal v-model="renameCaseModal" title="Rename Case" width="500">
-       <CaseRenameForm
-         :caseId="renameCaseDetails.caseId"
-         :caseName="renameCaseDetails.name"
-         @close-modal="(e) => renameCaseModal = e"
-       />
-     </SharedUiModal>
-   
-     <!--Edit Client-->
-     <SharedUiModal v-model="editClientModal" title="Edit Client" width="500">
-     <CaseEditClientForm
-       :caseId="editClientDetails.caseId"
-       :clientId="editClientDetails.clientId"
-       @close-modal="(e) => editClientModal = e"
-     />
-   </SharedUiModal>
-   
    <!-- Add New Document Modal -->
    <SharedUiModal v-model="addDocumentModal" title="Add New Document" width="500">
      <CaseUploadDocument 
@@ -137,6 +125,13 @@
      @close-modal="(e) => addDocumentModal = e"/>
    </SharedUiModal>
    
+   <!-- Edit Document Attachment Modal -->
+  <SharedUiModal v-model="editAttachmentModal" title="Update Document File" width="500">
+    <DocumentEditAttachmentForm
+      :document-id="editAttachmentInfoId"
+      @close-modal="(e) => editAttachmentModal = e"
+    />
+  </SharedUiModal>
    </template>
    
    <style scoped>
@@ -148,11 +143,13 @@
      color:#2b4c65;
      font-weight: bold;
    }
+
    </style>
    
    <script setup>
    import { ref, shallowRef } from 'vue';
    import { BriefcaseIcon } from "vue-tabler-icons"
+   import { Buffer } from 'buffer'
    
    const filter = ref({
      clientId: null,
@@ -168,6 +165,8 @@
    const { data: userRole } = await fetchData.$get("/UserRole/RoleName")
    
    const addDocumentModal = ref(false)
+   const editAttachmentInfoId = ref(null)
+   const editAttachmentModal = ref(false)
    const renameCaseDetails = ref({
      caseId: null,
      name: null,
@@ -225,7 +224,7 @@
    ]);
    
    //Rename Event Methods
-   const renameCaseGet = (caseId, caseName) => {
+   /*const renameCaseGet = (caseId, caseName) => {
      renameCaseDetails.value.caseId = caseId
      renameCaseDetails.value.name = caseName
      renameCaseModal.value = true
@@ -240,7 +239,7 @@
      editClientDetails.value.caseId = caseId;
      editClientDetails.value.clientId = clientId;
      editClientModal.value = true;
-   };
+   };*/
    
    const showConfirmationDialog = async (caseId, newStatus) => {
      try {
@@ -296,6 +295,11 @@
      }
    };
    
+   const getEditAttachmentInfo = (docId) => {
+    editAttachmentInfoId.value = docId
+    editAttachmentModal.value = true
+  }
+
    const downloadDocument = async(docId) => {
      const { data: docInfo } = await fetchData.$get(`/Document/Info/${docId}`)
      const { data: attachment } = await fetchData.$get(`/Document/GetAttachment/${docId}`)

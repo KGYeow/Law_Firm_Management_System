@@ -289,21 +289,19 @@ const showConfirmationDialog = async (caseId, newStatus) => {
 
 //Change Case Status
 const changeCaseStatus = async (caseId, newStatus) => {
-  
   try {
-    const response = await fetchData.$put(`/Case/ChangeStatus/${caseId}`, {
+    const result = await fetchData.$put(`/Case/ChangeStatus/${caseId}`, {
       NewStatus: newStatus,
     });
 
-    if (!response.error) {
+    if (!result.error) {
       // Update the ClosedTime if the new status is "Settled"
       if (newStatus === 'Settled') {
-        // Make a new request to update the ClosedTime
-        const closedTimeResponse = await fetchData.$put(`/Case/UpdateClosedTime/${caseId}`);
-        console.log('ClosedTime updated:', closedTimeResponse);
+        await fetchData.$put(`/Case/UpdateClosedTime/${caseId}`);
       }
 
-      ElNotification.success({ message: response.data.message });
+      emit('close-modal', false);
+      ElNotification.success({ message: result.data.message });
       refreshNuxtData(); // Refresh the case list or perform any necessary actions
     } else {
       ElNotification.error({ message: "Failed to change case status" });
