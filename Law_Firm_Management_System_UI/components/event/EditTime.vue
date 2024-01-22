@@ -27,7 +27,8 @@
   
   <script setup>
   import { useField, useForm } from 'vee-validate'
-
+  import dayjs from 'dayjs';
+  
   // Properties, Emit & Model
   const props = defineProps({
     eventId: Number,
@@ -56,7 +57,7 @@
     try {
       const result = await fetchData.$put("/Event/EditTime", {
         eventId: editTimeDetails.value.eventId,
-        eventTime: values.eventTime
+        eventTime: dayjs(values.eventTime).format("DD MMM YYYY, h:mm A"),
       })
       
       if (!result.error) {
