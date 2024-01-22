@@ -365,7 +365,12 @@ const pageCount = () => {
 //Add Event Methods
 const addEvent = handleSubmit(async(values) => {
   try {
-    const result = await fetchData.$post(`/Event/EventCreate`, values)
+    const result = await fetchData.$post(`/Event/EventCreate`, {
+      name: values.name,
+      caseID: values.caseID,
+      eventTime: dayjs(values.eventTime).format("DD MMM YYYY, h:mm A"),
+      description: values.description,
+    })
 
     if (!result.error) {
       addEventModal.value = false
